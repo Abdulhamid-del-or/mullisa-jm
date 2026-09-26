@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta name="theme-color" content="#087443">
+
+  <meta
+    name="description"
+    content="Mullisa-JM - Chat, Call, Video, Rooms and Learning"
+  >
+
+  <link rel="manifest" href="/manifest.json">
+
+  <title>Mullisa-JM</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f1f5f3;
+      color: #17221c;
+    }
+
+    header {
+      background: #087443;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 22px;
+    }
+
+    .menu-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 26px;
+      cursor: pointer;
+    }
+
+    nav {
+      display: none;
+      background: white;
+      padding: 10px;
+      box-shadow: 0 2px 10px #0002;
+    }
+
+    nav button {
+      width: 100%;
+      padding: 13px;
+      margin: 4px 0;
+      border: none;
+      border-radius: 8px;
+      background: #eef5f1;
+      text-align: left;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    nav button:hover {
+      background: #dcece4;
+    }
+
+    main {
+      padding: 15px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      padding: 18px;
+      border-radius: 14px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 10px #0001;
+    }
+
+    .card h2 {
+      margin-bottom: 10px;
+      color: #087443;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 13px;
+      margin: 7px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    button.primary {
+      background: #087443;
+      color: white;
+      border: none;
+      padding: 13px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .feature {
+      background: white;
+      padding: 20px 10px;
+      border-radius: 13px;
+      text-align: center;
+      box-shadow: 0 2px 8px #0001;
+      cursor: pointer;
+    }
+
+    .feature .icon {
+      font-size: 30px;
+      margin-bottom: 7px;
+    }
+
+    #messages {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 8px;
+      background: #fafafa;
+      margin-bottom: 10px;
+    }
+
+    .message {
+      padding: 8px;
+      margin-bottom: 6px;
+      background: #e8f4ed;
+      border-radius: 7px;
+    }
+
+    video {
+      width: 100%;
+      background: #111;
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+
+    .online {
+      color: #087443;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 10px;
+      color: #777;
+    }
+
+    @media (min-width: 700px) {
+      .grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌿 Mullisa-JM</h1>
+
+  <button
+    class="menu-btn"
+    onclick="toggleMenu()"
+  >
+    ☰
+  </button>
+</header>
+
+<nav id="menu">
+
+  <button onclick="showPage('home')">
+    🏠 Home
+  </button>
+
+  <button onclick="showPage('chat')">
+    💬 Chat
+  </button>
+
+  <button onclick="showPage('room')">
+    🏠 Room
+  </button>
+
+  <button onclick="showPage('video')">
+    🎥 Video
+  </button>
+
+  <button onclick="showPage('call')">
+    📞 Call
+  </button>
+
+  <button onclick="showPage('learning')">
+    📚 Barnoota
+  </button>
+
+  <button onclick="showPage('contacts')">
+    👥 Walqunnamtii
+  </button>
+
+  <button onclick="showPage('profile')">
+    👤 Profile
+  </button>
+
+  <button onclick="showPage('settings')">
+    ⚙️ Settings
+  </button>
+
+</nav>
+
+<main>
+
+  <!-- HOME -->
+
+  <section id="home" class="page active">
+
+    <div class="card">
+      <h2>🌿 Baga Nagaan Dhufte</h2>
+
+      <p>
+        Mullisa-JM appii walqunnamtii,
+        chat, room, video fi barnootaati.
+      </p>
+    </div>
+
+    <div class="grid">
+
+      <div
+        class="feature"
+        onclick="showPage('chat')"
+      >
+        <div class="icon">💬</div>
+        <b>Chat</b>
+      </div>
+
+      <div
+        class="feature"
+        onclick="showPage('room')"
+      >
+        <div class="icon">🏠</div>
+        <b>Room</b>
+      </div>
+
+      <div
+        class="feature"
+        onclick="showPage('video')"
+      >
+        <div class="icon">🎥</div>
+        <b>Video</b>
+      </div>
+
+      <div
+        class="feature"
+        onclick="showPage('learning')"
+      >
+        <div class="icon">📚</div>
+        <b>Barnoota</b>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- CHAT -->
+
+  <section id="chat" class="page">
+
+    <div class="card">
+
+      <h2>💬 Chat</h2>
+
+      <div id="messages"></div>
+
+      <input
+        id="chatInput"
+        placeholder="Ergaa barreessi..."
+      >
+
+      <button
+        class="primary"
+        onclick="sendMessage()"
+      >
+        Ergi
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ROOM -->
+
+  <section id="room" class="page">
+
+    <div class="card">
+
+      <h2>🏠 Room Uumi</h2>
+
+      <input
+        id="roomName"
+        placeholder="Maqaa Room"
+      >
+
+      <button
+        class="primary"
+        onclick="createRoom()"
+      >
+        Room Uumi
+      </button>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>Room Seeni</h2>
+
+      <input
+        id="roomId"
+        placeholder="Room ID"
+      >
+
+      <button
+        class="primary"
+        onclick="joinRoom()"
+      >
+        Seeni
+      </button>
+
+      <p id="roomStatus"></p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>👥 Namoota Room keessa jiran</h3>
+
+      <div id="roomUsers"></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- VIDEO -->
+
+  <section id="video" class="page">
+
+    <div class="card">
+
+      <h2>🎥 Video Room</h2>
+
+      <video
+        id="localVideo"
+        autoplay
+        muted
+        playsinline
+      ></video>
+
+      <button
+        class="primary"
+        onclick="startVideo()"
+      >
+        Camera Bani
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- CALL -->
+
+  <section id="call" class="page">
+
+    <div class="card">
+
+      <h2>📞 Call</h2>
+
+      <p>
+        Namoota online jiran:
+      </p>
+
+      <div id="onlineUsers"></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- LEARNING -->
+
+  <section id="learning" class="page">
+
+    <div class="card">
+
+      <h2>📚 Bakka Barnootaa</h2>
+
+      <p>
+        As keessatti barnoota, gaaffii fi
+        marii barnootaa qopheessuu dandeessa.
+      </p>
+
+      <input
+        id="lessonTitle"
+        placeholder="Mata-duree barnootaa"
+      >
+
+      <textarea
+        id="lessonText"
+        rows="6"
+        placeholder="Barnoota kee barreessi..."
+      ></textarea>
+
+      <button
+        class="primary"
+        onclick="saveLesson()"
+      >
+        Barnoota Olkaa'i
+      </button>
+
+      <div id="savedLessons"></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- CONTACTS -->
+
+  <section id="contacts" class="page">
+
+    <div class="card">
+
+      <h2>👥 Walqunnamtii</h2>
+
+      <input
+        placeholder="Nama barbaadi..."
+        oninput="searchUsers(this.value)"
+      >
+
+      <div id="contactsList"></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- PROFILE -->
+
+  <section id="profile" class="page">
+
+    <div class="card">
+
+      <h2>👤 Profile</h2>
+
+      <p>
+        Maqaa:
+        <b id="profileName">Guest</b>
+      </p>
+
+      <input
+        id="username"
+        placeholder="Maqaa kee"
+      >
+
+      <button
+        class="primary"
+        onclick="login()"
+      >
+        Seeni
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- SETTINGS -->
+
+  <section id="settings" class="page">
+
+    <div class="card">
+
+      <h2>⚙️ Settings</h2>
+
+      <label>
+        Dark Mode
+      </label>
+
+      <button
+        class="primary"
+        onclick="toggleDark()"
+      >
+        Dark / Light
+      </button>
+
+      <br><br>
+
+      <label>
+        Notifications
+      </label>
+
+      <button
+        class="primary"
+        onclick="notifyUser()"
+      >
+        Notification Hayyami
+      </button>
+
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  © 2026 Mullisa-JM
+</footer>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+
+const socket = io();
+
+let currentUser = null;
+
+function toggleMenu() {
+  const menu = document.getElementById("menu");
+
+  menu.style.display =
+    menu.style.display === "block"
+      ? "none"
+      : "block";
+}
+
+function showPage(id) {
+
+  document
+    .querySelectorAll(".page")
+    .forEach(page => {
+      page.classList.remove("active");
+    });
+
+  document
+    .getElementById(id)
+    .classList.add("active");
+
+  document.getElementById("menu").style.display =
+    "none";
+}
+
+
+function login() {
+
+  const name =
+    document.getElementById("username")
+      .value
+      .trim();
+
+  if (!name) {
+    alert("Maqaa kee galchi.");
+    return;
+  }
+
+  socket.emit("login", {
+    username: name
+  });
+}
+
+
+socket.on("login-success", user => {
+
+  currentUser = user;
+
+  document.getElementById(
+    "profileName"
+  ).textContent = user.username;
+
+  alert(
+    "Baga nagaan dhuftan " +
+    user.username
+  );
+});
+
+
+socket.on("online-users", users => {
+
+  const box =
+    document.getElementById("onlineUsers");
+
+  const contacts =
+    document.getElementById("contactsList");
+
+  box.innerHTML = "";
+  contacts.innerHTML = "";
+
+  users.forEach(user => {
+
+    const item =
+      document.createElement("div");
+
+    item.className = "card";
+
+    item.innerHTML =
+      "🟢 " +
+      user.username +
+      " <button onclick=\"callUser('" +
+      user.id +
+      "')\">📞</button>";
+
+    box.appendChild(item);
+
+    const contact =
+      document.createElement("p");
+
+    contact.innerHTML =
+      "🟢 " + user.username;
+
+    contacts.appendChild(contact);
+  });
+});
+
+
+function searchUsers(text) {
+
+  const items =
+    document.querySelectorAll(
+      "#contactsList .card, #contactsList p"
+    );
+
+  items.forEach(item => {
+
+    item.style.display =
+      item.textContent
+        .toLowerCase()
+        .includes(text.toLowerCase())
+        ? "block"
+        : "none";
+
+  });
+}
+
+
+function createRoom() {
+
+  const name =
+    document
+      .getElementById("roomName")
+      .value
+      .trim();
+
+  if (!name) {
+    alert("Maqaa room galchi.");
+    return;
+  }
+
+  socket.emit("create-room", {
+    roomName: name
+  });
+}
+
+
+socket.on("room-created", room => {
+
+  document.getElementById(
+    "roomId"
+  ).value = room.id;
+
+  document.getElementById(
+    "roomStatus"
+  ).textContent =
+    "Room uumame: " + room.id;
+
+  alert(
+    "Room kee uumame.\nRoom ID: " +
+    room.id
+  );
+});
+
+
+function joinRoom() {
+
+  const id =
+    document
+      .getElementById("roomId")
+      .value
+      .trim();
+
+  if (!id) {
+    alert("Room ID galchi.");
+    return;
+  }
+
+  socket.emit("join-room", id);
+}
+
+
+socket.on("joined-room", room => {
+
+  document.getElementById(
+    "roomStatus"
+  ).textContent =
+    "Room keessa jirta: " +
+    room.name;
+});
+
+
+socket.on("room-error", message => {
+  alert(message);
+});
+
+
+socket.on("room-users", users => {
+
+  const box =
+    document.getElementById("roomUsers");
+
+  box.innerHTML = "";
+
+  users.forEach(user => {
+
+    const p =
+      document.createElement("p");
+
+    p.textContent =
+      "👤 " + user;
+
+    box.appendChild(p);
+  });
+});
+
+
+function sendMessage() {
+
+  const input =
+    document.getElementById("chatInput");
+
+  const message =
+    input.value.trim();
+
+  if (!message) return;
+
+  socket.emit(
+    "room-message",
+    message
+  );
+
+  input.value = "";
+}
+
+
+socket.on("room-message", data => {
+
+  const box =
+    document.getElementById("messages");
+
+  const div =
+    document.createElement("div");
+
+  div.className = "message";
+
+  div.innerHTML =
+    "<b>" +
+    data.username +
+    ":</b> " +
+    data.message;
+
+  box.appendChild(div);
+
+  box.scrollTop =
+    box.scrollHeight;
+});
+
+
+async function startVideo() {
+
+  try {
+
+    const stream =
+      await navigator.mediaDevices
+        .getUserMedia({
+          video: true,
+          audio: true
+        });
+
+    document.getElementById(
+      "localVideo"
+    ).srcObject = stream;
+
+  } catch (error) {
+
+    alert(
+      "Camera/Microphone hayyamsiisuun hin dandeenye."
+    );
+  }
+}
+
+
+function callUser(id) {
+
+  alert(
+    "Call jalqabuuf user: " + id
+  );
+
+}
+
+
+function saveLesson() {
+
+  const title =
+    document
+      .getElementById("lessonTitle")
+      .value
+      .trim();
+
+  const text =
+    document
+      .getElementById("lessonText")
+      .value
+      .trim();
+
+  if (!title || !text) {
+    alert(
+      "Mata-duree fi barnoota guuti."
+    );
+    return;
+  }
+
+  const lessons =
+    JSON.parse(
+      localStorage.getItem(
+        "mullisaLessons"
+      ) || "[]"
+    );
+
+  lessons.push({
+    title,
+    text
+  });
+
+  localStorage.setItem(
+    "mullisaLessons",
+    JSON.stringify(lessons)
+  );
+
+  document.getElementById(
+    "lessonTitle"
+  ).value = "";
+
+  document.getElementById(
+    "lessonText"
+  ).value = "";
+
+  displayLessons();
+}
+
+
+function displayLessons() {
+
+  const box =
+    document.getElementById(
+      "savedLessons"
+    );
+
+  const lessons =
+    JSON.parse(
+      localStorage.getItem(
+        "mullisaLessons"
+      ) || "[]"
+    );
+
+  box.innerHTML = "";
+
+  lessons.forEach(lesson => {
+
+    const div =
+      document.createElement("div");
+
+    div.className = "card";
+
+    div.innerHTML =
+      "<h3>" +
+      lesson.title +
+      "</h3><p>" +
+      lesson.text +
+      "</p>";
+
+    box.appendChild(div);
+  });
+}
+
+
+function toggleDark() {
+
+  document.body.style.background =
+    document.body.style.background ===
+    "rgb(20, 25, 22)"
+      ? "#f1f5f3"
+      : "#141916";
+
+  document.body.style.color =
+    document.body.style.color ===
+    "white"
+      ? "#17221c"
+      : "white";
+}
+
+
+async function notifyUser() {
+
+  if (!("Notification" in window)) {
+    alert("Notification hin deeggaramu.");
+    return;
+  }
+
+  const permission =
+    await Notification.requestPermission();
+
+  if (permission === "granted") {
+    new Notification(
+      "Mullisa-JM",
+      {
+        body:
+          "Notification hojii irra ooleera."
+      }
+    );
+  }
+}
+
+
+displayLessons();
+
+
+if ("serviceWorker" in navigator) {
+
+  window.addEventListener(
+    "load",
+    () => {
+      navigator.serviceWorker.register(
+        "/sw.js"
+      );
+    }
+  );
+
+}
+
+</script>
+
+</body>
+  </html>
