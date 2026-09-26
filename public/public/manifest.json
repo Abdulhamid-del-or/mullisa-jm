@@ -1,0 +1,24 @@
+{
+  "name": "Mullisa-JM",
+  "short_name": "Mullisa",
+  "description": "Mullisa-JM - Chat, Call, Video, Rooms and Learning",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#087443",
+  "background_color": "#ffffff",
+  "lang": "om",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
