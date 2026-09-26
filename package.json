@@ -1,13 +1,14 @@
 {
   "name": "mullisa-jm",
-  "version": "1.0.0",
-  "description": "Mullisa-JM - Chat, Call, Video, Rooms, Learning and Community App",
+  "version": "2.0.0",
+  "description": "Mullisa-JM Chat, Call, Video Room and 10 Seat Class App",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.21.2",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "@supabase/supabase-js": "^2.57.4"
   }
 }
