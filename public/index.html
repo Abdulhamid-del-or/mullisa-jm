@@ -1,2290 +1,676 @@
 <!DOCTYPE html>
 <html lang="om">
 <head>
-<meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<meta name="theme-color" content="#087443">
-
-<meta name="description"
-      content="Mullisa-JM - Chat, Call, Video, Room, Barnoota fi Walqunnamtii">
-
-<link rel="manifest" href="/manifest.json">
-
-<title>Mullisa-JM</title>
-
-<style>
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Arial,sans-serif;
-}
-
-:root{
-  --green:#087443;
-  --green2:#0aa05a;
-  --light:#f1f5f3;
-  --card:#ffffff;
-  --text:#17221c;
-  --border:#dce5df;
-}
-
-body{
-  background:var(--light);
-  color:var(--text);
-  padding-bottom:72px;
-}
-
-/* TOP */
-
-header{
-  height:62px;
-  background:linear-gradient(135deg,#087443,#0aa05a);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 15px;
-  position:sticky;
-  top:0;
-  z-index:1000;
-  box-shadow:0 2px 10px #0003;
-}
-
-.logo{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:21px;
-  font-weight:bold;
-}
-
-.logo-icon{
-  width:38px;
-  height:38px;
-  border-radius:11px;
-  background:white;
-  color:#087443;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:23px;
-  font-weight:bold;
-}
-
-.top-actions{
-  display:flex;
-  gap:7px;
-}
-
-.top-btn{
-  width:39px;
-  height:39px;
-  border:0;
-  border-radius:50%;
-  background:#ffffff22;
-  color:white;
-  font-size:19px;
-}
-
-/* SIDE MENU */
-
-nav{
-  display:none;
-  position:fixed;
-  top:62px;
-  right:0;
-  width:260px;
-  max-height:calc(100vh - 62px);
-  overflow:auto;
-  background:white;
-  z-index:1100;
-  padding:10px;
-  box-shadow:-3px 5px 18px #0003;
-}
-
-nav button{
-  width:100%;
-  border:0;
-  background:#f0f5f2;
-  padding:13px;
-  margin:4px 0;
-  border-radius:10px;
-  text-align:left;
-  font-size:15px;
-}
-
-nav button:hover{
-  background:#dceee5;
-}
-
-/* MAIN */
-
-main{
-  max-width:950px;
-  margin:auto;
-  padding:14px;
-}
-
-.page{
-  display:none;
-}
-
-.page.active{
-  display:block;
-}
-
-.card{
-  background:var(--card);
-  border-radius:16px;
-  padding:17px;
-  margin-bottom:14px;
-  box-shadow:0 2px 10px #00000010;
-  border:1px solid var(--border);
-}
-
-.card h2{
-  color:var(--green);
-  margin-bottom:10px;
-}
-
-input,
-textarea,
-select{
-  width:100%;
-  border:1px solid #ccd8d1;
-  border-radius:10px;
-  padding:13px;
-  margin:6px 0;
-  outline:none;
-  background:white;
-  color:#17221c;
-}
-
-input:focus,
-textarea:focus,
-select:focus{
-  border-color:var(--green2);
-}
-
-.primary{
-  background:var(--green);
-  color:white;
-  border:0;
-  border-radius:9px;
-  padding:12px 16px;
-  cursor:pointer;
-  margin-top:5px;
-  font-weight:bold;
-}
-
-.primary:hover{
-  background:#075f38;
-}
-
-.secondary{
-  background:#e9f4ee;
-  color:#075f38;
-  border:0;
-  border-radius:9px;
-  padding:10px 14px;
-  cursor:pointer;
-  margin:3px;
-}
-
-.danger{
-  background:#d92d20;
-  color:white;
-  border:0;
-  border-radius:8px;
-  padding:9px 12px;
-}
-
-/* HOME */
-
-.welcome{
-  background:linear-gradient(135deg,#087443,#0ca95e);
-  color:white;
-  border-radius:18px;
-  padding:24px 18px;
-  margin-bottom:15px;
-}
-
-.welcome h2{
-  color:white;
-  font-size:25px;
-}
-
-.welcome p{
-  margin-top:7px;
-  line-height:1.5;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-}
-
-.feature{
-  background:white;
-  border:1px solid var(--border);
-  border-radius:15px;
-  padding:20px 8px;
-  text-align:center;
-  box-shadow:0 2px 8px #0001;
-  cursor:pointer;
-}
-
-.feature:active{
-  transform:scale(.97);
-}
-
-.feature-icon{
-  font-size:31px;
-  margin-bottom:7px;
-}
-
-/* USER */
-
-.user-card{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:12px;
-  border-bottom:1px solid #edf1ef;
-}
-
-.avatar{
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#087443,#12b866);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  font-size:18px;
-  flex-shrink:0;
-}
-
-.user-info{
-  flex:1;
-}
-
-.user-name{
-  font-weight:bold;
-}
-
-.online-dot{
-  color:#0ba55c;
-  font-size:12px;
-}
-
-.user-actions{
-  display:flex;
-  gap:4px;
-}
-
-/* ROOM */
-
-.room-box{
-  background:#f7faf8;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:13px;
-  margin-bottom:10px;
-}
-
-.room-title{
-  font-size:18px;
-  font-weight:bold;
-  color:var(--green);
-}
-
-.seat-area{
-  margin-top:12px;
-}
-
-.seat-title{
-  font-weight:bold;
-  margin:8px 0;
-  color:#555;
-}
-
-.seats{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:7px;
-}
-
-.seat{
-  min-height:70px;
-  border-radius:10px;
-  background:#e7eee9;
-  border:1px solid #d2ddd6;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:11px;
-  padding:5px;
-}
-
-.seat.host{
-  background:#087443;
-  color:white;
-}
-
-.seat.student{
-  background:#cceedd;
-  color:#075f38;
-}
-
-.audience{
-  background:#f0f4f1;
-  border-radius:10px;
-  padding:10px;
-  margin-top:10px;
-}
-
-.audience-user{
-  padding:8px;
-  border-bottom:1px solid #ddd;
-}
-
-/* CHAT */
-
-#messages{
-  height:310px;
-  overflow-y:auto;
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:10px;
-  background:#fafcfb;
-  margin-bottom:10px;
-}
-
-.message{
-  background:#e8f4ed;
-  padding:9px 11px;
-  border-radius:10px;
-  margin-bottom:7px;
-}
-
-.message small{
-  color:#777;
-  display:block;
-  margin-top:3px;
-}
-
-/* VIDEO */
-
-video{
-  width:100%;
-  background:#111;
-  border-radius:14px;
-  margin-top:8px;
-  max-height:450px;
-}
-
-/* STATUS */
-
-.status{
-  padding:10px;
-  background:#eef7f2;
-  color:#087443;
-  border-radius:9px;
-  margin-top:8px;
-}
-
-.error{
-  padding:10px;
-  background:#fff0ef;
-  color:#b42318;
-  border-radius:9px;
-}
-
-/* PROFILE */
-
-.profile-head{
-  text-align:center;
-  padding:15px;
-}
-
-.big-avatar{
-  width:85px;
-  height:85px;
-  margin:auto;
-  border-radius:50%;
-  background:linear-gradient(135deg,#087443,#10b963);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:34px;
-  font-weight:bold;
-}
-
-/* BOTTOM NAV */
-
-.bottom-nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  height:65px;
-  background:white;
-  border-top:1px solid #dce5df;
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  z-index:1200;
-  box-shadow:0 -2px 10px #0002;
-}
-
-.bottom-item{
-  border:0;
-  background:none;
-  color:#68756e;
-  font-size:11px;
-  text-align:center;
-  min-width:55px;
-}
-
-.bottom-item div{
-  font-size:21px;
-  margin-bottom:2px;
-}
-
-.bottom-item.active{
-  color:#087443;
-  font-weight:bold;
-}
-
-.create-btn{
-  width:52px;
-  height:52px;
-  border-radius:50%;
-  border:4px solid white;
-  background:#087443;
-  color:white;
-  font-size:27px;
-  margin-top:-25px;
-  box-shadow:0 3px 10px #0003;
-}
-
-/* FOOTER */
-
-footer{
-  text-align:center;
-  padding:25px 10px;
-  color:#777;
-  font-size:13px;
-}
-
-.dark{
-  --light:#101512;
-  --card:#18201c;
-  --text:#f2f5f3;
-  --border:#2d3932;
-}
-
-.dark input,
-.dark textarea,
-.dark select{
-  background:#202a24;
-  color:white;
-  border-color:#3a4940;
-}
-
-.dark .bottom-nav{
-  background:#18201c;
-}
-
-.dark .feature,
-.dark nav{
-  background:#18201c;
-}
-
-.dark nav button{
-  background:#202a24;
-  color:white;
-}
-
-.dark .seat{
-  background:#27312b;
-  color:white;
-}
-
-@media(min-width:700px){
-
-  .grid{
-    grid-template-columns:repeat(4,1fr);
-  }
-
-  .seats{
-    grid-template-columns:repeat(8,1fr);
-  }
-
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#087443">
+  <meta name="description" content="Mullisa-JM - Chat, Call, Room fi Club">
+
+  <link rel="manifest" href="/manifest.json">
+
+  <title>Mullisa-JM</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f3f7f5;
+      color: #17231e;
+    }
+
+    .app {
+      max-width: 500px;
+      margin: auto;
+      min-height: 100vh;
+      background: white;
+    }
+
+    header {
+      background: #087443;
+      color: white;
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 23px;
+    }
+
+    .icon-btn {
+      background: rgba(255,255,255,.15);
+      border: none;
+      color: white;
+      padding: 10px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    main {
+      padding: 18px;
+      padding-bottom: 90px;
+    }
+
+    .welcome {
+      background: linear-gradient(135deg, #087443, #12a05e);
+      color: white;
+      padding: 22px;
+      border-radius: 18px;
+      margin-bottom: 20px;
+    }
+
+    .welcome h2 {
+      margin-bottom: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid #e2e9e5;
+      border-radius: 16px;
+      padding: 20px 12px;
+      background: white;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 3px 12px rgba(0,0,0,.05);
+    }
+
+    .card:active {
+      transform: scale(.97);
+    }
+
+    .card .emoji {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .card h3 {
+      font-size: 16px;
+    }
+
+    .card p {
+      color: #69756f;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .back {
+      border: none;
+      background: none;
+      color: #087443;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+
+    .section-title {
+      margin-bottom: 15px;
+    }
+
+    .class-box {
+      border: 1px solid #dce7e1;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 15px;
+    }
+
+    .seats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .seat {
+      border: 1px solid #dce7e1;
+      border-radius: 12px;
+      padding: 14px;
+      background: #f8fbf9;
+      text-align: center;
+    }
+
+    .seat.occupied {
+      background: #e4f5eb;
+      border-color: #087443;
+    }
+
+    .seat-number {
+      font-weight: bold;
+      color: #087443;
+    }
+
+    .audience {
+      margin-top: 15px;
+      background: #f2f5f3;
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .settings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .setting {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      border: 1px solid #e1e8e4;
+      border-radius: 14px;
+      cursor: pointer;
+    }
+
+    .setting-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .setting-icon {
+      font-size: 23px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 5px;
+      z-index: 10;
+    }
+
+    .nav-btn {
+      border: none;
+      background: none;
+      color: #68736e;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .nav-btn.active {
+      color: #087443;
+      font-weight: bold;
+    }
+
+    .nav-icon {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 3px;
+    }
+
+    .primary {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #087443;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .primary:active {
+      transform: scale(.98);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 35px 15px;
+      color: #68736e;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
+<div class="app">
 
-<header>
+  <header>
+    <h1>🟢 Mullisa-JM</h1>
+    <button class="icon-btn" onclick="showPage('settings')">⚙️</button>
+  </header>
 
-  <div class="logo">
-    <div class="logo-icon">M</div>
-    Mullisa-JM
-  </div>
+  <main>
 
-  <div class="top-actions">
+    <!-- HOME -->
+    <section id="home" class="page active">
 
-    <button class="top-btn"
-            onclick="showPage('contacts')">
-      🔍
-    </button>
-
-    <button class="top-btn"
-            onclick="toggleMenu()">
-      ☰
-    </button>
-
-  </div>
-
-</header>
-
-<!-- ================= MENU ================= -->
-
-<nav id="menu">
-
-  <button onclick="showPage('home')">
-    🏠 Home
-  </button>
-
-  <button onclick="showPage('chat')">
-    💬 Chat
-  </button>
-
-  <button onclick="showPage('contacts')">
-    👥 Walqunnamtii
-  </button>
-
-  <button onclick="showPage('room')">
-    🏠 Room
-  </button>
-
-  <button onclick="showPage('video')">
-    🎥 Video
-  </button>
-
-  <button onclick="showPage('call')">
-    📞 Call
-  </button>
-
-  <button onclick="showPage('learning')">
-    📚 Barnoota
-  </button>
-
-  <button onclick="showPage('profile')">
-    👤 Profile
-  </button>
-
-  <button onclick="showPage('settings')">
-    ⚙️ Settings
-  </button>
-
-</nav>
-
-<!-- ================= MAIN ================= -->
-
-<main>
-
-<!-- HOME -->
-
-<section id="home" class="page active">
-
-  <div class="welcome">
-
-    <h2>🌿 Baga Nagaan Dhuftan</h2>
-
-    <p>
-      Mullisa-JM keessatti chat,
-      call, video, room, barnoota
-      fi walqunnamtii argatta.
-    </p>
-
-  </div>
-
-  <div class="grid">
-
-    <div class="feature"
-         onclick="showPage('chat')">
-      <div class="feature-icon">💬</div>
-      <b>Chat</b>
-    </div>
-
-    <div class="feature"
-         onclick="showPage('contacts')">
-      <div class="feature-icon">👥</div>
-      <b>Walqunnamtii</b>
-    </div>
-
-    <div class="feature"
-         onclick="showPage('room')">
-      <div class="feature-icon">🏠</div>
-      <b>Room</b>
-    </div>
-
-    <div class="feature"
-         onclick="showPage('video')">
-      <div class="feature-icon">🎥</div>
-      <b>Video</b>
-    </div>
-
-    <div class="feature"
-         onclick="showPage('call')">
-      <div class="feature-icon">📞</div>
-      <b>Call</b>
-    </div>
-
-    <div class="feature"
-         onclick="showPage('learning')">
-      <div class="feature-icon">📚</div>
-      <b>Barnoota</b>
-    </div>
-
-    <div class="feature"
-         onclick="showPage('profile')">
-      <div class="feature-icon">👤</div>
-      <b>Profile</b>
-    </div>
-
-    <div class="feature"
-         onclick="showPage('settings')">
-      <div class="feature-icon">⚙️</div>
-      <b>Settings</b>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= CHAT ================= -->
-
-<section id="chat" class="page">
-
-  <div class="card">
-
-    <h2>💬 Chat</h2>
-
-    <div id="messages"></div>
-
-    <input
-      id="chatInput"
-      placeholder="Ergaa barreessi..."
-      onkeydown="if(event.key==='Enter')sendMessage()"
-    >
-
-    <button class="primary"
-            onclick="sendMessage()">
-      Ergi
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- ================= CONTACTS ================= -->
-
-<section id="contacts" class="page">
-
-  <div class="card">
-
-    <h2>👥 Iddoo Walqunnamtii</h2>
-
-    <input
-      id="userSearch"
-      placeholder="Nama barbaadi..."
-      oninput="renderUsers(this.value)"
-    >
-
-    <div id="contactsList"></div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= ROOM ================= -->
-
-<section id="room" class="page">
-
-  <div class="card">
-
-    <h2>🏠 Room Uumi</h2>
-
-    <input
-      id="roomName"
-      placeholder="Maqaa Room"
-    >
-
-    <select id="seatCount">
-
-      <option value="10">
-        Teessoo 10
-      </option>
-
-      <option value="15">
-        Teessoo 15
-      </option>
-
-    </select>
-
-    <button class="primary"
-            onclick="createRoom()">
-      ➕ Room Uumi
-    </button>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>🔗 Room Seeni</h2>
-
-    <input
-      id="roomId"
-      placeholder="Room ID"
-    >
-
-    <button class="primary"
-            onclick="joinRoom()">
-      Seeni
-    </button>
-
-    <div id="roomStatus"></div>
-
-  </div>
-
-
-  <div id="roomPanel"
-       class="card"
-       style="display:none">
-
-    <h2 id="currentRoomName">
-      Room
-    </h2>
-
-    <p id="currentRoomId"></p>
-
-    <div class="seat-area">
-
-      <div class="seat-title">
-        🔝 Teessoo Gubbaa
+      <div class="welcome">
+        <h2>👋 Baga Nagaan Dhufte!</h2>
+        <p>Mullisa-JM keessatti wal qunnami.</p>
       </div>
 
-      <div id="topSeats"
-           class="seats"></div>
+      <div class="grid">
 
-    </div>
+        <div class="card" onclick="showPage('classes')">
+          <div class="emoji">👥</div>
+          <h3>Kilaasii</h3>
+          <p>Seat hanga 10</p>
+        </div>
 
+        <div class="card" onclick="showPage('room')">
+          <div class="emoji">🎥</div>
+          <h3>Room</h3>
+          <p>Room seeni</p>
+        </div>
 
-    <div class="seat-area">
+        <div class="card" onclick="showPage('chat')">
+          <div class="emoji">💬</div>
+          <h3>Chat</h3>
+          <p>Ergaa ergi</p>
+        </div>
 
-      <div class="seat-title">
-        🔻 Teessoo Jalaa
+        <div class="card" onclick="showPage('call')">
+          <div class="emoji">📞</div>
+          <h3>Call</h3>
+          <p>Bilbila</p>
+        </div>
+
+        <div class="card" onclick="showPage('search')">
+          <div class="emoji">🔎</div>
+          <h3>Search</h3>
+          <p>Barbaadi</p>
+        </div>
+
+        <div class="card" onclick="showPage('profile')">
+          <div class="emoji">👤</div>
+          <h3>Profile</h3>
+          <p>Herrega kee</p>
+        </div>
+
       </div>
 
-      <div id="bottomSeats"
-           class="seats"></div>
-
-    </div>
+    </section>
 
 
-    <div class="audience">
+    <!-- CLASS -->
+    <section id="classes" class="page">
 
-      <div class="seat-title">
-        👂 Dhaggeeffattoota
-      </div>
-
-      <div id="audienceList"></div>
-
-    </div>
-
-
-    <div style="margin-top:12px">
-
-      <button class="secondary"
-              onclick="requestSeat()">
-        🙋 Teessoo Gaafadhu
+      <button class="back" onclick="showPage('home')">
+        ← Home
       </button>
 
-      <button class="secondary"
-              onclick="leaveRoom()">
-        🚪 Room Ba'i
-      </button>
+      <h2 class="section-title">👥 Kilaasii</h2>
 
-    </div>
+      <div class="class-box">
+        <h3>Kilaasii Kee</h3>
+        <p style="margin-top:7px;">
+          Teessoo 10 qaba.
+        </p>
 
-    <div id="ownerControls"
-         style="display:none;margin-top:12px">
-
-      <button class="secondary"
-              onclick="toggleRoomLock()">
-        🔒 Lock/Unlock
-      </button>
-
-      <div id="seatRequests"></div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= VIDEO ================= -->
-
-<section id="video" class="page">
-
-  <div class="card">
-
-    <h2>🎥 Video</h2>
-
-    <video
-      id="localVideo"
-      autoplay
-      muted
-      playsinline>
-    </video>
-
-    <button class="primary"
-            onclick="startVideo()">
-      📷 Camera Bani
-    </button>
-
-    <button class="secondary"
-            onclick="stopVideo()">
-      ⛔ Camera Cufi
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- ================= CALL ================= -->
-
-<section id="call" class="page">
-
-  <div class="card">
-
-    <h2>📞 Call</h2>
-
-    <p>
-      Namoota online jiran:
-    </p>
-
-    <div id="onlineUsers"></div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= LEARNING ================= -->
-
-<section id="learning" class="page">
-
-  <div class="card">
-
-    <h2>📚 Bakka Barnootaa</h2>
-
-    <p>
-      Barnoota kee qopheessi,
-      olkaa'i fi dubbisi.
-    </p>
-
-    <input
-      id="lessonTitle"
-      placeholder="Mata-duree"
-    >
-
-    <textarea
-      id="lessonText"
-      rows="6"
-      placeholder="Barnoota barreessi..."
-    ></textarea>
-
-    <button class="primary"
-            onclick="saveLesson()">
-      💾 Olkaa'i
-    </button>
-
-  </div>
-
-  <div id="savedLessons"></div>
-
-</section>
-
-
-<!-- ================= PROFILE ================= -->
-
-<section id="profile" class="page">
-
-  <div class="card">
-
-    <div class="profile-head">
-
-      <div id="bigAvatar"
-           class="big-avatar">
-        M
+        <button class="primary" onclick="createClass()">
+          ➕ Kilaasii Uumi
+        </button>
       </div>
 
-      <h2 id="profileName">
-        Guest
-      </h2>
+      <div class="class-box">
 
-      <p id="profileStats">
-        Followers: 0 · Following: 0
-      </p>
+        <h3>🎙️ Seat</h3>
 
-    </div>
+        <div class="seats" id="seats"></div>
 
-    <input
-      id="username"
-      placeholder="Maqaa kee"
-    >
+        <div class="audience">
+          👂 <b>Audience</b>
+          <p style="margin-top:5px;">
+            Namni seat hin qabne dhaggeeffataa ta'ee seena.
+          </p>
+        </div>
 
-    <button class="primary"
-            onclick="login()">
-      🔐 Seeni
+      </div>
+
+    </section>
+
+
+    <!-- ROOM -->
+    <section id="room" class="page">
+
+      <button class="back" onclick="showPage('home')">
+        ← Home
+      </button>
+
+      <h2>🎥 Room</h2>
+
+      <div class="empty">
+        <div style="font-size:50px;">🎥</div>
+        <p>Room uumuu ykn Room seenuu dandeessa.</p>
+
+        <button class="primary" onclick="alert('Room uumamaa jira...')">
+          ➕ Create Room
+        </button>
+
+        <button class="primary" onclick="alert('Room ID galchi.')">
+          🔗 Join Room
+        </button>
+      </div>
+
+    </section>
+
+
+    <!-- CHAT -->
+    <section id="chat" class="page">
+
+      <button class="back" onclick="showPage('home')">
+        ← Home
+      </button>
+
+      <h2>💬 Chat</h2>
+
+      <div class="empty">
+        <div style="font-size:50px;">💬</div>
+        <p>Ergaa kee as keessatti ergi.</p>
+      </div>
+
+    </section>
+
+
+    <!-- CALL -->
+    <section id="call" class="page">
+
+      <button class="back" onclick="showPage('home')">
+        ← Home
+      </button>
+
+      <h2>📞 Call</h2>
+
+      <div class="empty">
+        <div style="font-size:50px;">📞</div>
+        <p>Voice ykn Video Call.</p>
+      </div>
+
+    </section>
+
+
+    <!-- SEARCH -->
+    <section id="search" class="page">
+
+      <button class="back" onclick="showPage('home')">
+        ← Home
+      </button>
+
+      <h2>🔎 Search</h2>
+
+      <input
+        type="text"
+        placeholder="Nama, Room ykn Kilaasii barbaadi..."
+        style="
+          width:100%;
+          padding:15px;
+          border:1px solid #ddd;
+          border-radius:12px;
+          margin-top:18px;
+          font-size:15px;
+        "
+      >
+
+    </section>
+
+
+    <!-- PROFILE -->
+    <section id="profile" class="page">
+
+      <button class="back" onclick="showPage('home')">
+        ← Home
+      </button>
+
+      <h2>👤 Profile</h2>
+
+      <div class="empty">
+        <div style="font-size:60px;">👤</div>
+        <h3>User</h3>
+        <p>Profile kee as keessatti argita.</p>
+      </div>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+    <section id="settings" class="page">
+
+      <button class="back" onclick="showPage('home')">
+        ← Home
+      </button>
+
+      <h2 class="section-title">⚙️ Settings</h2>
+
+      <div class="settings-list">
+
+        <div class="setting">
+          <div class="setting-left">
+            <span class="setting-icon">👤</span>
+            <span>Account</span>
+          </div>
+          <span>›</span>
+        </div>
+
+        <div class="setting">
+          <div class="setting-left">
+            <span class="setting-icon">🔔</span>
+            <span>Notifications</span>
+          </div>
+          <span>›</span>
+        </div>
+
+        <div class="setting">
+          <div class="setting-left">
+            <span class="setting-icon">🔒</span>
+            <span>Privacy</span>
+          </div>
+          <span>›</span>
+        </div>
+
+        <div class="setting" onclick="toggleDarkMode()">
+          <div class="setting-left">
+            <span class="setting-icon">🌙</span>
+            <span>Dark Mode</span>
+          </div>
+          <span>ON/OFF</span>
+        </div>
+
+        <div class="setting">
+          <div class="setting-left">
+            <span class="setting-icon">🌐</span>
+            <span>Afaan</span>
+          </div>
+          <span>Oromoo</span>
+        </div>
+
+        <div class="setting">
+          <div class="setting-left">
+            <span class="setting-icon">📱</span>
+            <span>App Settings</span>
+          </div>
+          <span>›</span>
+        </div>
+
+        <div class="setting" onclick="logout()">
+          <div class="setting-left">
+            <span class="setting-icon">🚪</span>
+            <span>Logout</span>
+          </div>
+          <span>›</span>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- BOTTOM NAV -->
+
+  <nav class="bottom-nav">
+
+    <button class="nav-btn active" onclick="showPage('home')">
+      <span class="nav-icon">🏠</span>
+      Home
     </button>
 
-  </div>
-
-</section>
-
-
-<!-- ================= SETTINGS ================= -->
-
-<section id="settings" class="page">
-
-  <div class="card">
-
-    <h2>⚙️ Settings</h2>
-
-    <button class="secondary"
-            onclick="toggleDark()">
-      🌙 Dark / Light
+    <button class="nav-btn" onclick="showPage('classes')">
+      <span class="nav-icon">👥</span>
+      Kilaasii
     </button>
 
-    <button class="secondary"
-            onclick="notifyUser()">
-      🔔 Notification
+    <button class="nav-btn" onclick="showPage('chat')">
+      <span class="nav-icon">💬</span>
+      Chat
     </button>
 
-    <button class="secondary"
-            onclick="showPage('profile')">
-      👤 Profile
+    <button class="nav-btn" onclick="showPage('profile')">
+      <span class="nav-icon">👤</span>
+      Profile
     </button>
 
-  </div>
+    <button class="nav-btn" onclick="showPage('settings')">
+      <span class="nav-icon">⚙️</span>
+      Settings
+    </button>
 
-</section>
-
-</main>
-
-
-<!-- ================= BOTTOM NAV ================= -->
-
-<div class="bottom-nav">
-
-  <button class="bottom-item active"
-          onclick="bottomPage(this,'home')">
-
-    <div>🏠</div>
-    Home
-
-  </button>
-
-
-  <button class="bottom-item"
-          onclick="bottomPage(this,'contacts')">
-
-    <div>👥</div>
-    Walqunnamtii
-
-  </button>
-
-
-  <button class="create-btn"
-          onclick="showPage('room')">
-
-    +
-
-  </button>
-
-
-  <button class="bottom-item"
-          onclick="bottomPage(this,'chat')">
-
-    <div>💬</div>
-    Chat
-
-  </button>
-
-
-  <button class="bottom-item"
-          onclick="bottomPage(this,'profile')">
-
-    <div>👤</div>
-    Profile
-
-  </button>
+  </nav>
 
 </div>
 
 
-<footer>
-  © 2026 Mullisa-JM
-</footer>
-
-
-<script src="/socket.io/socket.io.js"></script>
-
 <script>
 
-/* =========================
-   SOCKET
-========================= */
+  const pages = [
+    "home",
+    "classes",
+    "room",
+    "chat",
+    "call",
+    "search",
+    "profile",
+    "settings"
+  ];
 
-const socket = io();
+  function showPage(page) {
 
-let currentUser = null;
-let currentRoom = null;
-let localStream = null;
-let allUsers = [];
+    pages.forEach(id => {
+      const element = document.getElementById(id);
 
-
-/* =========================
-   MENU
-========================= */
-
-function toggleMenu(){
-
-  const menu =
-    document.getElementById("menu");
-
-  menu.style.display =
-    menu.style.display === "block"
-      ? "none"
-      : "block";
-}
-
-
-/* =========================
-   PAGE
-========================= */
-
-function showPage(id){
-
-  document
-    .querySelectorAll(".page")
-    .forEach(page => {
-      page.classList.remove("active");
+      if (element) {
+        element.classList.remove("active");
+      }
     });
 
-  const page =
-    document.getElementById(id);
+    const selected = document.getElementById(page);
 
-  if(page){
-    page.classList.add("active");
-  }
+    if (selected) {
+      selected.classList.add("active");
+    }
 
-  document.getElementById("menu")
-    .style.display = "none";
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-}
-
-
-function bottomPage(button,id){
-
-  document
-    .querySelectorAll(".bottom-item")
-    .forEach(item => {
-      item.classList.remove("active");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
     });
 
-  button.classList.add("active");
-
-  showPage(id);
-}
-
-
-/* =========================
-   LOGIN
-========================= */
-
-function login(){
-
-  const name =
-    document
-      .getElementById("username")
-      .value
-      .trim();
-
-  if(!name){
-
-    alert("Maqaa kee galchi.");
-
-    return;
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.classList.remove("active");
+    });
   }
 
-  socket.emit("login",{
-    username:name
-  });
-}
 
-
-socket.on("login-success",user => {
-
-  currentUser = user;
-
-  document.getElementById(
-    "profileName"
-  ).textContent = user.username;
-
-  document.getElementById(
-    "bigAvatar"
-  ).textContent =
-    user.username.charAt(0).toUpperCase();
-
-  updateProfileStats(user);
-
-  alert(
-    "Baga nagaan dhuftan " +
-    user.username
-  );
-
-});
-
-
-socket.on("login-error",message => {
-
-  alert(message);
-
-});
-
-
-function updateProfileStats(user){
-
-  document.getElementById(
-    "profileStats"
-  ).textContent =
-    "Followers: " +
-    (user.followers || 0) +
-    " · Following: " +
-    (user.following || 0);
-}
-
-
-/* =========================
-   USERS
-========================= */
-
-socket.on("online-users",users => {
-
-  allUsers = users || [];
-
-  renderUsers();
-
-  renderCallUsers();
-
-});
-
-
-function renderUsers(search=""){
-
-  const box =
-    document.getElementById(
-      "contactsList"
+  function createClass() {
+    alert(
+      "Kilaasii uumameera! 👥\n\n" +
+      "Seat: 10\n" +
+      "Host: Seat 1\n" +
+      "Audience: Seenuu ni danda'a."
     );
-
-  box.innerHTML = "";
-
-  const text =
-    search.toLowerCase();
-
-  const users =
-    allUsers.filter(user =>
-      user.username
-        .toLowerCase()
-        .includes(text)
-    );
-
-  if(users.length === 0){
-
-    box.innerHTML =
-      "<p style='padding:15px;color:#777'>" +
-      "Nama hin argamne." +
-      "</p>";
-
-    return;
   }
 
-  users.forEach(user => {
 
-    const div =
-      document.createElement("div");
+  function createSeats() {
 
-    div.className =
-      "user-card";
+    const container = document.getElementById("seats");
 
-    const initial =
-      user.username
-        .charAt(0)
-        .toUpperCase();
+    container.innerHTML = "";
 
-    div.innerHTML = `
+    for (let i = 1; i <= 10; i++) {
 
-      <div class="avatar">
-        ${initial}
-      </div>
+      const seat = document.createElement("div");
 
-      <div class="user-info">
+      seat.className =
+        i === 1
+          ? "seat occupied"
+          : "seat";
 
-        <div class="user-name">
-          ${escapeHtml(user.username)}
+      seat.innerHTML = `
+        <div class="seat-number">
+          Seat ${i}
         </div>
 
-        <small class="online-dot">
-          🟢 Online
-        </small>
-
-      </div>
-
-      <div class="user-actions">
-
-        <button class="secondary"
-          onclick="privateChat('${user.id}')">
-          💬
-        </button>
-
-        <button class="secondary"
-          onclick="callUser('${user.id}','voice')">
-          📞
-        </button>
-
-        <button class="secondary"
-          onclick="followUser('${user.id}')">
-          ➕
-        </button>
-
-      </div>
-
-    `;
-
-    box.appendChild(div);
-
-  });
-
-}
-
-
-/* =========================
-   CALL USERS
-========================= */
-
-function renderCallUsers(){
-
-  const box =
-    document.getElementById(
-      "onlineUsers"
-    );
-
-  box.innerHTML = "";
-
-  allUsers.forEach(user => {
-
-    const div =
-      document.createElement("div");
-
-    div.className =
-      "user-card";
-
-    div.innerHTML = `
-
-      <div class="avatar">
-        ${escapeHtml(
-          user.username
-            .charAt(0)
-            .toUpperCase()
-        )}
-      </div>
-
-      <div class="user-info">
-
-        <div class="user-name">
-          ${escapeHtml(user.username)}
+        <div style="margin-top:6px;">
+          ${i === 1 ? "👑 Host" : "🪑 Bilisa"}
         </div>
+      `;
 
-        <small class="online-dot">
-          🟢 Online
-        </small>
-
-      </div>
-
-      <button class="primary"
-        onclick="callUser('${user.id}','voice')">
-        📞
-      </button>
-
-    `;
-
-    box.appendChild(div);
-
-  });
-
-}
-
-
-/* =========================
-   FOLLOW
-========================= */
-
-function followUser(targetId){
-
-  if(!currentUser){
-
-    alert(
-      "Dura maqaa kee galchiitii seeni."
-    );
-
-    showPage("profile");
-
-    return;
-  }
-
-  socket.emit(
-    "follow-user",
-    {
-      targetId
+      container.appendChild(seat);
     }
-  );
-
-}
-
-
-socket.on("follow-status",data => {
-
-  alert(
-    data.following
-      ? "Nama kana follow gooteetta."
-      : "Follow irraa baateetta."
-  );
-
-});
-
-
-socket.on("follow-error",message => {
-
-  alert(message);
-
-});
-
-
-/* =========================
-   PRIVATE CHAT
-========================= */
-
-function privateChat(userId){
-
-  const user =
-    allUsers.find(
-      u => u.id === userId
-    );
-
-  if(!user) return;
-
-  showPage("chat");
-
-  alert(
-    "Chat waliin " +
-    user.username +
-    " jalqabachuuf qophiidha."
-  );
-
-}
-
-
-/* =========================
-   ROOM CREATE
-========================= */
-
-function createRoom(){
-
-  const name =
-    document
-      .getElementById("roomName")
-      .value
-      .trim();
-
-  const seats =
-    Number(
-      document
-        .getElementById("seatCount")
-        .value
-    );
-
-  if(!name){
-
-    alert(
-      "Maqaa Room galchi."
-    );
-
-    return;
   }
 
-  socket.emit(
-    "create-room",
-    {
-      roomName:name,
-      seats:seats
+
+  function toggleDarkMode() {
+
+    document.body.style.background =
+      document.body.style.background === "rgb(18, 18, 18)"
+        ? "#f3f7f5"
+        : "#121212";
+
+    document.querySelector(".app").style.background =
+      document.querySelector(".app").style.background === "rgb(30, 30, 30)"
+        ? "white"
+        : "#1e1e1e";
+
+    document.querySelector(".app").style.color =
+      document.querySelector(".app").style.color === "white"
+        ? "#17231e"
+        : "white";
+  }
+
+
+  function logout() {
+
+    if (confirm("Logout gochuu barbaaddaa?")) {
+      alert("Logout milkaa'e.");
+      showPage("home");
     }
-  );
-
-}
-
-
-socket.on("room-created",room => {
-
-  currentRoom = room;
-
-  document.getElementById(
-    "roomId"
-  ).value = room.id;
-
-  showRoom(room);
-
-  alert(
-    "Room uumame.\n\n" +
-    "Room ID: " +
-    room.id
-  );
-
-});
-
-
-/* =========================
-   JOIN ROOM
-========================= */
-
-function joinRoom(){
-
-  const id =
-    document
-      .getElementById("roomId")
-      .value
-      .trim();
-
-  if(!id){
-
-    alert(
-      "Room ID galchi."
-    );
-
-    return;
-  }
-
-  socket.emit(
-    "join-room",
-    id
-  );
-
-}
-
-
-socket.on("joined-room",room => {
-
-  currentRoom = room;
-
-  showRoom(room);
-
-});
-
-
-socket.on("room-error",message => {
-
-  alert(message);
-
-});
-
-
-/* =========================
-   ROOM UPDATE
-========================= */
-
-socket.on("room-updated",room => {
-
-  currentRoom = room;
-
-  showRoom(room);
-
-});
-
-
-function showRoom(room){
-
-  document.getElementById(
-    "roomPanel"
-  ).style.display = "block";
-
-  document.getElementById(
-    "currentRoomName"
-  ).textContent =
-    "🏠 " + room.name;
-
-  document.getElementById(
-    "currentRoomId"
-  ).textContent =
-    "Room ID: " + room.id;
-
-  renderSeats(room);
-
-  const isOwner =
-    currentUser &&
-    currentUser.id === room.ownerId;
-
-  document.getElementById(
-    "ownerControls"
-  ).style.display =
-    isOwner
-      ? "block"
-      : "none";
-
-}
-
-
-/* =========================
-   SEATS
-========================= */
-
-function renderSeats(room){
-
-  const top =
-    document.getElementById(
-      "topSeats"
-    );
-
-  const bottom =
-    document.getElementById(
-      "bottomSeats"
-    );
-
-  const audience =
-    document.getElementById(
-      "audienceList"
-    );
-
-  top.innerHTML = "";
-  bottom.innerHTML = "";
-  audience.innerHTML = "";
-
-
-  /*
-    TOP SEATS
-  */
-
-  (room.topSeats || [])
-    .forEach((name,index) => {
-
-      const div =
-        document.createElement("div");
-
-      div.className =
-        "seat host";
-
-      div.innerHTML =
-        "🎙️<br>" +
-        escapeHtml(name);
-
-      top.appendChild(div);
-
-    });
-
-
-  /*
-    BOTTOM SEATS
-  */
-
-  (room.bottomSeats || [])
-    .forEach(name => {
-
-      const div =
-        document.createElement("div");
-
-      div.className =
-        "seat student";
-
-      div.innerHTML =
-        "🪑<br>" +
-        escapeHtml(name);
-
-      bottom.appendChild(div);
-
-    });
-
-
-  /*
-    EMPTY SEATS
-  */
-
-  const occupied =
-    (room.topSeats || []).length +
-    (room.bottomSeats || []).length;
-
-  const empty =
-    Math.max(
-      0,
-      room.totalSeats - occupied
-    );
-
-  for(let i=0;i<empty;i++){
-
-    const div =
-      document.createElement("div");
-
-    div.className =
-      "seat";
-
-    div.innerHTML =
-      "＋<br>Banaa";
-
-    bottom.appendChild(div);
 
   }
 
 
-  /*
-    AUDIENCE
-  */
-
-  if(
-    !room.audience ||
-    room.audience.length === 0
-  ){
-
-    audience.innerHTML =
-      "<small>Dhaggeeffataan hin jiru.</small>";
-
-  }else{
-
-    room.audience.forEach(name => {
-
-      const div =
-        document.createElement("div");
-
-      div.className =
-        "audience-user";
-
-      div.textContent =
-        "👂 " + name;
-
-      audience.appendChild(div);
-
-    });
-
-  }
-
-}
-
-
-/* =========================
-   REQUEST SEAT
-========================= */
-
-function requestSeat(){
-
-  if(!currentRoom){
-
-    alert(
-      "Dura Room seeni."
-    );
-
-    return;
-  }
-
-  socket.emit(
-    "request-seat"
-  );
-
-  alert(
-    "Gaaffiin teessoo ergameera."
-  );
-
-}
-
-
-socket.on("seat-request-sent",() => {
-
-  console.log(
-    "Seat request sent"
-  );
-
-});
-
-
-/* =========================
-   OWNER SEAT REQUEST
-========================= */
-
-socket.on("seat-request",data => {
-
-  const box =
-    document.getElementById(
-      "seatRequests"
-    );
-
-  const div =
-    document.createElement("div");
-
-  div.className =
-    "room-box";
-
-  div.innerHTML = `
-
-    <b>
-      🙋 ${escapeHtml(data.username)}
-      teessoo gaafate
-    </b>
-
-    <br>
-
-    <button class="primary"
-      onclick="promoteUser('${data.userId}')">
-      🪑 Teessoo kenni
-    </button>
-
-  `;
-
-  box.appendChild(div);
-
-});
-
-
-function promoteUser(userId){
-
-  socket.emit(
-    "promote-user",
-    {
-      userId
-    }
-  );
-
-}
-
-
-/* =========================
-   LOCK ROOM
-========================= */
-
-function toggleRoomLock(){
-
-  socket.emit(
-    "toggle-room-lock"
-  );
-
-}
-
-
-/* =========================
-   LEAVE ROOM
-========================= */
-
-function leaveRoom(){
-
-  socket.emit(
-    "leave-room"
-  );
-
-  currentRoom = null;
-
-  document.getElementById(
-    "roomPanel"
-  ).style.display = "none";
-
-  document.getElementById(
-    "roomStatus"
-  ).textContent =
-    "Room keessaa baateetta.";
-
-}
-
-
-socket.on("room-closed",() => {
-
-  currentRoom = null;
-
-  document.getElementById(
-    "roomPanel"
-  ).style.display = "none";
-
-  alert(
-    "Abbaan Room baheera. Room cufame."
-  );
-
-});
-
-
-socket.on("removed-from-room",() => {
-
-  currentRoom = null;
-
-  document.getElementById(
-    "roomPanel"
-  ).style.display = "none";
-
-  alert(
-    "Room keessaa haqamte."
-  );
-
-});
-
-
-/* =========================
-   CHAT
-========================= */
-
-function sendMessage(){
-
-  const input =
-    document.getElementById(
-      "chatInput"
-    );
-
-  const message =
-    input.value.trim();
-
-  if(!message) return;
-
-  if(!currentRoom){
-
-    alert(
-      "Chat Room keessatti hojjechuu barbaada. Dura Room seeni."
-    );
-
-    return;
-  }
-
-  socket.emit(
-    "room-message",
-    message
-  );
-
-  input.value = "";
-
-}
-
-
-socket.on("room-message",data => {
-
-  const box =
-    document.getElementById(
-      "messages"
-    );
-
-  const div =
-    document.createElement("div");
-
-  div.className =
-    "message";
-
-  div.innerHTML = `
-
-    <b>
-      ${escapeHtml(data.username)}
-    </b>
-
-    <br>
-
-    ${escapeHtml(data.message)}
-
-    <small>
-      ${escapeHtml(data.time || "")}
-    </small>
-
-  `;
-
-  box.appendChild(div);
-
-  box.scrollTop =
-    box.scrollHeight;
-
-});
-
-
-/* =========================
-   VIDEO
-========================= */
-
-async function startVideo(){
-
-  try{
-
-    localStream =
-      await navigator.mediaDevices
-        .getUserMedia({
-          video:true,
-          audio:true
-        });
-
-    document.getElementById(
-      "localVideo"
-    ).srcObject =
-      localStream;
-
-  }catch(error){
-
-    alert(
-      "Camera ykn microphone hayyamamuu qaba."
-    );
-
-  }
-
-}
-
-
-function stopVideo(){
-
-  if(!localStream) return;
-
-  localStream
-    .getTracks()
-    .forEach(track =>
-      track.stop()
-    );
-
-  document.getElementById(
-    "localVideo"
-  ).srcObject = null;
-
-  localStream = null;
-
-}
-
-
-/* =========================
-   CALL
-========================= */
-
-function callUser(userId,type){
-
-  if(!currentUser){
-
-    alert(
-      "Dura Profile keessatti seeni."
-    );
-
-    showPage("profile");
-
-    return;
-  }
-
-  socket.emit(
-    "call-user",
-    {
-      to:userId,
-      type:type || "voice"
-    }
-  );
-
-  alert(
-    "Call ergameera."
-  );
-
-}
-
-
-socket.on("incoming-call",data => {
-
-  const answer =
-    confirm(
-      data.username +
-      " irraa call dhufeera.\n\n"
-      +
-      "OK = Fudhadhu\n" +
-      "Cancel = Didhu"
-    );
-
-  if(answer){
-
-    socket.emit(
-      "answer-call",
-      {
-        to:data.from
-      }
-    );
-
-  }else{
-
-    socket.emit(
-      "reject-call",
-      {
-        to:data.from
-      }
-    );
-
-  }
-
-});
-
-
-socket.on("call-answered",() => {
-
-  alert(
-    "Call fudhatame."
-  );
-
-});
-
-
-socket.on("call-rejected",() => {
-
-  alert(
-    "Call didame."
-  );
-
-});
-
-
-socket.on("call-ended",() => {
-
-  alert(
-    "Call xumurame."
-  );
-
-});
-
-
-/* =========================
-   LEARNING
-========================= */
-
-function saveLesson(){
-
-  const title =
-    document
-      .getElementById("lessonTitle")
-      .value
-      .trim();
-
-  const text =
-    document
-      .getElementById("lessonText")
-      .value
-      .trim();
-
-  if(!title || !text){
-
-    alert(
-      "Mata-duree fi barnoota guuti."
-    );
-
-    return;
-  }
-
-  const lessons =
-    JSON.parse(
-      localStorage.getItem(
-        "mullisaLessons"
-      ) || "[]"
-    );
-
-  lessons.push({
-    title,
-    text,
-    date:new Date().toLocaleDateString()
-  });
-
-  localStorage.setItem(
-    "mullisaLessons",
-    JSON.stringify(lessons)
-  );
-
-  document.getElementById(
-    "lessonTitle"
-  ).value = "";
-
-  document.getElementById(
-    "lessonText"
-  ).value = "";
-
-  displayLessons();
-
-}
-
-
-function displayLessons(){
-
-  const box =
-    document.getElementById(
-      "savedLessons"
-    );
-
-  const lessons =
-    JSON.parse(
-      localStorage.getItem(
-        "mullisaLessons"
-      ) || "[]"
-    );
-
-  box.innerHTML = "";
-
-  lessons.forEach(lesson => {
-
-    const div =
-      document.createElement("div");
-
-    div.className =
-      "card";
-
-    div.innerHTML = `
-
-      <h2>
-        📖 ${escapeHtml(lesson.title)}
-      </h2>
-
-      <p>
-        ${escapeHtml(lesson.text)}
-      </p>
-
-      <small>
-        ${escapeHtml(lesson.date || "")}
-      </small>
-
-    `;
-
-    box.appendChild(div);
-
-  });
-
-}
-
-
-/* =========================
-   DARK MODE
-========================= */
-
-function toggleDark(){
-
-  document.body.classList.toggle(
-    "dark"
-  );
-
-}
-
-
-/* =========================
-   NOTIFICATION
-========================= */
-
-async function notifyUser(){
-
-  if(!("Notification" in window)){
-
-    alert(
-      "Notification browser kee keessatti hin deeggaramu."
-    );
-
-    return;
-  }
-
-  const permission =
-    await Notification.requestPermission();
-
-  if(permission === "granted"){
-
-    new Notification(
-      "Mullisa-JM",
-      {
-        body:
-          "Notification hojii irra jira."
-      }
-    );
-
-  }
-
-}
-
-
-/* =========================
-   ESCAPE HTML
-========================= */
-
-function escapeHtml(value){
-
-  return String(value || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================
-   SERVICE WORKER
-========================= */
-
-if(
-  "serviceWorker" in navigator
-){
-
-  window.addEventListener(
-    "load",
-    () => {
-
-      navigator.serviceWorker
-        .register("/sw.js")
-        .catch(error =>
-          console.log(
-            "SW error:",
-            error
-          )
-        );
-
-    }
-  );
-
-}
-
-
-/* =========================
-   START
-========================= */
-
-displayLessons();
+  createSeats();
 
 </script>
 
 </body>
-  </html>
+      </html>
