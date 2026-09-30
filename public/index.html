@@ -2,35 +2,45 @@
 <html lang="om">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#087443">
-
-  <meta
-    name="description"
-    content="Mullisa-JM - Chat, Call, Video, Room, Kilaasii fi Social App"
-  >
+  <meta name="description" content="Mullisa-JM - Chat, Call, Video, Room, Post and Learning">
 
   <link rel="manifest" href="/manifest.json">
 
   <title>Mullisa-JM</title>
 
   <style>
-
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+    }
+
+    :root {
+      --green: #087443;
+      --green2: #0b8b52;
+      --bg: #f3f6f4;
+      --card: #ffffff;
+      --text: #17221d;
+      --muted: #6c7771;
+      --border: #dce5df;
+      --danger: #c62828;
+    }
+
+    body.dark {
+      --bg: #101513;
+      --card: #18201c;
+      --text: #f2f5f3;
+      --muted: #aab5af;
+      --border: #2c3832;
     }
 
     body {
-      background: #eef5f1;
-      color: #17231e;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
     }
 
     button,
@@ -46,51 +56,39 @@
     .app {
       width: 100%;
       max-width: 520px;
-      min-height: 100vh;
       margin: auto;
-      background: white;
-      position: relative;
-      overflow-x: hidden;
+      min-height: 100vh;
+      background: var(--bg);
+      padding-bottom: 75px;
     }
 
-    /* HEADER */
-
     header {
-      background: #087443;
-      color: white;
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 20;
+      background: var(--green);
+      color: white;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px #0002;
     }
 
-    header h1 {
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .header-btn {
+      border: 0;
+      background: transparent;
+      color: white;
       font-size: 22px;
     }
 
-    .header-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .icon-btn {
-      border: none;
-      background: rgba(255,255,255,.16);
-      color: white;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      font-size: 19px;
-    }
-
-    /* MAIN */
-
     main {
-      padding: 16px;
-      padding-bottom: 95px;
+      padding: 14px;
     }
 
     .page {
@@ -101,26 +99,21 @@
       display: block;
     }
 
-    /* WELCOME */
-
     .welcome {
-      background: linear-gradient(
-        135deg,
-        #087443,
-        #12a05e
-      );
+      background: linear-gradient(135deg, var(--green), var(--green2));
       color: white;
-      border-radius: 20px;
-      padding: 22px;
-      margin-bottom: 18px;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 15px;
     }
 
     .welcome h2 {
-      margin-bottom: 8px;
-      font-size: 21px;
+      margin-bottom: 6px;
     }
 
-    /* GRID */
+    .welcome p {
+      opacity: .9;
+    }
 
     .grid {
       display: grid;
@@ -129,107 +122,117 @@
     }
 
     .card {
-      border: 1px solid #e1e9e4;
-      background: white;
-      border-radius: 18px;
-      padding: 20px 12px;
-      text-align: center;
-      box-shadow: 0 4px 14px rgba(0,0,0,.05);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 17px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 7px #0000000d;
+    }
+
+    .feature {
+      min-height: 105px;
+      border: 0;
+      text-align: left;
+      color: var(--text);
       transition: .15s;
     }
 
-    .card:active {
+    .feature:active {
       transform: scale(.97);
     }
 
-    .emoji {
-      font-size: 31px;
+    .feature-icon {
+      font-size: 30px;
+      margin-bottom: 9px;
+    }
+
+    .feature-title {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .feature-desc {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    h2 {
+      margin-bottom: 14px;
+    }
+
+    h3 {
       margin-bottom: 8px;
     }
 
-    .card h3 {
-      font-size: 16px;
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
-    .card p {
-      color: #718079;
-      font-size: 12px;
-      margin-top: 5px;
-    }
-
-    /* BUTTON */
-
-    .primary {
-      width: 100%;
-      border: none;
-      background: #087443;
+    .btn {
+      border: 0;
+      background: var(--green);
       color: white;
-      padding: 14px;
-      border-radius: 13px;
-      margin-top: 10px;
-      font-size: 15px;
+      padding: 11px 15px;
+      border-radius: 11px;
+      font-weight: bold;
     }
 
-    .secondary {
-      width: 100%;
-      border: 1px solid #087443;
-      background: white;
-      color: #087443;
-      padding: 13px;
-      border-radius: 13px;
-      margin-top: 10px;
-      font-size: 15px;
+    .btn.secondary {
+      background: #e3ebe6;
+      color: #174b35;
     }
 
-    .danger {
-      width: 100%;
-      border: none;
-      background: #c62828;
+    body.dark .btn.secondary {
+      background: #29352f;
       color: white;
-      padding: 13px;
-      border-radius: 13px;
-      margin-top: 10px;
     }
 
-    /* BACK */
-
-    .back {
-      border: none;
-      background: none;
-      color: #087443;
-      font-size: 16px;
-      margin-bottom: 15px;
+    .btn.danger {
+      background: var(--danger);
     }
 
-    .section-title {
-      margin-bottom: 15px;
-    }
-
-    /* INPUT */
-
-    .input {
+    .btn.full {
       width: 100%;
-      padding: 14px;
-      border: 1px solid #d8e2dc;
-      border-radius: 12px;
+    }
+
+    .input,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--card);
+      color: var(--text);
       outline: none;
-      margin-top: 9px;
-      background: white;
+      margin-bottom: 10px;
     }
 
-    .textarea {
-      min-height: 100px;
+    textarea {
+      min-height: 90px;
       resize: vertical;
     }
 
-    /* POST */
-
-    .post-create {
-      border: 1px solid #e0e8e3;
-      border-radius: 17px;
-      padding: 15px;
-      margin-bottom: 15px;
+    .search-box {
+      display: flex;
+      gap: 8px;
     }
+
+    .search-box .input {
+      margin: 0;
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 25px 10px;
+    }
+
+    /* Posts */
 
     .post-user {
       display: flex;
@@ -242,322 +245,185 @@
       width: 42px;
       height: 42px;
       border-radius: 50%;
-      background: #087443;
+      background: var(--green);
       color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: grid;
+      place-items: center;
       font-weight: bold;
     }
 
-    .post {
-      border: 1px solid #e0e8e3;
-      border-radius: 17px;
-      padding: 15px;
-      margin-bottom: 15px;
-      background: white;
+    .post-time {
+      color: var(--muted);
+      font-size: 11px;
     }
 
     .post-content {
-      line-height: 1.6;
-      margin: 12px 0;
       white-space: pre-wrap;
+      line-height: 1.5;
+      margin-bottom: 12px;
     }
 
     .post-actions {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
       gap: 5px;
-      border-top: 1px solid #edf1ef;
-      border-bottom: 1px solid #edf1ef;
-      padding: 8px 0;
     }
 
-    .post-action {
-      border: none;
-      background: white;
-      padding: 9px 4px;
-      color: #65726c;
+    .post-actions button {
+      flex: 1;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 3px;
       border-radius: 8px;
     }
 
-    .post-action:hover {
-      background: #f1f7f3;
-    }
-
-    .comment-box {
-      display: flex;
-      gap: 7px;
-      margin-top: 10px;
-    }
-
-    .comment-box input {
-      flex: 1;
-      padding: 11px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      outline: none;
-    }
-
-    .comment-box button {
-      border: none;
-      background: #087443;
-      color: white;
-      border-radius: 10px;
-      padding: 0 13px;
+    .post-actions button:hover {
+      background: var(--bg);
     }
 
     .comments {
       margin-top: 10px;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
     }
 
     .comment {
-      background: #f4f7f5;
-      padding: 9px;
+      background: var(--bg);
       border-radius: 10px;
-      margin-top: 6px;
+      padding: 8px 10px;
+      margin-bottom: 7px;
+    }
+
+    .comment b {
       font-size: 13px;
     }
 
-    /* CLASS / ROOM */
-
-    .box {
-      border: 1px solid #dfe8e3;
-      border-radius: 17px;
-      padding: 16px;
-      margin-bottom: 15px;
+    .comment p {
+      font-size: 13px;
+      margin-top: 3px;
     }
 
-    .box-title {
+    .comment-form {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
+      gap: 7px;
+      margin-top: 9px;
     }
+
+    .comment-form input {
+      flex: 1;
+      margin: 0;
+    }
+
+    /* Seats */
 
     .seats {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
-      margin-top: 14px;
+      margin-top: 15px;
     }
 
     .seat {
-      border: 1px solid #dce7e1;
-      background: #f7faf8;
-      border-radius: 13px;
-      padding: 15px 8px;
+      min-height: 85px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--card);
+      padding: 10px;
       text-align: center;
-    }
-
-    .seat.occupied {
-      background: #e3f4e9;
-      border-color: #087443;
     }
 
     .seat-number {
-      color: #087443;
       font-weight: bold;
+      color: var(--green);
     }
 
-    .seat-name {
-      margin-top: 6px;
-      font-size: 13px;
+    .seat-user {
+      font-size: 12px;
+      margin-top: 8px;
     }
 
-    .audience {
-      margin-top: 15px;
-      padding: 13px;
-      background: #f3f5f4;
-      border-radius: 12px;
+    .seat.host {
+      border: 2px solid var(--green);
     }
 
-    /* ROOM CONTROL */
-
-    .room-head {
-      background: #087443;
-      color: white;
-      padding: 17px;
-      border-radius: 17px;
-      margin-bottom: 15px;
+    .seat.empty-seat {
+      opacity: .65;
     }
 
     .room-controls {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      display: flex;
       gap: 8px;
-      margin-top: 15px;
+      justify-content: center;
+      margin: 14px 0;
     }
 
-    .control {
-      border: none;
-      background: #f0f5f2;
-      border-radius: 12px;
-      padding: 12px 4px;
-      font-size: 12px;
-    }
-
-    .control.active {
-      background: #087443;
+    .circle-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 0;
+      background: var(--green);
       color: white;
+      font-size: 21px;
     }
 
-    .video-area {
-      background: #101512;
-      border-radius: 17px;
-      min-height: 240px;
-      display: grid;
-      place-items: center;
-      color: white;
-      margin-bottom: 15px;
-      position: relative;
-      overflow: hidden;
+    .circle-btn.off {
+      background: var(--danger);
     }
 
-    .video-area video {
+    video {
       width: 100%;
-      height: 240px;
+      max-height: 300px;
+      background: #000;
+      border-radius: 15px;
       object-fit: cover;
     }
 
-    .video-placeholder {
-      text-align: center;
-      font-size: 45px;
-    }
-
-    /* CHAT */
+    /* Chat */
 
     .chat-box {
-      border: 1px solid #e0e7e3;
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .messages {
-      height: 360px;
+      height: 52vh;
       overflow-y: auto;
-      padding: 12px;
-      background: #f6f9f7;
+      padding: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      margin-bottom: 10px;
     }
 
     .message {
-      margin-bottom: 9px;
-    }
-
-    .message .bubble {
-      display: inline-block;
-      background: white;
+      margin-bottom: 10px;
+      max-width: 82%;
+      padding: 9px 11px;
       border-radius: 13px;
-      padding: 9px 12px;
-      max-width: 85%;
-      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+      background: var(--bg);
     }
 
-    .message.me {
-      text-align: right;
-    }
-
-    .message.me .bubble {
-      background: #dff3e7;
-    }
-
-    .chat-input {
-      display: flex;
-      gap: 5px;
-      padding: 8px;
-      background: white;
-    }
-
-    .chat-input input {
-      flex: 1;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 11px;
-      outline: none;
-    }
-
-    .chat-input button {
-      border: none;
-      background: #087443;
-      color: white;
-      padding: 0 15px;
-      border-radius: 10px;
-    }
-
-    /* USERS */
-
-    .user {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      border-bottom: 1px solid #edf0ee;
-      padding: 12px 0;
-    }
-
-    .online-dot {
-      width: 10px;
-      height: 10px;
-      background: #20a957;
-      border-radius: 50%;
+    .message.mine {
       margin-left: auto;
-    }
-
-    /* CALL */
-
-    .call-card {
-      text-align: center;
-      border: 1px solid #e0e8e3;
-      border-radius: 17px;
-      padding: 25px;
-    }
-
-    .call-avatar {
-      width: 85px;
-      height: 85px;
-      margin: auto;
-      border-radius: 50%;
-      background: #087443;
+      background: var(--green);
       color: white;
-      display: grid;
-      place-items: center;
-      font-size: 40px;
     }
 
-    .call-buttons {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 20px;
+    .message-name {
+      font-size: 11px;
+      font-weight: bold;
+      margin-bottom: 3px;
     }
 
-    /* SETTINGS */
-
-    .settings-list {
+    .chat-form {
       display: flex;
-      flex-direction: column;
-      gap: 9px;
+      gap: 7px;
     }
 
-    .setting {
-      border: 1px solid #e0e8e3;
-      border-radius: 14px;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .chat-form input {
+      margin: 0;
+      flex: 1;
     }
 
-    .setting-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .setting-icon {
-      font-size: 22px;
-    }
-
-    /* BOTTOM NAV */
+    /* Bottom nav */
 
     .bottom-nav {
       position: fixed;
@@ -566,95 +432,235 @@
       transform: translateX(-50%);
       width: 100%;
       max-width: 520px;
-      background: white;
-      border-top: 1px solid #dfe5e1;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      z-index: 30;
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      padding: 8px 3px;
-      z-index: 30;
     }
 
     .nav-btn {
-      border: none;
-      background: none;
-      color: #69756f;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 9px 3px;
       font-size: 11px;
-      padding: 3px;
     }
 
     .nav-btn.active {
-      color: #087443;
+      color: var(--green);
       font-weight: bold;
     }
 
     .nav-icon {
       display: block;
-      font-size: 21px;
+      font-size: 19px;
       margin-bottom: 2px;
     }
 
-    .empty {
+    /* Modal */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: #0008;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 430px;
+      background: var(--card);
+      border-radius: 18px;
+      padding: 20px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .close {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 23px;
+    }
+
+    /* Login */
+
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-screen.show {
+      display: flex;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 30px #0002;
+    }
+
+    .login-logo {
       text-align: center;
-      padding: 30px 15px;
-      color: #69756f;
+      font-size: 42px;
+      margin-bottom: 10px;
     }
 
-    /* DARK MODE */
-
-    body.dark {
-      background: #101412;
-      color: #eeeeee;
+    .login-box h1 {
+      text-align: center;
+      margin-bottom: 7px;
     }
 
-    body.dark .app,
-    body.dark .card,
-    body.dark .post,
-    body.dark .box,
-    body.dark .post-create,
-    body.dark .setting {
-      background: #1c231f;
-      color: #eeeeee;
-      border-color: #303a34;
+    .login-box p {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 20px;
     }
 
-    body.dark .input,
-    body.dark textarea,
-    body.dark input {
-      background: #151a17;
+    .login-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      margin-bottom: 15px;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: 10px;
+    }
+
+    .login-tab {
+      border: 0;
+      background: transparent;
+      padding: 9px;
+      border-radius: 8px;
+      color: var(--muted);
+    }
+
+    .login-tab.active {
+      background: var(--card);
+      color: var(--green);
+      font-weight: bold;
+    }
+
+    /* Toast */
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 85px;
+      transform: translateX(-50%) translateY(20px);
+      background: #202824;
       color: white;
-      border-color: #39443d;
+      padding: 11px 15px;
+      border-radius: 11px;
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s;
+      max-width: 90%;
+      text-align: center;
     }
 
-    body.dark .post-action,
-    body.dark .secondary {
-      background: #1c231f;
-      color: #ddd;
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
 
-    body.dark .seat,
-    body.dark .comment,
-    body.dark .messages {
-      background: #151a17;
-      color: white;
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--muted);
     }
 
-    body.dark .bottom-nav {
-      background: #1c231f;
-      border-color: #303a34;
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #777;
     }
 
-    @media (max-width: 360px) {
+    .dot.online {
+      background: #20b866;
+    }
 
-      .grid {
-        grid-template-columns: 1fr;
+    .list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .list-item:last-child {
+      border-bottom: 0;
+    }
+
+    .list-info {
+      flex: 1;
+    }
+
+    .list-title {
+      font-weight: bold;
+    }
+
+    .list-sub {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .profile-big {
+      text-align: center;
+      padding: 15px;
+    }
+
+    .profile-big .avatar {
+      width: 80px;
+      height: 80px;
+      margin: auto auto 12px;
+      font-size: 28px;
+    }
+
+    @media (min-width: 480px) {
+      .seats {
+        grid-template-columns: repeat(5, 1fr);
       }
 
-      .room-controls {
-        grid-template-columns: repeat(2, 1fr);
+      .seat {
+        min-height: 95px;
       }
-
     }
-
   </style>
 </head>
 
@@ -662,509 +668,250 @@
 
 <div class="app">
 
-  <!-- HEADER -->
-
   <header>
-
-    <h1>🟢 Mullisa-JM</h1>
-
-    <div class="header-actions">
-
-      <button
-        class="icon-btn"
-        onclick="showPage('search')"
-      >
-        🔎
-      </button>
-
-      <button
-        class="icon-btn"
-        onclick="showPage('settings')"
-      >
-        ⚙️
-      </button>
-
-    </div>
-
+    <div class="logo">🟢 Mullisa-JM</div>
+    <button class="header-btn" onclick="showPage('settings')">⚙️</button>
   </header>
-
 
   <main>
 
-    <!-- ================= HOME ================= -->
-
-    <section
-      id="home"
-      class="page active"
-    >
+    <!-- HOME -->
+    <section id="home" class="page active">
 
       <div class="welcome">
-
-        <h2>
-          👋 Baga Nagaan Dhufte!
-        </h2>
-
-        <p>
-          Mullisa-JM keessatti
-          wal qunnami, baradhu,
-          mari'adhu.
+        <h2>👋 Baga nagaan dhuftan!</h2>
+        <p id="welcomeText">
+          Mullisa-JM keessatti wal qunnamaa, baradhaa fi qoodaa.
         </p>
-
       </div>
-
 
       <div class="grid">
 
-        <div
-          class="card"
-          onclick="showPage('posts')"
-        >
-          <div class="emoji">📝</div>
-          <h3>Post</h3>
-          <p>Barreeffama qoodi</p>
-        </div>
+        <button class="card feature" onclick="showPage('classes')">
+          <div class="feature-icon">🎓</div>
+          <div class="feature-title">Kilaasii</div>
+          <div class="feature-desc">Teessoo hanga 10</div>
+        </button>
 
+        <button class="card feature" onclick="showPage('rooms')">
+          <div class="feature-icon">🏠</div>
+          <div class="feature-title">Room</div>
+          <div class="feature-desc">Room hanga 10 namaa</div>
+        </button>
 
-        <div
-          class="card"
-          onclick="showPage('classes')"
-        >
-          <div class="emoji">🎓</div>
-          <h3>Kilaasii</h3>
-          <p>Teessoo 10</p>
-        </div>
+        <button class="card feature" onclick="showPage('chat')">
+          <div class="feature-icon">💬</div>
+          <div class="feature-title">Chat</div>
+          <div class="feature-desc">Ergaa yeroo-dhugaa</div>
+        </button>
 
+        <button class="card feature" onclick="showPage('call')">
+          <div class="feature-icon">📞</div>
+          <div class="feature-title">Voice Call</div>
+          <div class="feature-desc">Sagalee waliin haasawaa</div>
+        </button>
 
-        <div
-          class="card"
-          onclick="showPage('room')"
-        >
-          <div class="emoji">🎥</div>
-          <h3>Room</h3>
-          <p>Teessoo 10</p>
-        </div>
+        <button class="card feature" onclick="showPage('video')">
+          <div class="feature-icon">📹</div>
+          <div class="feature-title">Video Call</div>
+          <div class="feature-desc">Video waliin haasawaa</div>
+        </button>
 
+        <button class="card feature" onclick="showPage('posts')">
+          <div class="feature-icon">📝</div>
+          <div class="feature-title">Post</div>
+          <div class="feature-desc">Yaada kee qoodi</div>
+        </button>
 
-        <div
-          class="card"
-          onclick="showPage('chat')"
-        >
-          <div class="emoji">💬</div>
-          <h3>Chat</h3>
-          <p>Marii godhi</p>
-        </div>
+        <button class="card feature" onclick="showPage('search')">
+          <div class="feature-icon">🔎</div>
+          <div class="feature-title">Search</div>
+          <div class="feature-desc">Namoota barbaadi</div>
+        </button>
 
-
-        <div
-          class="card"
-          onclick="showPage('call')"
-        >
-          <div class="emoji">📞</div>
-          <h3>Call</h3>
-          <p>Voice / Video</p>
-        </div>
-
-
-        <div
-          class="card"
-          onclick="showPage('users')"
-        >
-          <div class="emoji">👥</div>
-          <h3>Users</h3>
-          <p>Namoota barbaadi</p>
-        </div>
-
-
-        <div
-          class="card"
-          onclick="showPage('profile')"
-        >
-          <div class="emoji">👤</div>
-          <h3>Profile</h3>
-          <p>Herrega kee</p>
-        </div>
-
-
-        <div
-          class="card"
-          onclick="showPage('settings')"
-        >
-          <div class="emoji">⚙️</div>
-          <h3>Settings</h3>
-          <p>Qindaa'ina</p>
-        </div>
+        <button class="card feature" onclick="showPage('profile')">
+          <div class="feature-icon">👤</div>
+          <div class="feature-title">Profile</div>
+          <div class="feature-desc">Herrega kee ilaali</div>
+        </button>
 
       </div>
+    </section>
+
+
+    <!-- POSTS -->
+    <section id="posts" class="page">
+
+      <div class="top-row">
+        <h2>📝 Postoota</h2>
+        <button class="btn" onclick="openModal('postModal')">
+          + Post
+        </button>
+      </div>
+
+      <div id="postsList"></div>
 
     </section>
 
 
-    <!-- ================= POSTS ================= -->
+    <!-- CLASSES -->
+    <section id="classes" class="page">
 
-    <section
-      id="posts"
-      class="page"
-    >
+      <div class="top-row">
+        <h2>🎓 Kilaasii</h2>
 
-      <button
-        class="back"
-        onclick="showPage('home')"
-      >
-        ← Home
-      </button>
-
-      <h2 class="section-title">
-        📝 Post
-      </h2>
-
-
-      <div class="post-create">
-
-        <div class="post-user">
-
-          <div class="avatar">
-            U
-          </div>
-
-          <div>
-            <b id="postUsername">
-              User
-            </b>
-
-            <div
-              style="
-                font-size:12px;
-                color:#718079;
-              "
-            >
-              Maal yaadaa jirta?
-            </div>
-          </div>
-
-        </div>
-
-
-        <textarea
-          id="postContent"
-          class="input textarea"
-          placeholder="Waan yaaddu barreessi..."
-        ></textarea>
-
-
-        <button
-          class="primary"
-          onclick="createPost()"
-        >
-          📝 Post Godhi
+        <button class="btn" onclick="openModal('classModal')">
+          + Uumi
         </button>
-
       </div>
 
-
-      <div id="postsList">
-
-        <div class="empty">
-          📝
-          <p>Postwwan as keessatti mul'atu.</p>
-        </div>
-
+      <div class="card">
+        <b>Teessoo 10 qaba</b>
+        <p class="small">
+          Teessoon 1 abbaa/haadha kilaasii ti.
+          Yoo teessoon guutame, namni biraa dhaggeeffataa ta'ee seenuu danda'a.
+        </p>
       </div>
+
+      <div id="classesList"></div>
 
     </section>
 
 
-    <!-- ================= CLASS ================= -->
+    <!-- CLASS ROOM -->
+    <section id="classRoom" class="page">
 
-    <section
-      id="classes"
-      class="page"
-    >
-
-      <button
-        class="back"
-        onclick="showPage('home')"
-      >
-        ← Home
-      </button>
-
-      <h2 class="section-title">
-        🎓 Kilaasii
-      </h2>
-
-
-      <div class="box">
-
-        <h3>
-          Kilaasii Uumi
-        </h3>
-
-        <input
-          id="className"
-          class="input"
-          placeholder="Maqaa kilaasii"
-        >
-
-        <button
-          class="primary"
-          onclick="createClass()"
-        >
-          ➕ Kilaasii Uumi
+      <div class="top-row">
+        <button class="btn secondary" onclick="showPage('classes')">
+          ← Deebi'i
         </button>
 
+        <span id="classRoomName"></span>
       </div>
 
-
-      <div class="box">
-
-        <div class="box-title">
-
-          <h3>
-            🪑 Teessoo
-          </h3>
-
-          <b>
-            10
-          </b>
-
-        </div>
-
-        <div
-          id="classSeats"
-          class="seats"
-        ></div>
-
-
-        <div class="audience">
-
-          👂
-          <b>
-            Audience
-          </b>
-
-          <p style="margin-top:5px;">
-            Teessoon 10 yoo guute,
-            namni itti aanu
-            daaw'ataa ta'ee seena.
-          </p>
-
-        </div>
-
+      <div class="card">
+        <h3>🎓 Kilaasii</h3>
+        <div id="classSeats" class="seats"></div>
       </div>
 
-    </section>
+      <div class="card">
+        <h3>💬 Marii Kilaasii</h3>
 
+        <div id="classChat" class="chat-box"></div>
 
-    <!-- ================= ROOM ================= -->
-
-    <section
-      id="room"
-      class="page"
-    >
-
-      <button
-        class="back"
-        onclick="showPage('home')"
-      >
-        ← Home
-      </button>
-
-      <h2 class="section-title">
-        🎥 Room
-      </h2>
-
-
-      <div class="box">
-
-        <h3>
-          🚪 Room Uumi
-        </h3>
-
-        <input
-          id="roomName"
-          class="input"
-          placeholder="Maqaa Room"
-        >
-
-        <button
-          class="primary"
-          onclick="createRoom()"
-        >
-          ➕ Create Room
-        </button>
-
-      </div>
-
-
-      <div class="box">
-
-        <h3>
-          🔗 Room Seeni
-        </h3>
-
-        <input
-          id="joinRoomId"
-          class="input"
-          placeholder="ROOM-XXXXXX"
-        >
-
-        <button
-          class="primary"
-          onclick="joinRoom()"
-        >
-          🚪 Join Room
-        </button>
-
-      </div>
-
-
-      <div
-        id="roomPanel"
-        style="display:none;"
-      >
-
-        <div class="room-head">
-
-          <h3 id="currentRoomName">
-            Mullisa-JM Room
-          </h3>
-
-          <p
-            id="currentRoomId"
-            style="margin-top:6px;"
+        <div class="chat-form">
+          <input
+            id="classMessageInput"
+            class="input"
+            placeholder="Ergaa barreessi..."
           >
-          </p>
 
+          <button class="btn" onclick="sendClassMessage()">
+            Ergi
+          </button>
         </div>
+      </div>
+
+      <button class="btn danger full" onclick="leaveCurrentClass()">
+        Kilaasii keessaa ba'i
+      </button>
+
+    </section>
 
 
-        <div class="video-area">
+    <!-- ROOMS -->
+    <section id="rooms" class="page">
 
-          <video
-            id="localVideo"
-            autoplay
-            muted
-            playsinline
-          ></video>
+      <div class="top-row">
+        <h2>🏠 Room</h2>
 
-          <div
-            id="videoPlaceholder"
-            class="video-placeholder"
-          >
-            🎥
-          </div>
+        <button class="btn" onclick="openModal('roomModal')">
+          + Uumi
+        </button>
+      </div>
 
-        </div>
+      <div class="card">
+        <b>Room hanga 10 teessoo qaba.</b>
+        <p class="small">
+          Teessoon 1 abbaa Room ti. Teessoon yoo guutame,
+          namni biraa dhaggeeffataa ta'ee seenuu danda'a.
+        </p>
+      </div>
 
+      <div id="roomsList"></div>
+
+    </section>
+
+
+    <!-- ROOM LIVE -->
+    <section id="liveRoom" class="page">
+
+      <div class="top-row">
+        <button class="btn secondary" onclick="leaveRoom()">
+          ← Ba'i
+        </button>
+
+        <b id="liveRoomName">Room</b>
+      </div>
+
+      <div class="card">
+
+        <video id="localVideo" autoplay muted playsinline></video>
 
         <div class="room-controls">
 
           <button
             id="micBtn"
-            class="control"
+            class="circle-btn"
             onclick="toggleMic()"
           >
-            🎤 Mic
+            🎙️
           </button>
 
           <button
             id="cameraBtn"
-            class="control"
+            class="circle-btn"
             onclick="toggleCamera()"
           >
-            📷 Camera
-          </button>
-
-          <button
-            id="handBtn"
-            class="control"
-            onclick="raiseHand()"
-          >
-            ✋ Hand
-          </button>
-
-          <button
-            class="control"
-            onclick="showPage('chat')"
-          >
-            💬 Chat
+            📹
           </button>
 
         </div>
 
+        <p class="small" id="roomStatus">
+          Room keessatti...
+        </p>
 
-        <button
-          class="danger"
-          onclick="leaveRoom()"
-        >
-          🚪 Room Irraa Ba'i
-        </button>
+      </div>
 
+      <div class="card">
+        <h3>💺 Teessoo 10</h3>
 
-        <div class="box">
-          <h3>🪑 Teessoo Room</h3>
-
-          <div
-            id="roomSeats"
-            class="seats"
-          ></div>
-
-          <div class="audience">
-            👂 Audience:
-            <span id="roomAudience">
-              0
-            </span>
-          </div>
-
-        </div>
-
+        <div id="roomSeats" class="seats"></div>
       </div>
 
     </section>
 
 
-    <!-- ================= CHAT ================= -->
+    <!-- CHAT -->
+    <section id="chat" class="page">
 
-    <section
-      id="chat"
-      class="page"
-    >
+      <h2>💬 Chat</h2>
 
-      <button
-        class="back"
-        onclick="showPage('home')"
-      >
-        ← Home
-      </button>
+      <div class="card">
 
-      <h2 class="section-title">
-        💬 Chat
-      </h2>
+        <div id="chatMessages" class="chat-box"></div>
 
-
-      <div class="chat-box">
-
-        <div
-          id="messages"
-          class="messages"
-        >
-        </div>
-
-
-        <div class="chat-input">
+        <div class="chat-form">
 
           <input
-            id="messageInput"
+            id="chatInput"
+            class="input"
             placeholder="Ergaa barreessi..."
-            onkeydown="
-              if(event.key==='Enter')
-              sendMessage()
-            "
           >
 
-          <button
-            onclick="sendMessage()"
-          >
-            ➤
+          <button class="btn" onclick="sendChat()">
+            Ergi
           </button>
 
         </div>
@@ -1174,142 +921,46 @@
     </section>
 
 
-    <!-- ================= CALL ================= -->
+    <!-- CALL -->
+    <section id="call" class="page">
 
-    <section
-      id="call"
-      class="page"
-    >
+      <h2>📞 Voice Call</h2>
 
-      <button
-        class="back"
-        onclick="showPage('home')"
-      >
-        ← Home
-      </button>
-
-      <h2 class="section-title">
-        📞 Call
-      </h2>
-
-
-      <div class="call-card">
-
-        <div class="call-avatar">
-          👤
-        </div>
-
-        <h3
-          id="callUser"
-          style="margin-top:12px;"
-        >
-          User
-        </h3>
-
-        <p style="margin-top:6px;">
-          Nama fayyadamaa filadhu.
-        </p>
-
-
-        <div class="call-buttons">
-
-          <button
-            class="primary"
-            onclick="startCall('audio')"
-          >
-            📞 Voice Call
-          </button>
-
-          <button
-            class="primary"
-            onclick="startCall('video')"
-          >
-            🎥 Video Call
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= USERS ================= -->
-
-    <section
-      id="users"
-      class="page"
-    >
-
-      <button
-        class="back"
-        onclick="showPage('home')"
-      >
-        ← Home
-      </button>
-
-      <h2 class="section-title">
-        👥 Users
-      </h2>
-
-
-      <input
-        id="userSearch"
-        class="input"
-        placeholder="User barbaadi..."
-        oninput="filterUsers()"
-      >
-
-
-      <div
-        id="usersList"
-        style="margin-top:15px;"
-      ></div>
-
-    </section>
-
-
-    <!-- ================= PROFILE ================= -->
-
-    <section
-      id="profile"
-      class="page"
-    >
-
-      <button
-        class="back"
-        onclick="showPage('home')"
-      >
-        ← Home
-      </button>
-
-      <h2 class="section-title">
-        👤 Profile
-      </h2>
-
-
-      <div class="call-card">
-
-        <div class="call-avatar">
-          👤
-        </div>
-
-        <h3
-          id="profileName"
-          style="margin-top:12px;"
-        >
-          User
-        </h3>
-
-        <p style="margin-top:6px;">
-          Mullisa-JM fayyadamaa
+      <div class="card">
+        <p>
+          Namni ati waamtu Search keessatti barbaadi.
         </p>
 
         <button
-          class="primary"
-          onclick="showPage('settings')"
+          class="btn full"
+          onclick="showPage('search')"
         >
-          ⚙️ Settings
+          🔎 Nama barbaadi
+        </button>
+      </div>
+
+    </section>
+
+
+    <!-- VIDEO -->
+    <section id="video" class="page">
+
+      <h2>📹 Video Call</h2>
+
+      <div class="card">
+
+        <video
+          id="previewVideo"
+          autoplay
+          muted
+          playsinline
+        ></video>
+
+        <button
+          class="btn full"
+          onclick="startVideoPreview()"
+        >
+          📹 Camera Qabsiisi
         </button>
 
       </div>
@@ -1317,228 +968,167 @@
     </section>
 
 
-    <!-- ================= SEARCH ================= -->
+    <!-- SEARCH -->
+    <section id="search" class="page">
 
-    <section
-      id="search"
-      class="page"
-    >
+      <h2>🔎 Search</h2>
 
-      <button
-        class="back"
-        onclick="showPage('home')"
-      >
-        ← Home
-      </button>
+      <div class="card">
 
-      <h2 class="section-title">
-        🔎 Search
-      </h2>
+        <div class="search-box">
 
+          <input
+            id="searchInput"
+            class="input"
+            placeholder="Username barbaadi..."
+          >
 
-      <input
-        id="globalSearch"
-        class="input"
-        placeholder="User, Room ykn Kilaasii barbaadi..."
-      >
-
-    </section>
-
-
-    <!-- ================= SETTINGS ================= -->
-
-    <section
-      id="settings"
-      class="page"
-    >
-
-      <button
-        class="back"
-        onclick="showPage('home')"
-      >
-        ← Home
-      </button>
-
-      <h2 class="section-title">
-        ⚙️ Settings
-      </h2>
-
-
-      <div class="settings-list">
-
-        <div class="setting">
-
-          <div class="setting-left">
-            <span class="setting-icon">
-              👤
-            </span>
-
-            <span>
-              Account
-            </span>
-          </div>
-
-          <span>›</span>
-
-        </div>
-
-
-        <div class="setting">
-
-          <div class="setting-left">
-            <span class="setting-icon">
-              🔔
-            </span>
-
-            <span>
-              Notifications
-            </span>
-          </div>
-
-          <span>›</span>
-
-        </div>
-
-
-        <div class="setting">
-
-          <div class="setting-left">
-            <span class="setting-icon">
-              🔒
-            </span>
-
-            <span>
-              Privacy
-            </span>
-          </div>
-
-          <span>›</span>
-
-        </div>
-
-
-        <div
-          class="setting"
-          onclick="toggleDarkMode()"
-        >
-
-          <div class="setting-left">
-            <span class="setting-icon">
-              🌙
-            </span>
-
-            <span>
-              Dark Mode
-            </span>
-          </div>
-
-          <span>
-            ON/OFF
-          </span>
-
-        </div>
-
-
-        <div class="setting">
-
-          <div class="setting-left">
-            <span class="setting-icon">
-              🌐
-            </span>
-
-            <span>
-              Afaan
-            </span>
-          </div>
-
-          <span>
-            Oromoo
-          </span>
-
-        </div>
-
-
-        <div
-          class="setting"
-          onclick="logout()"
-        >
-
-          <div class="setting-left">
-            <span class="setting-icon">
-              🚪
-            </span>
-
-            <span>
-              Logout
-            </span>
-          </div>
-
-          <span>›</span>
+          <button
+            class="btn"
+            onclick="searchUsers()"
+          >
+            Barbaadi
+          </button>
 
         </div>
 
       </div>
+
+      <div id="searchResults"></div>
+
+    </section>
+
+
+    <!-- PROFILE -->
+    <section id="profile" class="page">
+
+      <h2>👤 Profile</h2>
+
+      <div class="card profile-big">
+
+        <div id="profileAvatar" class="avatar">
+          U
+        </div>
+
+        <h2 id="profileName">User</h2>
+
+        <div class="status">
+          <span class="dot online"></span>
+          Online
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Odeeffannoo</h3>
+
+        <p class="small">
+          Maqaa fayyadamaa
+        </p>
+
+        <p id="profileUsername">
+          -
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+    <section id="settings" class="page">
+
+      <h2>⚙️ Settings</h2>
+
+      <div class="card">
+
+        <div class="list-item">
+          <div class="list-info">
+            <div class="list-title">🌙 Dark Mode</div>
+            <div class="list-sub">
+              Halluu app jijjiiri
+            </div>
+          </div>
+
+          <button
+            class="btn secondary"
+            onclick="toggleDarkMode()"
+          >
+            Jijjiiri
+          </button>
+        </div>
+
+        <div class="list-item">
+          <div class="list-info">
+            <div class="list-title">🌐 Afaan Oromoo</div>
+            <div class="list-sub">
+              Afaan appii
+            </div>
+          </div>
+
+          <span>✓</span>
+        </div>
+
+      </div>
+
+      <button
+        class="btn danger full"
+        onclick="logout()"
+      >
+        🚪 Logout
+      </button>
 
     </section>
 
   </main>
 
 
-  <!-- ================= BOTTOM NAV ================= -->
-
+  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
 
     <button
+      id="nav-home"
       class="nav-btn active"
       onclick="showPage('home')"
     >
-      <span class="nav-icon">
-        🏠
-      </span>
+      <span class="nav-icon">🏠</span>
       Home
     </button>
 
-
     <button
+      id="nav-posts"
       class="nav-btn"
       onclick="showPage('posts')"
     >
-      <span class="nav-icon">
-        📝
-      </span>
+      <span class="nav-icon">📝</span>
       Post
     </button>
 
-
     <button
+      id="nav-rooms"
       class="nav-btn"
-      onclick="showPage('room')"
+      onclick="showPage('rooms')"
     >
-      <span class="nav-icon">
-        🎥
-      </span>
+      <span class="nav-icon">🏠</span>
       Room
     </button>
 
-
     <button
+      id="nav-chat"
       class="nav-btn"
       onclick="showPage('chat')"
     >
-      <span class="nav-icon">
-        💬
-      </span>
+      <span class="nav-icon">💬</span>
       Chat
     </button>
 
-
     <button
+      id="nav-profile"
       class="nav-btn"
       onclick="showPage('profile')"
     >
-      <span class="nav-icon">
-        👤
-      </span>
+      <span class="nav-icon">👤</span>
       Profile
     </button>
 
@@ -1547,222 +1137,299 @@
 </div>
 
 
-<!-- SOCKET.IO -->
+<!-- LOGIN -->
+<div id="loginScreen" class="login-screen">
+
+  <div class="login-box">
+
+    <div class="login-logo">
+      🟢
+    </div>
+
+    <h1>Mullisa-JM</h1>
+
+    <p>
+      Wal qunnami, baradhu, qoodi.
+    </p>
+
+    <div class="login-tabs">
+
+      <button
+        id="loginTab"
+        class="login-tab active"
+        onclick="setAuthMode('login')"
+      >
+        Seeni
+      </button>
+
+      <button
+        id="registerTab"
+        class="login-tab"
+        onclick="setAuthMode('register')"
+      >
+        Galmaa'i
+      </button>
+
+    </div>
+
+    <input
+      id="authUsername"
+      class="input"
+      placeholder="Username"
+      autocomplete="username"
+    >
+
+    <input
+      id="authPassword"
+      class="input"
+      type="password"
+      placeholder="Password"
+      autocomplete="current-password"
+    >
+
+    <button
+      id="authButton"
+      class="btn full"
+      onclick="submitAuth()"
+    >
+      Seeni
+    </button>
+
+    <p
+      id="authError"
+      style="color:#c62828;margin-top:12px;"
+    ></p>
+
+  </div>
+
+</div>
+
+
+<!-- POST MODAL -->
+<div id="postModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-title">
+      <h3>📝 Post Haaraa</h3>
+
+      <button
+        class="close"
+        onclick="closeModal('postModal')"
+      >
+        ×
+      </button>
+    </div>
+
+    <textarea
+      id="postContent"
+      placeholder="Yaada kee barreessi..."
+    ></textarea>
+
+    <input
+      id="postImage"
+      class="input"
+      placeholder="Image URL (filannoo)"
+    >
+
+    <button
+      class="btn full"
+      onclick="createPost()"
+    >
+      Post Godhi
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- CLASS MODAL -->
+<div id="classModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-title">
+
+      <h3>🎓 Kilaasii Uumi</h3>
+
+      <button
+        class="close"
+        onclick="closeModal('classModal')"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <input
+      id="className"
+      class="input"
+      placeholder="Maqaa kilaasii"
+    >
+
+    <button
+      class="btn full"
+      onclick="createClass()"
+    >
+      Uumi
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ROOM MODAL -->
+<div id="roomModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-title">
+
+      <h3>🏠 Room Uumi</h3>
+
+      <button
+        class="close"
+        onclick="closeModal('roomModal')"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <input
+      id="roomName"
+      class="input"
+      placeholder="Maqaa Room"
+    >
+
+    <button
+      class="btn full"
+      onclick="createRoom()"
+    >
+      Room Uumi
+    </button>
+
+  </div>
+
+</div>
+
+
+<div id="toast" class="toast"></div>
+
 
 <script src="/socket.io/socket.io.js"></script>
 
-
 <script>
 
-  /* =================================================
-     GLOBAL
-  ================================================= */
+  /* =========================
+     STATE
+  ========================= */
 
-  const socket = io();
+  let token = localStorage.getItem("mullisa_token");
+  let currentUser =
+    JSON.parse(localStorage.getItem("mullisa_user") || "null");
 
-  let currentUser = null;
+  let authMode = "login";
 
+  let socket = null;
+
+  let currentClass = null;
   let currentRoom = null;
 
   let localStream = null;
 
-  let micEnabled = false;
-
-  let cameraEnabled = false;
-
-  let handRaised = false;
+  let micOn = true;
+  let cameraOn = true;
 
 
-  const pages = [
-    "home",
-    "posts",
-    "classes",
-    "room",
-    "chat",
-    "call",
-    "users",
-    "profile",
-    "search",
-    "settings"
-  ];
+  /* =========================
+     HELPERS
+  ========================= */
+
+  function headers() {
+
+    const h = {
+      "Content-Type": "application/json"
+    };
+
+    if (token) {
+      h.Authorization = "Bearer " + token;
+    }
+
+    return h;
+  }
 
 
-  /* =================================================
-     USER
-  ================================================= */
+  async function api(url, options = {}) {
 
-  function getUser() {
+    options.headers = {
+      ...headers(),
+      ...(options.headers || {})
+    };
 
-    const saved =
-      localStorage.getItem(
-        "mullisaUser"
+    const response = await fetch(url, options);
+
+    const data = await response.json()
+      .catch(() => ({}));
+
+    if (!response.ok) {
+
+      if (response.status === 401) {
+        logout(false);
+      }
+
+      throw new Error(
+        data.error || "Rakkoon uumame."
       );
-
-    if (saved) {
-
-      try {
-        currentUser =
-          JSON.parse(saved);
-
-      } catch (e) {
-
-        currentUser = null;
-
-      }
-
     }
 
-    if (!currentUser) {
-
-      const username =
-        prompt(
-          "Maqaa kee galchi:"
-        );
-
-      if (username) {
-
-        login(username);
-
-      }
-
-    }
-
+    return data;
   }
 
 
-  async function login(username) {
+  function toast(message) {
 
-    try {
+    const el = document.getElementById("toast");
 
-      const response =
-        await fetch(
-          "/api/login",
-          {
-            method: "POST",
+    el.textContent = message;
 
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
+    el.classList.add("show");
 
-            body: JSON.stringify({
-              username
-            })
-          }
-        );
-
-      const result =
-        await response.json();
-
-      if (result.success) {
-
-        currentUser =
-          result.user;
-
-        localStorage.setItem(
-          "mullisaUser",
-          JSON.stringify(
-            currentUser
-          )
-        );
-
-        updateUserUI();
-
-        socket.emit(
-          "userOnline",
-          currentUser
-        );
-
-      }
-
-    } catch (error) {
-
-      console.error(error);
-
-    }
-
+    setTimeout(() => {
+      el.classList.remove("show");
+    }, 2500);
   }
 
 
-  function updateUserUI() {
-
-    if (!currentUser)
-      return;
-
-    const name =
-      currentUser.username;
-
-    const elements = [
-      "postUsername",
-      "profileName",
-      "callUser"
-    ];
-
-    elements.forEach(id => {
-
-      const element =
-        document.getElementById(id);
-
-      if (element) {
-        element.textContent =
-          name;
-      }
-
-    });
-
-  }
-
-
-  /* =================================================
-     NAVIGATION
-  ================================================= */
+  /* =========================
+     PAGE
+  ========================= */
 
   function showPage(page) {
 
-    pages.forEach(id => {
+    document
+      .querySelectorAll(".page")
+      .forEach(p => p.classList.remove("active"));
 
-      const element =
-        document.getElementById(id);
-
-      if (element) {
-
-        element.classList.remove(
-          "active"
-        );
-
-      }
-
-    });
-
-
-    const selected =
+    const target =
       document.getElementById(page);
 
-    if (selected) {
-
-      selected.classList.add(
-        "active"
-      );
-
+    if (target) {
+      target.classList.add("active");
     }
-
 
     document
       .querySelectorAll(".nav-btn")
-      .forEach(btn => {
+      .forEach(b => b.classList.remove("active"));
 
-        btn.classList.remove(
-          "active"
-        );
+    const nav =
+      document.getElementById("nav-" + page);
 
-      });
-
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
+    if (nav) {
+      nav.classList.add("active");
+    }
 
     if (page === "posts") {
       loadPosts();
@@ -1772,1741 +1439,1693 @@
       loadClasses();
     }
 
-    if (page === "users") {
-      loadUsers();
+    if (page === "rooms") {
+      loadRooms();
     }
 
+    if (page === "profile") {
+      loadProfile();
+    }
   }
 
 
-  /* =================================================
-     POSTS
-  ================================================= */
+  /* =========================
+     MODALS
+  ========================= */
 
-  async function createPost() {
+  function openModal(id) {
+    document.getElementById(id).classList.add("show");
+  }
 
-    if (!currentUser) {
+  function closeModal(id) {
+    document.getElementById(id).classList.remove("show");
+  }
 
-      alert(
-        "Dura maqaa kee galchi."
+
+  /* =========================
+     AUTH
+  ========================= */
+
+  function setAuthMode(mode) {
+
+    authMode = mode;
+
+    document
+      .getElementById("loginTab")
+      .classList.toggle(
+        "active",
+        mode === "login"
       );
 
-      return;
-
-    }
-
-
-    const content =
-      document
-        .getElementById(
-          "postContent"
-        )
-        .value
-        .trim();
-
-
-    if (!content) {
-
-      alert(
-        "Post kee barreessi."
+    document
+      .getElementById("registerTab")
+      .classList.toggle(
+        "active",
+        mode === "register"
       );
 
+    document.getElementById("authButton")
+      .textContent =
+      mode === "login"
+        ? "Seeni"
+        : "Galmaa'i";
+
+    document.getElementById("authError")
+      .textContent = "";
+  }
+
+
+  async function submitAuth() {
+
+    const username =
+      document.getElementById("authUsername")
+        .value.trim();
+
+    const password =
+      document.getElementById("authPassword")
+        .value;
+
+    const error =
+      document.getElementById("authError");
+
+    error.textContent = "";
+
+    if (!username || !password) {
+      error.textContent =
+        "Username fi password guuti.";
       return;
-
     }
-
 
     try {
 
-      const response =
-        await fetch(
-          "/api/posts",
-          {
-            method: "POST",
+      const endpoint =
+        authMode === "login"
+          ? "/api/login"
+          : "/api/register";
 
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
+      const data = await api(endpoint, {
+        method: "POST",
+        body: JSON.stringify({
+          username,
+          password
+        })
+      });
 
-            body: JSON.stringify({
-              username:
-                currentUser.username,
+      token = data.token;
+      currentUser = data.user;
 
-              content
-            })
-          }
-        );
+      localStorage.setItem(
+        "mullisa_token",
+        token
+      );
 
-
-      const result =
-        await response.json();
-
-
-      if (!result.success) {
-
-        alert(
-          result.message ||
-          "Post uumamuu hin dandeenye."
-        );
-
-        return;
-
-      }
-
+      localStorage.setItem(
+        "mullisa_user",
+        JSON.stringify(currentUser)
+      );
 
       document
-        .getElementById(
-          "postContent"
-        )
-        .value = "";
+        .getElementById("loginScreen")
+        .classList.remove("show");
 
+      updateUserUI();
+
+      connectSocket();
+
+      toast(
+        authMode === "login"
+          ? "Baga nagaan dhuftan!"
+          : "Galmeen milkaa'e!"
+      );
 
       loadPosts();
 
-    } catch (error) {
+    } catch (e) {
 
-      alert(
-        "Server waliin rakkoo uumame."
-      );
-
+      error.textContent = e.message;
     }
-
   }
 
 
+  function updateUserUI() {
+
+    if (!currentUser) return;
+
+    const name =
+      currentUser.username || "User";
+
+    document.getElementById("welcomeText")
+      .textContent =
+      `Baga nagaan dhuftan ${name}! Mullisa-JM keessatti wal qunnamaa, baradhaa fi qoodaa.`;
+
+    document.getElementById("profileName")
+      .textContent = name;
+
+    document.getElementById("profileUsername")
+      .textContent = name;
+
+    document.getElementById("profileAvatar")
+      .textContent =
+      name.charAt(0).toUpperCase();
+  }
+
+
+  function logout(showMessage = true) {
+
+    if (socket) {
+      socket.disconnect();
+      socket = null;
+    }
+
+    localStorage.removeItem("mullisa_token");
+    localStorage.removeItem("mullisa_user");
+
+    token = null;
+    currentUser = null;
+
+    document
+      .getElementById("loginScreen")
+      .classList.add("show");
+
+    if (showMessage) {
+      toast("Logout milkaa'e.");
+    }
+  }
+
+
+  /* =========================
+     SOCKET
+  ========================= */
+
+  function connectSocket() {
+
+    if (!token || !currentUser) return;
+
+    if (socket) {
+      socket.disconnect();
+    }
+
+    socket = io();
+
+    socket.on("connect", () => {
+
+      socket.emit("userOnline", {
+        userId: currentUser.id,
+        username: currentUser.username
+      });
+    });
+
+
+    socket.on("newPost", () => {
+      if (
+        document.getElementById("posts")
+          .classList.contains("active")
+      ) {
+        loadPosts();
+      }
+    });
+
+
+    socket.on("postLikeChanged", data => {
+
+      const likes =
+        document.querySelector(
+          `[data-post-likes="${data.postId}"]`
+        );
+
+      if (likes) {
+        likes.textContent =
+          `❤️ ${data.likes}`;
+      }
+    });
+
+
+    socket.on("newComment", comment => {
+
+      const box =
+        document.querySelector(
+          `[data-comments="${comment.post_id}"]`
+        );
+
+      if (box) {
+        loadComments(
+          comment.post_id,
+          box
+        );
+      }
+    });
+
+
+    socket.on("classMessage", message => {
+
+      if (
+        currentClass &&
+        String(message.classId) ===
+        String(currentClass.id)
+      ) {
+        addClassMessage(message);
+      }
+    });
+
+
+    socket.on("roomUserJoined", data => {
+
+      if (
+        currentRoom &&
+        String(data.roomId || "") ===
+        String(currentRoom.id)
+      ) {
+        loadCurrentRoom();
+      }
+    });
+
+
+    socket.on("roomUserLeft", () => {
+
+      if (currentRoom) {
+        loadCurrentRoom();
+      }
+    });
+
+
+    socket.on("micStatus", data => {
+
+      if (!currentRoom) return;
+
+      const seat =
+        document.querySelector(
+          `[data-user-id="${data.userId}"]`
+        );
+
+      if (seat) {
+        seat.dataset.mic =
+          data.micOn ? "on" : "off";
+      }
+    });
+
+
+    socket.on("cameraStatus", data => {
+
+      if (!currentRoom) return;
+
+      const seat =
+        document.querySelector(
+          `[data-user-id="${data.userId}"]`
+        );
+
+      if (seat) {
+        seat.dataset.camera =
+          data.cameraOn ? "on" : "off";
+      }
+    });
+  }
+
+
+  /* =========================
+     POSTS
+  ========================= */
+
   async function loadPosts() {
+
+    const list =
+      document.getElementById("postsList");
+
+    list.innerHTML =
+      `<div class="empty">⏳ Postoota fe'aa...</div>`;
 
     try {
 
-      const response =
-        await fetch(
-          "/api/posts"
-        );
+      const data =
+        await api("/api/posts");
 
-      const result =
-        await response.json();
+      if (!data.posts.length) {
 
-      const container =
-        document.getElementById(
-          "postsList"
-        );
-
-      if (
-        !result.success ||
-        !result.posts.length
-      ) {
-
-        container.innerHTML = `
-          <div class="empty">
-            📝
-            <p>
-              Post hin jiru.
-            </p>
+        list.innerHTML = `
+          <div class="card empty">
+            Postiin hin jiru.<br>
+            Postii jalqabaa ati godhi.
           </div>
         `;
 
         return;
-
       }
 
+      list.innerHTML =
+        data.posts.map(renderPost).join("");
 
-      container.innerHTML =
-        result.posts
-          .map(post => {
+    } catch (e) {
 
-            const comments =
-              post.post_comments || [];
-
-
-            return `
-
-              <article class="post">
-
-                <div class="post-user">
-
-                  <div class="avatar">
-                    ${escapeHtml(
-                      post.username
-                        .charAt(0)
-                        .toUpperCase()
-                    )}
-                  </div>
-
-                  <div>
-                    <b>
-                      ${escapeHtml(
-                        post.username
-                      )}
-                    </b>
-
-                    <div
-                      style="
-                        font-size:11px;
-                        color:#718079;
-                      "
-                    >
-                      ${formatDate(
-                        post.created_at
-                      )}
-                    </div>
-
-                  </div>
-
-                </div>
-
-
-                <div class="post-content">
-                  ${escapeHtml(
-                    post.content
-                  )}
-                </div>
-
-
-                <div class="post-actions">
-
-                  <button
-                    class="post-action"
-                    onclick="
-                      likePost('${post.id}')
-                    "
-                  >
-                    ❤️
-                    ${post.likes_count || 0}
-                  </button>
-
-
-                  <button
-                    class="post-action"
-                    onclick="
-                      document
-                        .getElementById(
-                          'comment-${post.id}'
-                        )
-                        .focus()
-                    "
-                  >
-                    💬
-                    ${post.comments_count || 0}
-                  </button>
-
-
-                  <button
-                    class="post-action"
-                    onclick="
-                      sharePost('${post.id}')
-                    "
-                  >
-                    🔄
-                    ${post.shares_count || 0}
-                  </button>
-
-                </div>
-
-
-                <div class="comments">
-
-                  ${comments
-                    .map(comment => `
-                      <div class="comment">
-
-                        <b>
-                          ${escapeHtml(
-                            comment.username
-                          )}
-                        </b>
-
-                        <div>
-                          ${escapeHtml(
-                            comment.comment
-                          )}
-                        </div>
-
-                      </div>
-                    `)
-                    .join("")}
-
-                </div>
-
-
-                <div class="comment-box">
-
-                  <input
-                    id="comment-${post.id}"
-                    placeholder="Comment barreessi..."
-                  >
-
-                  <button
-                    onclick="
-                      addComment(
-                        '${post.id}'
-                      )
-                    "
-                  >
-                    ➤
-                  </button>
-
-                </div>
-
-              </article>
-
-            `;
-
-          })
-          .join("");
-
-    } catch (error) {
-
-      console.error(error);
-
+      list.innerHTML = `
+        <div class="card empty">
+          ${escapeHtml(e.message)}
+        </div>
+      `;
     }
-
   }
 
 
-  async function likePost(postId) {
+  function renderPost(post) {
 
-    if (!currentUser) {
+    const initial =
+      (post.username || "U")
+        .charAt(0)
+        .toUpperCase();
 
-      alert(
-        "Dura login godhi."
+    const image =
+      post.image_url
+        ? `
+          <img
+            src="${escapeAttr(post.image_url)}"
+            style="
+              width:100%;
+              border-radius:12px;
+              margin-bottom:10px;
+            "
+            onerror="this.style.display='none'"
+          >
+        `
+        : "";
+
+    return `
+      <article class="card" id="post-${post.id}">
+
+        <div class="post-user">
+
+          <div class="avatar">
+            ${escapeHtml(initial)}
+          </div>
+
+          <div>
+            <b>${escapeHtml(post.username)}</b>
+
+            <div class="post-time">
+              ${formatDate(post.created_at)}
+            </div>
+          </div>
+
+        </div>
+
+        <div class="post-content">
+          ${escapeHtml(post.content)}
+        </div>
+
+        ${image}
+
+        <div class="post-actions">
+
+          <button onclick="likePost('${post.id}')">
+            <span data-post-likes="${post.id}">
+              ❤️ ${post.likes || 0}
+            </span>
+          </button>
+
+          <button onclick="toggleComments('${post.id}')">
+            💬 ${post.comments || 0}
+          </button>
+
+          <button onclick="sharePost('${post.id}')">
+            ↗️ ${post.shares || 0}
+          </button>
+
+        </div>
+
+        <div
+          id="comments-${post.id}"
+          class="comments"
+          data-comments="${post.id}"
+          style="display:none;"
+        >
+        </div>
+
+      </article>
+    `;
+  }
+
+
+  async function createPost() {
+
+    const content =
+      document.getElementById("postContent")
+        .value.trim();
+
+    const image_url =
+      document.getElementById("postImage")
+        .value.trim();
+
+    if (!content) {
+      toast("Post kee barreessi.");
+      return;
+    }
+
+    try {
+
+      await api("/api/posts", {
+        method: "POST",
+        body: JSON.stringify({
+          content,
+          image_url
+        })
+      });
+
+      document.getElementById("postContent")
+        .value = "";
+
+      document.getElementById("postImage")
+        .value = "";
+
+      closeModal("postModal");
+
+      toast("Post kee maxxanfameera.");
+
+      loadPosts();
+
+    } catch (e) {
+      toast(e.message);
+    }
+  }
+
+
+  async function likePost(id) {
+
+    try {
+
+      const data =
+        await api(`/api/posts/${id}/like`, {
+          method: "POST"
+        });
+
+      const el =
+        document.querySelector(
+          `[data-post-likes="${id}"]`
+        );
+
+      if (el) {
+        el.textContent =
+          `❤️ ${data.likes}`;
+      }
+
+    } catch (e) {
+      toast(e.message);
+    }
+  }
+
+
+  async function toggleComments(id) {
+
+    const box =
+      document.getElementById(
+        `comments-${id}`
       );
 
-      return;
+    if (!box) return;
 
+    if (box.style.display === "none") {
+
+      box.style.display = "block";
+
+      await loadComments(id, box);
+
+    } else {
+
+      box.style.display = "none";
     }
-
-
-    await fetch(
-      `/api/posts/${postId}/like`,
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type":
-            "application/json"
-        },
-
-        body: JSON.stringify({
-          username:
-            currentUser.username
-        })
-      }
-    );
-
-
-    loadPosts();
-
   }
 
 
-  async function addComment(postId) {
+  async function loadComments(id, box) {
 
-    if (!currentUser)
-      return;
+    try {
 
+      const data =
+        await api(
+          `/api/posts/${id}/comments`
+        );
+
+      box.innerHTML = `
+
+        <div>
+
+          ${
+            data.comments.length
+              ? data.comments.map(c => `
+                <div class="comment">
+                  <b>${escapeHtml(c.username)}</b>
+                  <p>${escapeHtml(c.content)}</p>
+                </div>
+              `).join("")
+              : `<div class="small">Comment hin jiru.</div>`
+          }
+
+        </div>
+
+        <div class="comment-form">
+
+          <input
+            id="comment-${id}"
+            class="input"
+            placeholder="Comment barreessi..."
+          >
+
+          <button
+            class="btn"
+            onclick="addComment('${id}')"
+          >
+            Ergi
+          </button>
+
+        </div>
+      `;
+
+    } catch (e) {
+
+      box.innerHTML =
+        `<div class="small">${escapeHtml(e.message)}</div>`;
+    }
+  }
+
+
+  async function addComment(id) {
 
     const input =
       document.getElementById(
-        `comment-${postId}`
+        `comment-${id}`
       );
 
-
-    const comment =
+    const content =
       input.value.trim();
 
-
-    if (!comment)
-      return;
-
-
-    await fetch(
-      `/api/posts/${postId}/comments`,
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type":
-            "application/json"
-        },
-
-        body: JSON.stringify({
-          username:
-            currentUser.username,
-
-          comment
-        })
-      }
-    );
-
-
-    input.value = "";
-
-    loadPosts();
-
-  }
-
-
-  async function sharePost(postId) {
-
-    if (!currentUser)
-      return;
-
-
-    await fetch(
-      `/api/posts/${postId}/share`,
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type":
-            "application/json"
-        },
-
-        body: JSON.stringify({
-          username:
-            currentUser.username
-        })
-      }
-    );
-
+    if (!content) return;
 
     try {
 
-      await navigator.clipboard.writeText(
-        window.location.origin +
-        "/?post=" +
-        postId
+      await api(
+        `/api/posts/${id}/comments`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            content
+          })
+        }
       );
 
-      alert(
-        "Linkiin Post qoodameera."
-      );
+      input.value = "";
 
-    } catch (error) {
+      const box =
+        document.getElementById(
+          `comments-${id}`
+        );
 
-      alert(
-        "Post share godhameera."
-      );
+      loadComments(id, box);
 
+    } catch (e) {
+      toast(e.message);
     }
-
-
-    loadPosts();
-
   }
 
 
-  /* =================================================
-     CLASS
-  ================================================= */
+  async function sharePost(id) {
 
-  async function createClass() {
-
-    if (!currentUser) {
-
-      alert(
-        "Dura login godhi."
-      );
-
-      return;
-
-    }
-
-
-    const name =
-      document
-        .getElementById(
-          "className"
-        )
-        .value
-        .trim() ||
-      "Mullisa-JM Kilaasii";
-
+    const link =
+      `${location.origin}/#post-${id}`;
 
     try {
 
-      const response =
-        await fetch(
-          "/api/classes",
-          {
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-
-            body: JSON.stringify({
-
-              ownerName:
-                currentUser.username,
-
-              name
-
-            })
-          }
-        );
-
-
-      const result =
-        await response.json();
-
-
-      if (!result.success) {
-
-        alert(
-          result.message
-        );
-
-        return;
-
-      }
-
-
-      alert(
-        "Kilaasiin uumameera.\n\n" +
-        "Class ID: " +
-        result.class.class_id
-      );
-
-
-      loadClasses();
-
-    } catch (error) {
-
-      alert(
-        "Kilaasii uumuu irratti rakkoo."
-      );
-
-    }
-
-  }
-
-
-  async function loadClasses() {
-
-    try {
-
-      const response =
-        await fetch(
-          "/api/classes"
-        );
-
-      const result =
-        await response.json();
-
-
-      if (
-        !result.success ||
-        !result.classes.length
-      ) {
-
-        renderSeats([]);
-
-        return;
-
-      }
-
-
-      const classroom =
-        result.classes[0];
-
-
-      renderSeats(
-        classroom.class_seats || []
-      );
-
-    } catch (error) {
-
-      console.error(error);
-
-    }
-
-  }
-
-
-  function renderSeats(seats) {
-
-    const container =
-      document.getElementById(
-        "classSeats"
-      );
-
-
-    container.innerHTML = "";
-
-
-    for (
-      let i = 1;
-      i <= 10;
-      i++
-    ) {
-
-      const found =
-        seats.find(
-          seat =>
-            seat.seat_number === i
-        );
-
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-
-      div.className =
-        found
-          ? "seat occupied"
-          : "seat";
-
-
-      div.innerHTML = `
-
-        <div class="seat-number">
-          🪑 Seat ${i}
-        </div>
-
-        <div class="seat-name">
-          ${
-            found
-              ? escapeHtml(
-                  found.username
-                )
-              : "Bilisa"
-          }
-        </div>
-
-      `;
-
-
-      container.appendChild(div);
-
-    }
-
-  }
-
-
-  /* =================================================
-     ROOM
-  ================================================= */
-
-  async function createRoom() {
-
-    if (!currentUser) {
-
-      alert(
-        "Dura login godhi."
-      );
-
-      return;
-
-    }
-
-
-    const name =
-      document
-        .getElementById(
-          "roomName"
-        )
-        .value
-        .trim() ||
-      "Mullisa-JM Room";
-
-
-    try {
-
-      const response =
-        await fetch(
-          "/api/rooms",
-          {
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-
-            body: JSON.stringify({
-
-              name,
-
-              username:
-                currentUser.username
-
-            })
-          }
-        );
-
-
-      const result =
-        await response.json();
-
-
-      if (!result.success) {
-
-        alert(
-          result.message
-        );
-
-        return;
-
-      }
-
-
-      alert(
-        "Room uumameera!\n\n" +
-        "Room ID: " +
-        result.room.room_id +
-        "\n\n" +
-        "Teessoo kee: 1 👑"
-      );
-
-
-      openRoom(
-        result.room
-      );
-
-    } catch (error) {
-
-      alert(
-        "Room uumuu irratti rakkoo."
-      );
-
-    }
-
-  }
-
-
-  async function joinRoom() {
-
-    if (!currentUser) {
-
-      alert(
-        "Dura login godhi."
-      );
-
-      return;
-
-    }
-
-
-    const roomId =
-      document
-        .getElementById(
-          "joinRoomId"
-        )
-        .value
-        .trim()
-        .toUpperCase();
-
-
-    if (!roomId) {
-
-      alert(
-        "Room ID galchi."
-      );
-
-      return;
-
-    }
-
-
-    try {
-
-      const response =
-        await fetch(
-          `/api/rooms/${roomId}/join`,
-          {
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-
-            body: JSON.stringify({
-
-              username:
-                currentUser.username
-
-            })
-          }
-        );
-
-
-      const result =
-        await response.json();
-
-
-      if (!result.success) {
-
-        alert(
-          result.message
-        );
-
-        return;
-
-      }
-
-
-      if (
-        result.type ===
-        "audience"
-      ) {
-
-        alert(
-          "Teessoon 10 guuteera.\n\n" +
-          "Ati Audience taate."
-        );
+      if (navigator.share) {
+
+        await navigator.share({
+          title: "Mullisa-JM",
+          text: "Postii Mullisa-JM",
+          url: link
+        });
 
       } else {
 
-        alert(
-          "Room seente.\n\n" +
-          "Seat: " +
-          result.seat
-        );
+        await navigator.clipboard.writeText(link);
 
+        toast("Linkiin copy ta'eera.");
       }
 
-
-      const roomResponse =
-        await fetch(
-          `/api/rooms/${roomId}`
-        );
-
-
-      const roomResult =
-        await roomResponse.json();
-
-
-      if (roomResult.success) {
-
-        openRoom(
-          roomResult.room
-        );
-
-      }
-
-    } catch (error) {
-
-      alert(
-        "Room seenuu irratti rakkoo."
+      await api(
+        `/api/posts/${id}/share`,
+        {
+          method: "POST"
+        }
       );
 
+    } catch (e) {
+
+      if (e.name !== "AbortError") {
+        toast("Share hin milkoofne.");
+      }
+    }
+  }
+
+
+  /* =========================
+     CLASSES
+  ========================= */
+
+  async function loadClasses() {
+
+    const list =
+      document.getElementById("classesList");
+
+    list.innerHTML =
+      `<div class="empty">⏳ Kilaasota fe'aa...</div>`;
+
+    try {
+
+      const data =
+        await api("/api/classes");
+
+      if (!data.classes.length) {
+
+        list.innerHTML = `
+          <div class="card empty">
+            Kilaasiin hin jiru.
+          </div>
+        `;
+
+        return;
+      }
+
+      list.innerHTML =
+        data.classes.map(c => `
+          <div class="card">
+
+            <div class="list-item">
+
+              <div class="list-info">
+
+                <div class="list-title">
+                  🎓 ${escapeHtml(c.name)}
+                </div>
+
+                <div class="list-sub">
+                  Abbaa: ${escapeHtml(c.owner_name)}
+                  · Namoota: ${c.members}
+                </div>
+
+              </div>
+
+              <button
+                class="btn"
+                onclick="joinClass('${c.id}')"
+              >
+                Seeni
+              </button>
+
+            </div>
+
+          </div>
+        `).join("");
+
+    } catch (e) {
+
+      list.innerHTML =
+        `<div class="card">${escapeHtml(e.message)}</div>`;
+    }
+  }
+
+
+  async function createClass() {
+
+    const name =
+      document.getElementById("className")
+        .value.trim();
+
+    if (!name) {
+      toast("Maqaa kilaasii galchi.");
+      return;
     }
 
-  }
+    try {
 
+      const data =
+        await api("/api/classes", {
+          method: "POST",
+          body: JSON.stringify({ name })
+        });
 
-  function openRoom(room) {
+      document.getElementById("className")
+        .value = "";
 
-    currentRoom = room;
+      closeModal("classModal");
 
+      toast("Kilaasiin uumameera.");
 
-    document.getElementById(
-      "roomPanel"
-    ).style.display = "block";
-
-
-    document.getElementById(
-      "currentRoomName"
-    ).textContent =
-      room.name;
-
-
-    document.getElementById(
-      "currentRoomId"
-    ).textContent =
-      room.room_id;
-
-
-    renderRoomSeats(
-      room.room_seats || [],
-      room.room_audience || []
-    );
-
-
-    socket.emit(
-      "joinRoom",
-      {
-        roomId:
-          room.room_id,
-
-        username:
-          currentUser?.username ||
-          "User"
-      }
-    );
-
-
-    startCamera();
-
-  }
-
-
-  function renderRoomSeats(
-    seats,
-    audience
-  ) {
-
-    const container =
-      document.getElementById(
-        "roomSeats"
+      await openClass(
+        data.class.id
       );
 
-
-    container.innerHTML = "";
-
-
-    for (
-      let i = 1;
-      i <= 10;
-      i++
-    ) {
-
-      const found =
-        seats.find(
-          seat =>
-            seat.seat_number === i
-        );
+    } catch (e) {
+      toast(e.message);
+    }
+  }
 
 
-      const div =
-        document.createElement(
-          "div"
-        );
+  async function joinClass(id) {
 
+    try {
 
-      div.className =
-        found
-          ? "seat occupied"
-          : "seat";
-
-
-      div.innerHTML = `
-
-        <div class="seat-number">
-          🪑 Seat ${i}
-        </div>
-
-        <div class="seat-name">
-          ${
-            found
-              ? (
-                  found.role ===
-                  "host"
-                    ? "👑 "
-                    : ""
-                ) +
-                escapeHtml(
-                  found.username
-                )
-              : "Bilisa"
+      const data =
+        await api(
+          `/api/classes/${id}/join`,
+          {
+            method: "POST"
           }
-        </div>
+        );
 
-      `;
-
-
-      container.appendChild(
-        div
+      toast(
+        data.seat
+          ? `Teessoo ${data.seat} keessa jirta.`
+          : "Ati dhaggeeffataa taatee seente."
       );
 
+      await openClass(id);
+
+    } catch (e) {
+      toast(e.message);
+    }
+  }
+
+
+  async function openClass(id) {
+
+    try {
+
+      const data =
+        await api(`/api/classes/${id}`);
+
+      currentClass = data.class;
+
+      document.getElementById("classRoomName")
+        .textContent = currentClass.name;
+
+      renderClassSeats(data.members);
+
+      document.getElementById("classChat")
+        .innerHTML = "";
+
+      showPage("classRoom");
+
+      if (socket) {
+
+        socket.emit("joinClass", {
+          classId: currentClass.id,
+          userId: currentUser.id,
+          username: currentUser.username
+        });
+      }
+
+    } catch (e) {
+      toast(e.message);
+    }
+  }
+
+
+  function renderClassSeats(members) {
+
+    const seats =
+      document.getElementById("classSeats");
+
+    const bySeat = {};
+
+    members.forEach(m => {
+      if (m.seat) {
+        bySeat[m.seat] = m;
+      }
+    });
+
+    let html = "";
+
+    for (let i = 1; i <= 10; i++) {
+
+      const member = bySeat[i];
+
+      if (member) {
+
+        html += `
+          <div class="seat ${i === 1 ? "host" : ""}">
+            <div class="seat-number">
+              💺 ${i}
+            </div>
+
+            <div class="seat-user">
+              ${i === 1 ? "👑 " : ""}
+              ${escapeHtml(member.username)}
+            </div>
+          </div>
+        `;
+
+      } else {
+
+        html += `
+          <div class="seat empty-seat">
+            <div class="seat-number">
+              💺 ${i}
+            </div>
+
+            <div class="seat-user">
+              Bilisa
+            </div>
+          </div>
+        `;
+      }
     }
 
+    seats.innerHTML = html;
+  }
 
-    document.getElementById(
-      "roomAudience"
-    ).textContent =
-      audience.length;
 
+  async function leaveCurrentClass() {
+
+    if (!currentClass) return;
+
+    try {
+
+      await api(
+        `/api/classes/${currentClass.id}/leave`,
+        {
+          method: "POST"
+        }
+      );
+
+      if (socket) {
+        socket.emit("leaveClass", {
+          classId: currentClass.id,
+          userId: currentUser.id
+        });
+      }
+
+      currentClass = null;
+
+      toast("Kilaasii keessaa baateetta.");
+
+      showPage("classes");
+
+      loadClasses();
+
+    } catch (e) {
+      toast(e.message);
+    }
+  }
+
+
+  function sendClassMessage() {
+
+    const input =
+      document.getElementById(
+        "classMessageInput"
+      );
+
+    const content =
+      input.value.trim();
+
+    if (!content || !currentClass || !socket) {
+      return;
+    }
+
+    socket.emit("classMessage", {
+      classId: currentClass.id,
+      userId: currentUser.id,
+      username: currentUser.username,
+      content
+    });
+
+    input.value = "";
+  }
+
+
+  function addClassMessage(message) {
+
+    const box =
+      document.getElementById("classChat");
+
+    const mine =
+      String(message.userId) ===
+      String(currentUser.id);
+
+    box.insertAdjacentHTML(
+      "beforeend",
+      `
+        <div class="message ${mine ? "mine" : ""}">
+          <div class="message-name">
+            ${escapeHtml(message.username)}
+          </div>
+
+          ${escapeHtml(message.content)}
+        </div>
+      `
+    );
+
+    box.scrollTop = box.scrollHeight;
+  }
+
+
+  /* =========================
+     ROOMS
+  ========================= */
+
+  async function loadRooms() {
+
+    const list =
+      document.getElementById("roomsList");
+
+    list.innerHTML =
+      `<div class="empty">⏳ Roomoota fe'aa...</div>`;
+
+    try {
+
+      const data =
+        await api("/api/rooms");
+
+      if (!data.rooms.length) {
+
+        list.innerHTML = `
+          <div class="card empty">
+            Room hin jiru.
+          </div>
+        `;
+
+        return;
+      }
+
+      list.innerHTML =
+        data.rooms.map(r => `
+          <div class="card">
+
+            <div class="list-item">
+
+              <div class="list-info">
+
+                <div class="list-title">
+                  🏠 ${escapeHtml(r.name)}
+                </div>
+
+                <div class="list-sub">
+                  Abbaa: ${escapeHtml(r.owner_name)}
+                  · Namoota: ${r.members}/10
+                </div>
+
+              </div>
+
+              <button
+                class="btn"
+                onclick="joinRoom('${r.id}')"
+              >
+                Seeni
+              </button>
+
+            </div>
+
+          </div>
+        `).join("");
+
+    } catch (e) {
+
+      list.innerHTML =
+        `<div class="card">${escapeHtml(e.message)}</div>`;
+    }
+  }
+
+
+  async function createRoom() {
+
+    const name =
+      document.getElementById("roomName")
+        .value.trim();
+
+    if (!name) {
+      toast("Maqaa Room galchi.");
+      return;
+    }
+
+    try {
+
+      const data =
+        await api("/api/rooms", {
+          method: "POST",
+          body: JSON.stringify({ name })
+        });
+
+      document.getElementById("roomName")
+        .value = "";
+
+      closeModal("roomModal");
+
+      toast("Room uumameera.");
+
+      await joinRoom(data.room.id);
+
+    } catch (e) {
+      toast(e.message);
+    }
+  }
+
+
+  async function joinRoom(id) {
+
+    try {
+
+      const data =
+        await api(
+          `/api/rooms/${id}/join`,
+          {
+            method: "POST"
+          }
+        );
+
+      currentRoom = {
+        id,
+        seat: data.seat
+      };
+
+      const roomData =
+        await api(`/api/rooms/${id}`);
+
+      currentRoom.room =
+        roomData.room;
+
+      currentRoom.members =
+        roomData.members;
+
+      document.getElementById("liveRoomName")
+        .textContent =
+        roomData.room.name;
+
+      renderRoomSeats(
+        roomData.members
+      );
+
+      showPage("liveRoom");
+
+      if (socket) {
+
+        socket.emit("joinRoom", {
+          roomId: id,
+          userId: currentUser.id,
+          username: currentUser.username,
+          seat: data.seat
+        });
+      }
+
+      await startLocalMedia();
+
+    } catch (e) {
+      toast(e.message);
+    }
+  }
+
+
+  async function loadCurrentRoom() {
+
+    if (!currentRoom) return;
+
+    try {
+
+      const data =
+        await api(
+          `/api/rooms/${currentRoom.id}`
+        );
+
+      currentRoom.members =
+        data.members;
+
+      renderRoomSeats(
+        data.members
+      );
+
+    } catch {}
+  }
+
+
+  function renderRoomSeats(members) {
+
+    const seats =
+      document.getElementById("roomSeats");
+
+    const bySeat = {};
+
+    members.forEach(m => {
+
+      if (m.seat) {
+        bySeat[m.seat] = m;
+      }
+
+    });
+
+    let html = "";
+
+    for (let i = 1; i <= 10; i++) {
+
+      const member = bySeat[i];
+
+      if (member) {
+
+        html += `
+          <div
+            class="seat ${i === 1 ? "host" : ""}"
+            data-user-id="${member.user_id}"
+          >
+
+            <div class="seat-number">
+              💺 ${i}
+            </div>
+
+            <div class="seat-user">
+              ${i === 1 ? "👑 " : ""}
+              ${escapeHtml(member.username)}
+            </div>
+
+            <div class="small">
+              ${member.mic_on ? "🎙️" : "🔇"}
+              ${member.camera_on ? "📹" : "🚫"}
+            </div>
+
+          </div>
+        `;
+
+      } else {
+
+        html += `
+          <div class="seat empty-seat">
+
+            <div class="seat-number">
+              💺 ${i}
+            </div>
+
+            <div class="seat-user">
+              Bilisa
+            </div>
+
+          </div>
+        `;
+      }
+    }
+
+    seats.innerHTML = html;
   }
 
 
   async function leaveRoom() {
 
-    if (
-      !currentRoom ||
-      !currentUser
-    )
+    if (!currentRoom) {
+      showPage("rooms");
       return;
+    }
 
+    try {
 
-    await fetch(
-      `/api/rooms/${currentRoom.room_id}/leave`,
-      {
-        method: "POST",
+      await api(
+        `/api/rooms/${currentRoom.id}/leave`,
+        {
+          method: "POST"
+        }
+      );
 
-        headers: {
-          "Content-Type":
-            "application/json"
-        },
+    } catch {}
 
-        body: JSON.stringify({
-          username:
-            currentUser.username
-        })
-      }
-    );
+    if (socket) {
 
+      socket.emit("leaveRoom", {
+        roomId: currentRoom.id,
+        userId: currentUser.id
+      });
+    }
 
-    stopCamera();
-
+    stopLocalMedia();
 
     currentRoom = null;
 
+    showPage("rooms");
 
-    document.getElementById(
-      "roomPanel"
-    ).style.display =
-      "none";
-
+    loadRooms();
   }
 
 
-  /* =================================================
-     CAMERA
-  ================================================= */
+  /* =========================
+     MEDIA
+  ========================= */
 
-  async function startCamera() {
+  async function startLocalMedia() {
 
     try {
 
       localStream =
-        await navigator.mediaDevices
-          .getUserMedia({
-            video: true,
-            audio: true
-          });
-
+        await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: true
+        });
 
       const video =
-        document.getElementById(
-          "localVideo"
-        );
+        document.getElementById("localVideo");
 
+      video.srcObject = localStream;
 
-      video.srcObject =
-        localStream;
+      micOn = true;
+      cameraOn = true;
 
+      updateMediaButtons();
 
-      document.getElementById(
-        "videoPlaceholder"
-      ).style.display =
-        "none";
+    } catch (e) {
 
-
-      cameraEnabled = true;
-      micEnabled = true;
-
-
-      updateControlButtons();
-
-    } catch (error) {
-
-      console.log(
-        "Camera permission:",
-        error
+      toast(
+        "Camera ykn microphone hayyama gaafata."
       );
-
     }
-
   }
 
 
-  function stopCamera() {
+  function stopLocalMedia() {
 
-    if (localStream) {
+    if (!localStream) return;
 
-      localStream
-        .getTracks()
-        .forEach(
-          track =>
-            track.stop()
-        );
-
-    }
-
+    localStream
+      .getTracks()
+      .forEach(track => track.stop());
 
     localStream = null;
 
+    const video =
+      document.getElementById("localVideo");
+
+    if (video) {
+      video.srcObject = null;
+    }
   }
 
 
   function toggleMic() {
 
-    if (!localStream)
-      return;
+    if (!localStream) return;
 
+    const track =
+      localStream.getAudioTracks()[0];
 
-    micEnabled =
-      !micEnabled;
+    if (!track) return;
 
+    micOn = !micOn;
 
-    localStream
-      .getAudioTracks()
-      .forEach(
-        track => {
-          track.enabled =
-            micEnabled;
-        }
-      );
+    track.enabled = micOn;
 
+    updateMediaButtons();
 
-    socket.emit(
-      "micStatus",
-      micEnabled
-    );
+    if (socket && currentRoom) {
 
-
-    updateControlButtons();
-
+      socket.emit("micStatus", {
+        roomId: currentRoom.id,
+        userId: currentUser.id,
+        micOn
+      });
+    }
   }
 
 
   function toggleCamera() {
 
-    if (!localStream)
-      return;
+    if (!localStream) return;
 
+    const track =
+      localStream.getVideoTracks()[0];
 
-    cameraEnabled =
-      !cameraEnabled;
+    if (!track) return;
 
+    cameraOn = !cameraOn;
 
-    localStream
-      .getVideoTracks()
-      .forEach(
-        track => {
-          track.enabled =
-            cameraEnabled;
-        }
-      );
+    track.enabled = cameraOn;
 
+    updateMediaButtons();
 
-    socket.emit(
-      "cameraStatus",
-      cameraEnabled
-    );
+    if (socket && currentRoom) {
 
-
-    updateControlButtons();
-
+      socket.emit("cameraStatus", {
+        roomId: currentRoom.id,
+        userId: currentUser.id,
+        cameraOn
+      });
+    }
   }
 
 
-  function raiseHand() {
-
-    handRaised =
-      !handRaised;
-
-
-    socket.emit(
-      "raiseHand",
-      handRaised
-    );
-
-
-    updateControlButtons();
-
-  }
-
-
-  function updateControlButtons() {
+  function updateMediaButtons() {
 
     const mic =
-      document.getElementById(
-        "micBtn"
-      );
+      document.getElementById("micBtn");
 
-    const camera =
-      document.getElementById(
-        "cameraBtn"
-      );
-
-    const hand =
-      document.getElementById(
-        "handBtn"
-      );
-
+    const cam =
+      document.getElementById("cameraBtn");
 
     if (mic) {
 
       mic.classList.toggle(
-        "active",
-        micEnabled
+        "off",
+        !micOn
       );
 
-      mic.innerHTML =
-        micEnabled
-          ? "🎤 Mic ON"
-          : "🔇 Mic OFF";
-
+      mic.textContent =
+        micOn ? "🎙️" : "🔇";
     }
 
+    if (cam) {
 
-    if (camera) {
-
-      camera.classList.toggle(
-        "active",
-        cameraEnabled
+      cam.classList.toggle(
+        "off",
+        !cameraOn
       );
 
-      camera.innerHTML =
-        cameraEnabled
-          ? "📷 Camera ON"
-          : "📷 Camera OFF";
-
+      cam.textContent =
+        cameraOn ? "📹" : "🚫";
     }
-
-
-    if (hand) {
-
-      hand.classList.toggle(
-        "active",
-        handRaised
-      );
-
-      hand.innerHTML =
-        handRaised
-          ? "✋ Raised"
-          : "✋ Hand";
-
-    }
-
   }
 
 
-  /* =================================================
-     CHAT
-  ================================================= */
-
-  function sendMessage() {
-
-    const input =
-      document.getElementById(
-        "messageInput"
-      );
-
-
-    const message =
-      input.value.trim();
-
-
-    if (!message)
-      return;
-
-
-    if (
-      currentRoom
-    ) {
-
-      socket.emit(
-        "roomMessage",
-        message
-      );
-
-    } else {
-
-      socket.emit(
-        "classMessage",
-        message
-      );
-
-    }
-
-
-    input.value = "";
-
-  }
-
-
-  function addMessage(
-    username,
-    message,
-    mine = false
-  ) {
-
-    const container =
-      document.getElementById(
-        "messages"
-      );
-
-
-    const div =
-      document.createElement(
-        "div"
-      );
-
-
-    div.className =
-      "message" +
-      (
-        mine
-          ? " me"
-          : ""
-      );
-
-
-    div.innerHTML = `
-
-      <div class="bubble">
-
-        <b>
-          ${escapeHtml(
-            username
-          )}
-        </b>
-
-        <div style="margin-top:4px;">
-          ${escapeHtml(
-            message
-          )}
-        </div>
-
-      </div>
-
-    `;
-
-
-    container.appendChild(
-      div
-    );
-
-
-    container.scrollTop =
-      container.scrollHeight;
-
-  }
-
-
-  socket.on(
-    "roomMessage",
-    data => {
-
-      addMessage(
-        data.username,
-        data.message,
-        data.username ===
-          currentUser?.username
-      );
-
-    }
-  );
-
-
-  socket.on(
-    "classMessage",
-    data => {
-
-      addMessage(
-        data.username,
-        data.message,
-        data.username ===
-          currentUser?.username
-      );
-
-    }
-  );
-
-
-  /* =================================================
-     USERS
-  ================================================= */
-
-  let allUsers = [];
-
-
-  async function loadUsers() {
+  async function startVideoPreview() {
 
     try {
 
-      const response =
-        await fetch(
-          "/api/users"
-        );
+      const stream =
+        await navigator.mediaDevices
+          .getUserMedia({
+            audio: true,
+            video: true
+          });
 
-      const result =
-        await response.json();
+      document.getElementById(
+        "previewVideo"
+      ).srcObject = stream;
 
+    } catch {
 
-      allUsers =
-        result.users || [];
-
-
-      renderUsers(
-        allUsers
+      toast(
+        "Cameraaf hayyama kenni."
       );
-
-    } catch (error) {
-
-      console.error(error);
-
     }
-
   }
 
 
-  function renderUsers(users) {
+  /* =========================
+     CHAT
+  ========================= */
 
-    const container =
+  function sendChat() {
+
+    const input =
       document.getElementById(
-        "usersList"
+        "chatInput"
       );
 
+    const content =
+      input.value.trim();
 
-    if (!users.length) {
+    if (!content || !socket) return;
 
-      container.innerHTML = `
-        <div class="empty">
-          User hin jiru.
+    /*
+      Chat waliigalaa:
+      Yoo Room ykn Kilaasii keessa jirte,
+      chat isaanii fayyadami.
+    */
+
+    if (currentClass) {
+
+      socket.emit("classMessage", {
+        classId: currentClass.id,
+        userId: currentUser.id,
+        username: currentUser.username,
+        content
+      });
+
+    } else {
+
+      addGeneralMessage({
+        username: currentUser.username,
+        content,
+        mine: true
+      });
+
+    }
+
+    input.value = "";
+  }
+
+
+  function addGeneralMessage(data) {
+
+    const box =
+      document.getElementById(
+        "chatMessages"
+      );
+
+    box.insertAdjacentHTML(
+      "beforeend",
+      `
+        <div class="message ${data.mine ? "mine" : ""}">
+          <div class="message-name">
+            ${escapeHtml(data.username)}
+          </div>
+          ${escapeHtml(data.content)}
         </div>
-      `;
+      `
+    );
+
+    box.scrollTop = box.scrollHeight;
+  }
+
+
+  /* =========================
+     SEARCH
+  ========================= */
+
+  async function searchUsers() {
+
+    const q =
+      document.getElementById(
+        "searchInput"
+      ).value.trim();
+
+    const results =
+      document.getElementById(
+        "searchResults"
+      );
+
+    if (!q) {
+
+      results.innerHTML =
+        `<div class="card empty">Username galchi.</div>`;
 
       return;
-
     }
 
+    try {
 
-    container.innerHTML =
-      users
-        .map(user => `
+      const data =
+        await api(
+          `/api/users?search=${encodeURIComponent(q)}`
+        );
 
-          <div class="user">
+      if (!data.users.length) {
 
-            <div class="avatar">
-              ${escapeHtml(
-                user.username
-                  .charAt(0)
-                  .toUpperCase()
-              )}
-            </div>
+        results.innerHTML =
+          `<div class="card empty">Nama argamuu hin dandeenye.</div>`;
 
-            <div>
+        return;
+      }
 
-              <b>
+      results.innerHTML =
+        data.users.map(u => `
+          <div class="card">
+
+            <div class="list-item">
+
+              <div class="avatar">
                 ${escapeHtml(
-                  user.username
+                  u.username.charAt(0).toUpperCase()
                 )}
-              </b>
-
-              <div
-                style="
-                  font-size:11px;
-                  color:#718079;
-                "
-              >
-                ${
-                  user.online
-                    ? "Online"
-                    : "Offline"
-                }
               </div>
 
+              <div class="list-info">
+
+                <div class="list-title">
+                  ${escapeHtml(u.username)}
+                </div>
+
+                <div class="list-sub">
+                  <span class="status">
+                    <span class="dot ${
+                      u.status === "online"
+                        ? "online"
+                        : ""
+                    }"></span>
+
+                    ${
+                      u.status === "online"
+                        ? "Online"
+                        : "Offline"
+                    }
+                  </span>
+                </div>
+
+              </div>
+
+              <button
+                class="btn"
+                onclick="toast('Chat dhuun itti aanutti ni banama.')"
+              >
+                Chat
+              </button>
+
             </div>
 
-            ${
-              user.online
-                ? `
-                  <div
-                    class="online-dot"
-                  ></div>
-                `
-                : ""
-            }
-
           </div>
+        `).join("");
 
-        `)
-        .join("");
+    } catch (e) {
 
+      results.innerHTML =
+        `<div class="card">${escapeHtml(e.message)}</div>`;
+    }
   }
 
 
-  function filterUsers() {
+  /* =========================
+     PROFILE
+  ========================= */
 
-    const value =
-      document
-        .getElementById(
-          "userSearch"
-        )
-        .value
-        .toLowerCase();
+  async function loadProfile() {
 
+    if (!currentUser) return;
 
-    renderUsers(
-      allUsers.filter(
-        user =>
-          user.username
-            .toLowerCase()
-            .includes(value)
-      )
-    );
+    try {
 
+      const data =
+        await api("/api/me");
+
+      currentUser = data.user;
+
+      localStorage.setItem(
+        "mullisa_user",
+        JSON.stringify(currentUser)
+      );
+
+      updateUserUI();
+
+    } catch {}
   }
 
 
-  /* =================================================
-     CALL
-  ================================================= */
-
-  function startCall(type) {
-
-    alert(
-      type === "video"
-        ? "🎥 Video Call jalqabsiisuuf qophiidha."
-        : "📞 Voice Call jalqabsiisuuf qophiidha."
-    );
-
-  }
-
-
-  /* =================================================
-     SOCKET EVENTS
-  ================================================= */
-
-  socket.on(
-    "newPost",
-    () => {
-
-      if (
-        document
-          .getElementById(
-            "posts"
-          )
-          .classList
-          .contains("active")
-      ) {
-
-        loadPosts();
-
-      }
-
-    }
-  );
-
-
-  socket.on(
-    "postUpdated",
-    () => {
-
-      if (
-        document
-          .getElementById(
-            "posts"
-          )
-          .classList
-          .contains("active")
-      ) {
-
-        loadPosts();
-
-      }
-
-    }
-  );
-
-
-  socket.on(
-    "roomUpdated",
-    async () => {
-
-      if (!currentRoom)
-        return;
-
-
-      const response =
-        await fetch(
-          `/api/rooms/${currentRoom.room_id}`
-        );
-
-
-      const result =
-        await response.json();
-
-
-      if (result.success) {
-
-        currentRoom =
-          result.room;
-
-
-        renderRoomSeats(
-          result.room.room_seats ||
-            [],
-          result.room.room_audience ||
-            []
-        );
-
-      }
-
-    }
-  );
-
-
-  socket.on(
-    "classUpdated",
-    () => {
-
-      loadClasses();
-
-    }
-  );
-
-
-  socket.on(
-    "usersUpdated",
-    () => {
-
-      if (
-        document
-          .getElementById(
-            "users"
-          )
-          .classList
-          .contains("active")
-      ) {
-
-        loadUsers();
-
-      }
-
-    }
-  );
-
-
-  /* =================================================
+  /* =========================
      DARK MODE
-  ================================================= */
+  ========================= */
 
   function toggleDarkMode() {
 
-    document.body.classList.toggle(
-      "dark"
-    );
-
+    document.body.classList.toggle("dark");
 
     localStorage.setItem(
-      "mullisaDark",
-      document.body.classList.contains(
-        "dark"
-      )
+      "mullisa_dark",
+      document.body.classList.contains("dark")
     );
-
   }
 
 
-  /* =================================================
-     LOGOUT
-  ================================================= */
-
-  function logout() {
+  function loadDarkMode() {
 
     if (
-      !confirm(
-        "Logout gochuu barbaaddaa?"
-      )
-    )
-      return;
+      localStorage.getItem(
+        "mullisa_dark"
+      ) === "true"
+    ) {
 
-
-    localStorage.removeItem(
-      "mullisaUser"
-    );
-
-
-    currentUser = null;
-
-
-    alert(
-      "Logout milkaa'e."
-    );
-
-
-    showPage(
-      "home"
-    );
-
+      document.body.classList.add("dark");
+    }
   }
 
 
-  /* =================================================
+  /* =========================
      HELPERS
-  ================================================= */
+  ========================= */
 
   function escapeHtml(value) {
 
-    return String(value)
-      .replace(
-        /&/g,
-        "&amp;"
-      )
-      .replace(
-        /</g,
-        "&lt;"
-      )
-      .replace(
-        />/g,
-        "&gt;"
-      )
-      .replace(
-        /"/g,
-        "&quot;"
-      )
-      .replace(
-        /'/g,
-        "&#039;"
-      );
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
 
+
+  function escapeAttr(value) {
+    return escapeHtml(value);
   }
 
 
   function formatDate(date) {
 
-    if (!date)
-      return "";
-
+    if (!date) return "";
 
     return new Date(date)
-      .toLocaleString(
-        "om-ET"
-      );
-
+      .toLocaleString("om-ET", {
+        dateStyle: "medium",
+        timeStyle: "short"
+      });
   }
 
 
-  /* =================================================
+  /* =========================
      START
-  ================================================= */
+  ========================= */
 
-  if (
-    localStorage.getItem(
-      "mullisaDark"
-    ) === "true"
-  ) {
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    document.body.classList.add(
-      "dark"
-    );
+      loadDarkMode();
 
-  }
+      if (currentUser && token) {
 
+        document
+          .getElementById("loginScreen")
+          .classList.remove("show");
 
-  getUser();
+        updateUserUI();
 
-  createInitialSeats();
+        connectSocket();
 
-  updateUserUI();
+        loadPosts();
 
+      } else {
 
-  function createInitialSeats() {
+        document
+          .getElementById("loginScreen")
+          .classList.add("show");
+      }
 
-    renderSeats([]);
+      document
+        .getElementById("authPassword")
+        .addEventListener(
+          "keydown",
+          e => {
+            if (e.key === "Enter") {
+              submitAuth();
+            }
+          }
+        );
 
-  }
+      document
+        .getElementById("chatInput")
+        .addEventListener(
+          "keydown",
+          e => {
+            if (e.key === "Enter") {
+              sendChat();
+            }
+          }
+        );
+
+    }
+  );
 
 </script>
 
