@@ -9,8 +9,9 @@ const { Pool } = require("pg");
 const app = express();
 const server = http.createServer(app);
 
-const PORT = process.env.PORT || 10000;
-const JWT_SECRET = process.env.JWT_SECRET || "mullisa-jm-change-this-secret";
+const PORT = Number(process.env.PORT) || 10000;
+const JWT_SECRET =
+  process.env.JWT_SECRET || "mullisa-jm-change-this-secret";
 
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
@@ -22,14 +23,38 @@ app.use(express.urlencoded({ extended: true }));
 const databaseUrl = process.env.DATABASE_URL;
 
 if (!databaseUrl) {
-  console.error("DATABASE_URL hin argamne.");
+  console.error("❌ DATABASE_URL hin argamne.");
   process.exit(1);
 }
 
+/*
+  IPv4 dirqama godha.
+  Kun Render -> Supabase keessatti
+  ENETUNREACH IPv6 rakkoo hir'isa.
+*/
+
 const pool = new Pool({
   connectionString: databaseUrl,
-  ssl: { rejectUnauthorized: false },
-  connectionTimeoutMillis: 15000
+
+  ssl: {
+    rejectUnauthorized: false
+  },
+
+  family: 4,
+
+  connectionTimeoutMillis: 15000,
+
+  idleTimeoutMillis: 30000,
+
+  max: 10,
+
+  keepAlive: true,
+
+  keepAliveInitialDelayMillis: 10000
+});
+
+pool.on("error", (error) => {
+  console.error("❌ PostgreSQL pool error:", error.message);
 });
 
 async function query(text, params = []) {
@@ -37,11 +62,49 @@ async function query(text, params = []) {
 }
 
 /* =========================
+   DATABASE CONNECTION TEST
+========================= */
+
+async function testDatabase() {
+  console.log("🔄 Database connection testing...");
+
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    try {
+      await query("SELECT NOW()");
+
+      console.log("✅ Database connected.");
+      return true;
+    } catch (error) {
+      console.error(
+        `❌ Database connection attempt ${attempt}/5 failed:`,
+        error.message
+      );
+
+      if (attempt < 5) {
+        console.log("⏳ 5 seconds booda irra deebi'a...");
+        await new Promise((resolve) =>
+          setTimeout(resolve, 5000)
+        );
+      }
+    }
+  }
+
+  return false;
+}
+
+/* =========================
    DATABASE SETUP
 ========================= */
 
 async function initDatabase() {
-  console.log("Database initialization started...");
+  console.log("🔄 Database initialization started...");
+
+  /*
+    UUID gen_random_uuid() tiif
+  */
+  await query(`
+    CREATE EXTENSION IF NOT EXISTS pgcrypto;
+  `);
 
   await query(`
     CREATE TABLE IF NOT EXISTS users (
@@ -180,7 +243,7 @@ async function initDatabase() {
     );
   `);
 
-  console.log("Database migrations completed.");
+  console.log("✅ Database migrations completed.");
 }
 
 /* =========================
@@ -194,7 +257,9 @@ function createToken(user) {
       username: user.username
     },
     JWT_SECRET,
-    { expiresIn: "30d" }
+    {
+      expiresIn: "30d"
+    }
   );
 }
 
@@ -248,7 +313,8 @@ app.get("/api/health", async (req, res) => {
 
 app.post("/api/register", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const username = String(req.body.username || "").trim();
+    const password = String(req.body.password || "");
 
     if (!username || !password) {
       return res.status(400).json({
@@ -269,8 +335,12 @@ app.post("/api/register", async (req, res) => {
     }
 
     const exists = await query(
-      "SELECT id FROM users WHERE LOWER(username)=LOWER($1)",
-      [username.trim()]
+      `
+      SELECT id
+      FROM users
+      WHERE LOWER(username)=LOWER($1)
+      `,
+      [username]
     );
 
     if (exists.rows.length) {
@@ -279,15 +349,29 @@ app.post("/api/register", async (req, res) => {
       });
     }
 
-    const passwordHash = await bcrypt.hash(password, 12);
+    const passwordHash = await bcrypt.hash(
+      password,
+      12
+    );
 
     const result = await query(
       `
-      INSERT INTO users(username,password_hash)
-      VALUES($1,$2)
-      RETURNING id,username,bio,avatar,status,last_seen,created_at
+      INSERT INTO users
+      (username,password_hash,status,last_seen)
+      VALUES($1,$2,'online',NOW())
+      RETURNING
+        id,
+        username,
+        bio,
+        avatar,
+        status,
+        last_seen,
+        created_at
       `,
-      [username.trim(), passwordHash]
+      [
+        username,
+        passwordHash
+      ]
     );
 
     const user = result.rows[0];
@@ -298,7 +382,10 @@ app.post("/api/register", async (req, res) => {
       token: createToken(user)
     });
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Register error:",
+      error.message
+    );
 
     res.status(500).json({
       error: "Register irratti rakkoon uumame."
@@ -312,7 +399,13 @@ app.post("/api/register", async (req, res) => {
 
 app.post("/api/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const username = String(
+      req.body.username || ""
+    ).trim();
+
+    const password = String(
+      req.body.password || ""
+    );
 
     if (!username || !password) {
       return res.status(400).json({
@@ -321,8 +414,12 @@ app.post("/api/login", async (req, res) => {
     }
 
     const result = await query(
-      "SELECT * FROM users WHERE LOWER(username)=LOWER($1)",
-      [username.trim()]
+      `
+      SELECT *
+      FROM users
+      WHERE LOWER(username)=LOWER($1)
+      `,
+      [username]
     );
 
     if (!result.rows.length) {
@@ -347,7 +444,8 @@ app.post("/api/login", async (req, res) => {
     await query(
       `
       UPDATE users
-      SET status='online', last_seen=NOW()
+      SET status='online',
+          last_seen=NOW()
       WHERE id=$1
       `,
       [user.id]
@@ -361,7 +459,10 @@ app.post("/api/login", async (req, res) => {
       token: createToken(user)
     });
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Login error:",
+      error.message
+    );
 
     res.status(500).json({
       error: "Login irratti rakkoon uumame."
@@ -374,24 +475,37 @@ app.post("/api/login", async (req, res) => {
 ========================= */
 
 app.get("/api/me", auth, async (req, res) => {
-  const result = await query(
-    `
-    SELECT id,username,bio,avatar,status,last_seen,created_at
-    FROM users
-    WHERE id=$1
-    `,
-    [req.user.id]
-  );
+  try {
+    const result = await query(
+      `
+      SELECT
+        id,
+        username,
+        bio,
+        avatar,
+        status,
+        last_seen,
+        created_at
+      FROM users
+      WHERE id=$1
+      `,
+      [req.user.id]
+    );
 
-  if (!result.rows.length) {
-    return res.status(404).json({
-      error: "User hin argamne."
+    if (!result.rows.length) {
+      return res.status(404).json({
+        error: "User hin argamne."
+      });
+    }
+
+    res.json({
+      user: result.rows[0]
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "User argachuu hin dandeenye."
     });
   }
-
-  res.json({
-    user: result.rows[0]
-  });
 });
 
 /* =========================
@@ -399,22 +513,36 @@ app.get("/api/me", auth, async (req, res) => {
 ========================= */
 
 app.get("/api/users", auth, async (req, res) => {
-  const search = String(req.query.search || "").trim();
+  try {
+    const search = String(
+      req.query.search || ""
+    ).trim();
 
-  const result = await query(
-    `
-    SELECT id,username,bio,avatar,status,last_seen
-    FROM users
-    WHERE username ILIKE $1
-    ORDER BY username
-    LIMIT 50
-    `,
-    [`%${search}%`]
-  );
+    const result = await query(
+      `
+      SELECT
+        id,
+        username,
+        bio,
+        avatar,
+        status,
+        last_seen
+      FROM users
+      WHERE username ILIKE $1
+      ORDER BY username
+      LIMIT 50
+      `,
+      [`%${search}%`]
+    );
 
-  res.json({
-    users: result.rows
-  });
+    res.json({
+      users: result.rows
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Users barbaaduu hin danda'amne."
+    });
+  }
 });
 
 /* =========================
@@ -435,9 +563,12 @@ app.get("/api/posts", async (req, res) => {
         COUNT(DISTINCT c.id)::int AS comments,
         COUNT(DISTINCT s.id)::int AS shares
       FROM posts p
-      LEFT JOIN post_likes l ON l.post_id=p.id
-      LEFT JOIN comments c ON c.post_id=p.id
-      LEFT JOIN post_shares s ON s.post_id=p.id
+      LEFT JOIN post_likes l
+        ON l.post_id=p.id
+      LEFT JOIN comments c
+        ON c.post_id=p.id
+      LEFT JOIN post_shares s
+        ON s.post_id=p.id
       GROUP BY p.id
       ORDER BY p.created_at DESC
       LIMIT 100
@@ -447,6 +578,11 @@ app.get("/api/posts", async (req, res) => {
       posts: result.rows
     });
   } catch (error) {
+    console.error(
+      "Posts error:",
+      error.message
+    );
+
     res.status(500).json({
       error: "Posts fidhuun hin danda'amne."
     });
@@ -455,9 +591,15 @@ app.get("/api/posts", async (req, res) => {
 
 app.post("/api/posts", auth, async (req, res) => {
   try {
-    const { content, image_url = "" } = req.body;
+    const content = String(
+      req.body.content || ""
+    ).trim();
 
-    if (!content || !content.trim()) {
+    const imageUrl = String(
+      req.body.image_url || ""
+    ).trim();
+
+    if (!content) {
       return res.status(400).json({
         error: "Post kee barreessi."
       });
@@ -465,15 +607,16 @@ app.post("/api/posts", auth, async (req, res) => {
 
     const result = await query(
       `
-      INSERT INTO posts(user_id,username,content,image_url)
+      INSERT INTO posts
+      (user_id,username,content,image_url)
       VALUES($1,$2,$3,$4)
       RETURNING *
       `,
       [
         req.user.id,
         req.user.username,
-        content.trim(),
-        image_url
+        content,
+        imageUrl
       ]
     );
 
@@ -486,7 +629,10 @@ app.post("/api/posts", auth, async (req, res) => {
       post
     });
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Post error:",
+      error.message
+    );
 
     res.status(500).json({
       error: "Post uumuu irratti rakkoo."
@@ -498,592 +644,805 @@ app.post("/api/posts", auth, async (req, res) => {
    LIKE
 ========================= */
 
-app.post("/api/posts/:id/like", auth, async (req, res) => {
-  try {
-    const postId = req.params.id;
+app.post(
+  "/api/posts/:id/like",
+  auth,
+  async (req, res) => {
+    try {
+      const postId = req.params.id;
 
-    const exists = await query(
-      `
-      SELECT id
-      FROM post_likes
-      WHERE post_id=$1 AND user_id=$2
-      `,
-      [postId, req.user.id]
-    );
-
-    let liked;
-
-    if (exists.rows.length) {
-      await query(
+      const exists = await query(
         `
-        DELETE FROM post_likes
-        WHERE post_id=$1 AND user_id=$2
+        SELECT id
+        FROM post_likes
+        WHERE post_id=$1
+        AND user_id=$2
         `,
-        [postId, req.user.id]
+        [
+          postId,
+          req.user.id
+        ]
       );
 
-      liked = false;
-    } else {
-      await query(
+      let liked;
+
+      if (exists.rows.length) {
+        await query(
+          `
+          DELETE FROM post_likes
+          WHERE post_id=$1
+          AND user_id=$2
+          `,
+          [
+            postId,
+            req.user.id
+          ]
+        );
+
+        liked = false;
+      } else {
+        await query(
+          `
+          INSERT INTO post_likes
+          (post_id,user_id)
+          VALUES($1,$2)
+          ON CONFLICT DO NOTHING
+          `,
+          [
+            postId,
+            req.user.id
+          ]
+        );
+
+        liked = true;
+      }
+
+      const count = await query(
         `
-        INSERT INTO post_likes(post_id,user_id)
-        VALUES($1,$2)
+        SELECT COUNT(*)::int AS count
+        FROM post_likes
+        WHERE post_id=$1
         `,
-        [postId, req.user.id]
+        [postId]
       );
 
-      liked = true;
+      const likes =
+        count.rows[0].count;
+
+      io.emit(
+        "postLikeChanged",
+        {
+          postId,
+          likes
+        }
+      );
+
+      res.json({
+        ok: true,
+        liked,
+        likes
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: "Like irratti rakkoo."
+      });
     }
-
-    const count = await query(
-      `
-      SELECT COUNT(*)::int AS count
-      FROM post_likes
-      WHERE post_id=$1
-      `,
-      [postId]
-    );
-
-    io.emit("postLikeChanged", {
-      postId,
-      likes: count.rows[0].count
-    });
-
-    res.json({
-      ok: true,
-      liked,
-      likes: count.rows[0].count
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: "Like irratti rakkoo."
-    });
   }
-});
+);
 
 /* =========================
    COMMENTS
 ========================= */
 
-app.get("/api/posts/:id/comments", async (req, res) => {
-  const result = await query(
-    `
-    SELECT id,post_id,user_id,username,content,created_at
-    FROM comments
-    WHERE post_id=$1
-    ORDER BY created_at ASC
-    `,
-    [req.params.id]
-  );
+app.get(
+  "/api/posts/:id/comments",
+  async (req, res) => {
+    try {
+      const result = await query(
+        `
+        SELECT
+          id,
+          post_id,
+          user_id,
+          username,
+          content,
+          created_at
+        FROM comments
+        WHERE post_id=$1
+        ORDER BY created_at ASC
+        `,
+        [req.params.id]
+      );
 
-  res.json({
-    comments: result.rows
-  });
-});
-
-app.post("/api/posts/:id/comments", auth, async (req, res) => {
-  try {
-    const { content } = req.body;
-
-    if (!content || !content.trim()) {
-      return res.status(400).json({
-        error: "Comment barreessi."
+      res.json({
+        comments: result.rows
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: "Comments fidhuun hin danda'amne."
       });
     }
-
-    const result = await query(
-      `
-      INSERT INTO comments(post_id,user_id,username,content)
-      VALUES($1,$2,$3,$4)
-      RETURNING *
-      `,
-      [
-        req.params.id,
-        req.user.id,
-        req.user.username,
-        content.trim()
-      ]
-    );
-
-    const comment = result.rows[0];
-
-    io.emit("newComment", comment);
-
-    res.json({
-      ok: true,
-      comment
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: "Comment irratti rakkoo."
-    });
   }
-});
+);
+
+app.post(
+  "/api/posts/:id/comments",
+  auth,
+  async (req, res) => {
+    try {
+      const content = String(
+        req.body.content || ""
+      ).trim();
+
+      if (!content) {
+        return res.status(400).json({
+          error: "Comment barreessi."
+        });
+      }
+
+      const result = await query(
+        `
+        INSERT INTO comments
+        (post_id,user_id,username,content)
+        VALUES($1,$2,$3,$4)
+        RETURNING *
+        `,
+        [
+          req.params.id,
+          req.user.id,
+          req.user.username,
+          content
+        ]
+      );
+
+      const comment = result.rows[0];
+
+      io.emit(
+        "newComment",
+        comment
+      );
+
+      res.json({
+        ok: true,
+        comment
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: "Comment irratti rakkoo."
+      });
+    }
+  }
+);
 
 /* =========================
    SHARE
 ========================= */
 
-app.post("/api/posts/:id/share", auth, async (req, res) => {
-  try {
-    await query(
-      `
-      INSERT INTO post_shares(post_id,user_id)
-      VALUES($1,$2)
-      ON CONFLICT DO NOTHING
-      `,
-      [req.params.id, req.user.id]
-    );
+app.post(
+  "/api/posts/:id/share",
+  auth,
+  async (req, res) => {
+    try {
+      await query(
+        `
+        INSERT INTO post_shares
+        (post_id,user_id)
+        VALUES($1,$2)
+        ON CONFLICT DO NOTHING
+        `,
+        [
+          req.params.id,
+          req.user.id
+        ]
+      );
 
-    const count = await query(
-      `
-      SELECT COUNT(*)::int AS count
-      FROM post_shares
-      WHERE post_id=$1
-      `,
-      [req.params.id]
-    );
+      const count = await query(
+        `
+        SELECT COUNT(*)::int AS count
+        FROM post_shares
+        WHERE post_id=$1
+        `,
+        [req.params.id]
+      );
 
-    res.json({
-      ok: true,
-      shares: count.rows[0].count
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: "Share irratti rakkoo."
-    });
+      res.json({
+        ok: true,
+        shares: count.rows[0].count
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: "Share irratti rakkoo."
+      });
+    }
   }
-});
+);
 
 /* =========================
    CLASSES
 ========================= */
 
-app.post("/api/classes", auth, async (req, res) => {
-  try {
-    const { name } = req.body;
+app.post(
+  "/api/classes",
+  auth,
+  async (req, res) => {
+    try {
+      const name = String(
+        req.body.name || ""
+      ).trim();
 
-    if (!name || !name.trim()) {
-      return res.status(400).json({
-        error: "Maqaa kilaasii galchi."
+      if (!name) {
+        return res.status(400).json({
+          error: "Maqaa kilaasii galchi."
+        });
+      }
+
+      const result = await query(
+        `
+        INSERT INTO classes
+        (name,owner_id,owner_name)
+        VALUES($1,$2,$3)
+        RETURNING *
+        `,
+        [
+          name,
+          req.user.id,
+          req.user.username
+        ]
+      );
+
+      const classroom =
+        result.rows[0];
+
+      await query(
+        `
+        INSERT INTO class_members
+        (class_id,user_id,username,seat)
+        VALUES($1,$2,$3,1)
+        `,
+        [
+          classroom.id,
+          req.user.id,
+          req.user.username
+        ]
+      );
+
+      res.json({
+        ok: true,
+        class: classroom,
+        seat: 1
+      });
+    } catch (error) {
+      console.error(
+        "Class create error:",
+        error.message
+      );
+
+      res.status(500).json({
+        error: "Kilaasii uumuu hin dandeenye."
       });
     }
-
-    const result = await query(
-      `
-      INSERT INTO classes(name,owner_id,owner_name)
-      VALUES($1,$2,$3)
-      RETURNING *
-      `,
-      [
-        name.trim(),
-        req.user.id,
-        req.user.username
-      ]
-    );
-
-    const classroom = result.rows[0];
-
-    await query(
-      `
-      INSERT INTO class_members
-      (class_id,user_id,username,seat)
-      VALUES($1,$2,$3,1)
-      `,
-      [
-        classroom.id,
-        req.user.id,
-        req.user.username
-      ]
-    );
-
-    res.json({
-      ok: true,
-      class: classroom,
-      seat: 1
-    });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      error: "Kilaasii uumuu hin dandeenye."
-    });
   }
-});
+);
 
-app.get("/api/classes", async (req, res) => {
-  const result = await query(`
-    SELECT
-      c.id,
-      c.name,
-      c.owner_id,
-      c.owner_name,
-      c.created_at,
-      COUNT(cm.id)::int AS members
-    FROM classes c
-    LEFT JOIN class_members cm
-      ON cm.class_id=c.id
-    GROUP BY c.id
-    ORDER BY c.created_at DESC
-    LIMIT 100
-  `);
+app.get(
+  "/api/classes",
+  async (req, res) => {
+    try {
+      const result = await query(`
+        SELECT
+          c.id,
+          c.name,
+          c.owner_id,
+          c.owner_name,
+          c.created_at,
+          COUNT(cm.id)::int AS members
+        FROM classes c
+        LEFT JOIN class_members cm
+          ON cm.class_id=c.id
+        GROUP BY c.id
+        ORDER BY c.created_at DESC
+        LIMIT 100
+      `);
 
-  res.json({
-    classes: result.rows
-  });
-});
-
-app.get("/api/classes/:id", async (req, res) => {
-  const result = await query(
-    `
-    SELECT
-      c.id,
-      c.name,
-      c.owner_id,
-      c.owner_name,
-      c.created_at
-    FROM classes c
-    WHERE c.id=$1
-    `,
-    [req.params.id]
-  );
-
-  if (!result.rows.length) {
-    return res.status(404).json({
-      error: "Kilaasii hin argamne."
-    });
+      res.json({
+        classes: result.rows
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: "Kilaasiiwwan fidhuun hin danda'amne."
+      });
+    }
   }
+);
 
-  const members = await query(
-    `
-    SELECT
-      user_id,
-      username,
-      seat,
-      joined_at
-    FROM class_members
-    WHERE class_id=$1
-    ORDER BY seat NULLS LAST
-    `,
-    [req.params.id]
-  );
+app.get(
+  "/api/classes/:id",
+  async (req, res) => {
+    try {
+      const result = await query(
+        `
+        SELECT
+          id,
+          name,
+          owner_id,
+          owner_name,
+          created_at
+        FROM classes
+        WHERE id=$1
+        `,
+        [req.params.id]
+      );
 
-  res.json({
-    class: result.rows[0],
-    members: members.rows
-  });
-});
+      if (!result.rows.length) {
+        return res.status(404).json({
+          error: "Kilaasii hin argamne."
+        });
+      }
+
+      const members =
+        await query(
+          `
+          SELECT
+            user_id,
+            username,
+            seat,
+            joined_at
+          FROM class_members
+          WHERE class_id=$1
+          ORDER BY seat NULLS LAST
+          `,
+          [req.params.id]
+        );
+
+      res.json({
+        class: result.rows[0],
+        members: members.rows
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: "Kilaasii fidhuu hin dandeenye."
+      });
+    }
+  }
+);
 
 /* =========================
    JOIN CLASS
 ========================= */
 
-app.post("/api/classes/:id/join", auth, async (req, res) => {
-  try {
-    const classId = req.params.id;
+app.post(
+  "/api/classes/:id/join",
+  auth,
+  async (req, res) => {
+    try {
+      const classId =
+        req.params.id;
 
-    const classroom = await query(
-      "SELECT * FROM classes WHERE id=$1",
-      [classId]
-    );
+      const classroom =
+        await query(
+          "SELECT * FROM classes WHERE id=$1",
+          [classId]
+        );
 
-    if (!classroom.rows.length) {
-      return res.status(404).json({
-        error: "Kilaasii hin argamne."
-      });
-    }
-
-    const existing = await query(
-      `
-      SELECT *
-      FROM class_members
-      WHERE class_id=$1 AND user_id=$2
-      `,
-      [classId, req.user.id]
-    );
-
-    if (existing.rows.length) {
-      return res.json({
-        ok: true,
-        seat: existing.rows[0].seat,
-        alreadyJoined: true
-      });
-    }
-
-    const seats = await query(
-      `
-      SELECT seat
-      FROM class_members
-      WHERE class_id=$1
-      AND seat IS NOT NULL
-      ORDER BY seat
-      `,
-      [classId]
-    );
-
-    const occupied = new Set(
-      seats.rows.map(x => Number(x.seat))
-    );
-
-    let seat = null;
-
-    for (let i = 2; i <= 10; i++) {
-      if (!occupied.has(i)) {
-        seat = i;
-        break;
+      if (!classroom.rows.length) {
+        return res.status(404).json({
+          error: "Kilaasii hin argamne."
+        });
       }
+
+      const existing =
+        await query(
+          `
+          SELECT *
+          FROM class_members
+          WHERE class_id=$1
+          AND user_id=$2
+          `,
+          [
+            classId,
+            req.user.id
+          ]
+        );
+
+      if (existing.rows.length) {
+        return res.json({
+          ok: true,
+          seat: existing.rows[0].seat,
+          alreadyJoined: true,
+          audience:
+            existing.rows[0].seat === null
+        });
+      }
+
+      const seats =
+        await query(
+          `
+          SELECT seat
+          FROM class_members
+          WHERE class_id=$1
+          AND seat IS NOT NULL
+          `,
+          [classId]
+        );
+
+      const occupied =
+        new Set(
+          seats.rows.map(
+            x => Number(x.seat)
+          )
+        );
+
+      let seat = null;
+
+      for (let i = 2; i <= 10; i++) {
+        if (!occupied.has(i)) {
+          seat = i;
+          break;
+        }
+      }
+
+      await query(
+        `
+        INSERT INTO class_members
+        (class_id,user_id,username,seat)
+        VALUES($1,$2,$3,$4)
+        `,
+        [
+          classId,
+          req.user.id,
+          req.user.username,
+          seat
+        ]
+      );
+
+      io.to(`class:${classId}`).emit(
+        "classMemberChanged",
+        {
+          userId: req.user.id,
+          username: req.user.username,
+          seat
+        }
+      );
+
+      res.json({
+        ok: true,
+        seat,
+        audience: seat === null
+      });
+    } catch (error) {
+      console.error(
+        "Join class error:",
+        error.message
+      );
+
+      res.status(500).json({
+        error: "Kilaasii seenuu irratti rakkoo."
+      });
     }
-
-    await query(
-      `
-      INSERT INTO class_members
-      (class_id,user_id,username,seat)
-      VALUES($1,$2,$3,$4)
-      `,
-      [
-        classId,
-        req.user.id,
-        req.user.username,
-        seat
-      ]
-    );
-
-    res.json({
-      ok: true,
-      seat,
-      audience: seat === null
-    });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      error: "Kilaasii seenuu irratti rakkoo."
-    });
   }
-});
+);
 
 /* =========================
    LEAVE CLASS
 ========================= */
 
-app.post("/api/classes/:id/leave", auth, async (req, res) => {
-  await query(
-    `
-    DELETE FROM class_members
-    WHERE class_id=$1 AND user_id=$2
-    `,
-    [
-      req.params.id,
-      req.user.id
-    ]
-  );
+app.post(
+  "/api/classes/:id/leave",
+  auth,
+  async (req, res) => {
+    try {
+      await query(
+        `
+        DELETE FROM class_members
+        WHERE class_id=$1
+        AND user_id=$2
+        `,
+        [
+          req.params.id,
+          req.user.id
+        ]
+      );
 
-  res.json({
-    ok: true
-  });
-});
+      io.to(
+        `class:${req.params.id}`
+      ).emit(
+        "classMemberLeft",
+        {
+          userId: req.user.id
+        }
+      );
+
+      res.json({
+        ok: true
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: "Kilaasii keessaa bahuu hin dandeenye."
+      });
+    }
+  }
+);
 
 /* =========================
    ROOMS
 ========================= */
 
-app.post("/api/rooms", auth, async (req, res) => {
-  try {
-    const { name } = req.body;
+app.post(
+  "/api/rooms",
+  auth,
+  async (req, res) => {
+    try {
+      const name = String(
+        req.body.name || ""
+      ).trim();
 
-    if (!name || !name.trim()) {
-      return res.status(400).json({
-        error: "Maqaa room galchi."
+      if (!name) {
+        return res.status(400).json({
+          error: "Maqaa room galchi."
+        });
+      }
+
+      const result = await query(
+        `
+        INSERT INTO rooms
+        (name,owner_id,owner_name)
+        VALUES($1,$2,$3)
+        RETURNING *
+        `,
+        [
+          name,
+          req.user.id,
+          req.user.username
+        ]
+      );
+
+      res.json({
+        ok: true,
+        room: result.rows[0]
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: "Room uumuu hin dandeenye."
       });
     }
-
-    const result = await query(
-      `
-      INSERT INTO rooms(name,owner_id,owner_name)
-      VALUES($1,$2,$3)
-      RETURNING *
-      `,
-      [
-        name.trim(),
-        req.user.id,
-        req.user.username
-      ]
-    );
-
-    res.json({
-      ok: true,
-      room: result.rows[0]
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: "Room uumuu hin dandeenye."
-    });
   }
-});
+);
 
-app.get("/api/rooms", async (req, res) => {
-  const result = await query(`
-    SELECT
-      r.id,
-      r.name,
-      r.owner_id,
-      r.owner_name,
-      r.created_at,
-      COUNT(rm.id)::int AS members
-    FROM rooms r
-    LEFT JOIN room_members rm
-      ON rm.room_id=r.id
-    GROUP BY r.id
-    ORDER BY r.created_at DESC
-    LIMIT 100
-  `);
+app.get(
+  "/api/rooms",
+  async (req, res) => {
+    try {
+      const result = await query(`
+        SELECT
+          r.id,
+          r.name,
+          r.owner_id,
+          r.owner_name,
+          r.created_at,
+          COUNT(rm.id)::int AS members
+        FROM rooms r
+        LEFT JOIN room_members rm
+          ON rm.room_id=r.id
+        GROUP BY r.id
+        ORDER BY r.created_at DESC
+        LIMIT 100
+      `);
 
-  res.json({
-    rooms: result.rows
-  });
-});
-
-app.get("/api/rooms/:id", async (req, res) => {
-  const result = await query(
-    "SELECT * FROM rooms WHERE id=$1",
-    [req.params.id]
-  );
-
-  if (!result.rows.length) {
-    return res.status(404).json({
-      error: "Room hin argamne."
-    });
+      res.json({
+        rooms: result.rows
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: "Roomwwan fidhuun hin danda'amne."
+      });
+    }
   }
+);
 
-  const members = await query(
-    `
-    SELECT
-      user_id,
-      username,
-      seat,
-      mic_on,
-      camera_on
-    FROM room_members
-    WHERE room_id=$1
-    ORDER BY seat NULLS LAST
-    `,
-    [req.params.id]
-  );
+app.get(
+  "/api/rooms/:id",
+  async (req, res) => {
+    try {
+      const result =
+        await query(
+          `
+          SELECT *
+          FROM rooms
+          WHERE id=$1
+          `,
+          [req.params.id]
+        );
 
-  res.json({
-    room: result.rows[0],
-    members: members.rows
-  });
-});
+      if (!result.rows.length) {
+        return res.status(404).json({
+          error: "Room hin argamne."
+        });
+      }
+
+      const members =
+        await query(
+          `
+          SELECT
+            user_id,
+            username,
+            seat,
+            mic_on,
+            camera_on
+          FROM room_members
+          WHERE room_id=$1
+          ORDER BY seat NULLS LAST
+          `,
+          [req.params.id]
+        );
+
+      res.json({
+        room: result.rows[0],
+        members: members.rows
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: "Room fidhuu hin dandeenye."
+      });
+    }
+  }
+);
 
 /* =========================
    JOIN ROOM
 ========================= */
 
-app.post("/api/rooms/:id/join", auth, async (req, res) => {
-  try {
-    const roomId = req.params.id;
+app.post(
+  "/api/rooms/:id/join",
+  auth,
+  async (req, res) => {
+    try {
+      const roomId =
+        req.params.id;
 
-    const room = await query(
-      "SELECT * FROM rooms WHERE id=$1",
-      [roomId]
-    );
+      const room =
+        await query(
+          "SELECT * FROM rooms WHERE id=$1",
+          [roomId]
+        );
 
-    if (!room.rows.length) {
-      return res.status(404).json({
-        error: "Room hin argamne."
-      });
-    }
-
-    const existing = await query(
-      `
-      SELECT *
-      FROM room_members
-      WHERE room_id=$1 AND user_id=$2
-      `,
-      [roomId, req.user.id]
-    );
-
-    if (existing.rows.length) {
-      return res.json({
-        ok: true,
-        seat: existing.rows[0].seat,
-        alreadyJoined: true
-      });
-    }
-
-    const seats = await query(
-      `
-      SELECT seat
-      FROM room_members
-      WHERE room_id=$1
-      AND seat IS NOT NULL
-      ORDER BY seat
-      `,
-      [roomId]
-    );
-
-    const occupied = new Set(
-      seats.rows.map(x => Number(x.seat)
-    ));
-
-    let seat = null;
-
-    for (let i = 1; i <= 10; i++) {
-      if (!occupied.has(i)) {
-        seat = i;
-        break;
+      if (!room.rows.length) {
+        return res.status(404).json({
+          error: "Room hin argamne."
+        });
       }
+
+      const existing =
+        await query(
+          `
+          SELECT *
+          FROM room_members
+          WHERE room_id=$1
+          AND user_id=$2
+          `,
+          [
+            roomId,
+            req.user.id
+          ]
+        );
+
+      if (existing.rows.length) {
+        return res.json({
+          ok: true,
+          seat: existing.rows[0].seat,
+          alreadyJoined: true,
+          audience:
+            existing.rows[0].seat === null
+        });
+      }
+
+      const seats =
+        await query(
+          `
+          SELECT seat
+          FROM room_members
+          WHERE room_id=$1
+          AND seat IS NOT NULL
+          `,
+          [roomId]
+        );
+
+      const occupied =
+        new Set(
+          seats.rows.map(
+            x => Number(x.seat)
+          )
+        );
+
+      let seat = null;
+
+      for (let i = 1; i <= 10; i++) {
+        if (!occupied.has(i)) {
+          seat = i;
+          break;
+        }
+      }
+
+      await query(
+        `
+        INSERT INTO room_members
+        (room_id,user_id,username,seat)
+        VALUES($1,$2,$3,$4)
+        `,
+        [
+          roomId,
+          req.user.id,
+          req.user.username,
+          seat
+        ]
+      );
+
+      io.to(`room:${roomId}`).emit(
+        "roomMemberChanged",
+        {
+          userId: req.user.id,
+          username: req.user.username,
+          seat
+        }
+      );
+
+      res.json({
+        ok: true,
+        seat,
+        audience: seat === null
+      });
+    } catch (error) {
+      console.error(
+        "Join room error:",
+        error.message
+      );
+
+      res.status(500).json({
+        error: "Room seenuu irratti rakkoo."
+      });
     }
-
-    await query(
-      `
-      INSERT INTO room_members
-      (room_id,user_id,username,seat)
-      VALUES($1,$2,$3,$4)
-      `,
-      [
-        roomId,
-        req.user.id,
-        req.user.username,
-        seat
-      ]
-    );
-
-    res.json({
-      ok: true,
-      seat,
-      audience: seat === null
-    });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      error: "Room seenuu irratti rakkoo."
-    });
   }
-});
+);
 
 /* =========================
    LEAVE ROOM
 ========================= */
 
-app.post("/api/rooms/:id/leave", auth, async (req, res) => {
-  await query(
-    `
-    DELETE FROM room_members
-    WHERE room_id=$1 AND user_id=$2
-    `,
-    [
-      req.params.id,
-      req.user.id
-    ]
-  );
+app.post(
+  "/api/rooms/:id/leave",
+  auth,
+  async (req, res) => {
+    try {
+      await query(
+        `
+        DELETE FROM room_members
+        WHERE room_id=$1
+        AND user_id=$2
+        `,
+        [
+          req.params.id,
+          req.user.id
+        ]
+      );
 
-  res.json({
-    ok: true
-  });
-});
+      io.to(
+        `room:${req.params.id}`
+      ).emit(
+        "roomMemberLeft",
+        {
+          userId: req.user.id
+        }
+      );
+
+      res.json({
+        ok: true
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: "Room keessaa bahuu hin dandeenye."
+      });
+    }
+  }
+);
 
 /* =========================
    SOCKET.IO
@@ -1093,280 +1452,445 @@ const io = new Server(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"]
-  }
+  },
+  transports: ["websocket", "polling"]
 });
 
 const onlineUsers = new Map();
 
 io.on("connection", socket => {
-  console.log("Socket connected:", socket.id);
+  console.log(
+    "🔌 Socket connected:",
+    socket.id
+  );
 
-  socket.on("userOnline", async data => {
-    if (!data?.userId) return;
+  socket.on(
+    "userOnline",
+    async data => {
+      if (!data?.userId) return;
 
-    onlineUsers.set(String(data.userId), socket.id);
+      const userId =
+        String(data.userId);
 
-    try {
-      await query(
-        `
-        UPDATE users
-        SET status='online', last_seen=NOW()
-        WHERE id=$1
-        `,
-        [data.userId]
+      onlineUsers.set(
+        userId,
+        socket.id
       );
 
-      io.emit("userStatus", {
-        userId: data.userId,
-        status: "online"
-      });
-    } catch {}
-  });
+      try {
+        await query(
+          `
+          UPDATE users
+          SET status='online',
+              last_seen=NOW()
+          WHERE id=$1
+          `,
+          [userId]
+        );
+
+        io.emit(
+          "userStatus",
+          {
+            userId,
+            status: "online"
+          }
+        );
+      } catch (error) {
+        console.error(
+          "userOnline error:",
+          error.message
+        );
+      }
+    }
+  );
 
   /* CLASS */
 
-  socket.on("joinClass", async data => {
-    if (!data?.classId) return;
+  socket.on(
+    "joinClass",
+    async data => {
+      if (!data?.classId) return;
 
-    socket.join(`class:${data.classId}`);
+      const room =
+        `class:${data.classId}`;
 
-    socket.classId = data.classId;
+      socket.join(room);
 
-    io.to(`class:${data.classId}`).emit(
-      "classUserJoined",
-      {
-        userId: data.userId,
-        username: data.username
-      }
-    );
-  });
+      socket.classId =
+        data.classId;
 
-  socket.on("classMessage", async data => {
-    if (!data?.classId || !data?.content) return;
-
-    const message = {
-      id: Date.now().toString(),
-      classId: data.classId,
-      userId: data.userId,
-      username: data.username,
-      content: data.content,
-      createdAt: new Date().toISOString()
-    };
-
-    try {
-      await query(
-        `
-        INSERT INTO messages
-        (sender_id,sender_name,class_id,content)
-        VALUES($1,$2,$3,$4)
-        `,
-        [
-          data.userId,
-          data.username,
-          data.classId,
-          data.content
-        ]
-      );
-    } catch {}
-
-    io.to(`class:${data.classId}`).emit(
-      "classMessage",
-      message
-    );
-  });
-
-  /* ROOM */
-
-  socket.on("joinRoom", data => {
-    if (!data?.roomId) return;
-
-    socket.join(`room:${data.roomId}`);
-
-    socket.roomId = data.roomId;
-
-    io.to(`room:${data.roomId}`).emit(
-      "roomUserJoined",
-      {
-        socketId: socket.id,
-        userId: data.userId,
-        username: data.username,
-        seat: data.seat
-      }
-    );
-  });
-
-  socket.on("leaveRoom", data => {
-    if (!data?.roomId) return;
-
-    socket.leave(`room:${data.roomId}`);
-
-    socket.to(`room:${data.roomId}`).emit(
-      "roomUserLeft",
-      {
-        socketId: socket.id,
-        userId: data.userId
-      }
-    );
-  });
-
-  /* PRIVATE MESSAGE */
-
-  socket.on("privateMessage", async data => {
-    if (!data?.to || !data?.content) return;
-
-    const targetSocket = onlineUsers.get(
-      String(data.to)
-    );
-
-    if (targetSocket) {
-      io.to(targetSocket).emit(
-        "privateMessage",
-        data
-      );
-    }
-
-    try {
-      await query(
-        `
-        INSERT INTO messages
-        (sender_id,sender_name,receiver_id,content)
-        VALUES($1,$2,$3,$4)
-        `,
-        [
-          data.userId,
-          data.username,
-          data.to,
-          data.content
-        ]
-      );
-    } catch {}
-  });
-
-  /* WEBRTC */
-
-  socket.on("offer", data => {
-    if (data?.to) {
-      io.to(data.to).emit("offer", {
-        from: socket.id,
-        offer: data.offer
-      });
-    }
-  });
-
-  socket.on("answer", data => {
-    if (data?.to) {
-      io.to(data.to).emit("answer", {
-        from: socket.id,
-        answer: data.answer
-      });
-    }
-  });
-
-  socket.on("ice-candidate", data => {
-    if (data?.to) {
-      io.to(data.to).emit("ice-candidate", {
-        from: socket.id,
-        candidate: data.candidate
-      });
-    }
-  });
-
-  /* MIC */
-
-  socket.on("micStatus", data => {
-    if (!data?.roomId) return;
-
-    socket.to(`room:${data.roomId}`).emit(
-      "micStatus",
-      {
-        userId: data.userId,
-        micOn: data.micOn
-      }
-    );
-  });
-
-  /* CAMERA */
-
-  socket.on("cameraStatus", data => {
-    if (!data?.roomId) return;
-
-    socket.to(`room:${data.roomId}`).emit(
-      "cameraStatus",
-      {
-        userId: data.userId,
-        cameraOn: data.cameraOn
-      }
-    );
-  });
-
-  /* DISCONNECT */
-
-  socket.on("disconnect", async () => {
-    console.log("Socket disconnected:", socket.id);
-
-    for (const [userId, socketId] of onlineUsers.entries()) {
-      if (socketId === socket.id) {
-        onlineUsers.delete(userId);
-
-        try {
-          await query(
-            `
-            UPDATE users
-            SET status='offline', last_seen=NOW()
-            WHERE id=$1
-            `,
-            [userId]
-          );
-
-          io.emit("userStatus", {
-            userId,
-            status: "offline"
-          });
-        } catch {}
-
-        break;
-      }
-    }
-
-    if (socket.roomId) {
-      socket.to(`room:${socket.roomId}`).emit(
-        "roomUserLeft",
+      io.to(room).emit(
+        "classUserJoined",
         {
-          socketId: socket.id
+          userId: data.userId,
+          username: data.username
         }
       );
     }
-  });
+  );
+
+  socket.on(
+    "classMessage",
+    async data => {
+      if (
+        !data?.classId ||
+        !data?.content
+      ) {
+        return;
+      }
+
+      const message = {
+        id: Date.now().toString(),
+        classId: data.classId,
+        userId: data.userId,
+        username: data.username,
+        content: data.content,
+        createdAt:
+          new Date().toISOString()
+      };
+
+      try {
+        await query(
+          `
+          INSERT INTO messages
+          (sender_id,
+           sender_name,
+           class_id,
+           content)
+          VALUES($1,$2,$3,$4)
+          `,
+          [
+            data.userId,
+            data.username,
+            data.classId,
+            data.content
+          ]
+        );
+      } catch (error) {
+        console.error(
+          "Class message DB error:",
+          error.message
+        );
+      }
+
+      io.to(
+        `class:${data.classId}`
+      ).emit(
+        "classMessage",
+        message
+      );
+    }
+  );
+
+  /* ROOM */
+
+  socket.on(
+    "joinRoom",
+    data => {
+      if (!data?.roomId) return;
+
+      const room =
+        `room:${data.roomId}`;
+
+      socket.join(room);
+
+      socket.roomId =
+        data.roomId;
+
+      io.to(room).emit(
+        "roomUserJoined",
+        {
+          socketId: socket.id,
+          userId: data.userId,
+          username: data.username,
+          seat: data.seat
+        }
+      );
+    }
+  );
+
+  socket.on(
+    "leaveRoom",
+    data => {
+      if (!data?.roomId) return;
+
+      const room =
+        `room:${data.roomId}`;
+
+      socket.leave(room);
+
+      socket.to(room).emit(
+        "roomUserLeft",
+        {
+          socketId: socket.id,
+          userId: data.userId
+        }
+      );
+    }
+  );
+
+  /* PRIVATE MESSAGE */
+
+  socket.on(
+    "privateMessage",
+    async data => {
+      if (
+        !data?.to ||
+        !data?.content
+      ) {
+        return;
+      }
+
+      const targetSocket =
+        onlineUsers.get(
+          String(data.to)
+        );
+
+      if (targetSocket) {
+        io.to(targetSocket).emit(
+          "privateMessage",
+          data
+        );
+      }
+
+      try {
+        await query(
+          `
+          INSERT INTO messages
+          (sender_id,
+           sender_name,
+           receiver_id,
+           content)
+          VALUES($1,$2,$3,$4)
+          `,
+          [
+            data.userId,
+            data.username,
+            data.to,
+            data.content
+          ]
+        );
+      } catch (error) {
+        console.error(
+          "Private message DB error:",
+          error.message
+        );
+      }
+    }
+  );
+
+  /* WEBRTC */
+
+  socket.on(
+    "offer",
+    data => {
+      if (!data?.to) return;
+
+      io.to(data.to).emit(
+        "offer",
+        {
+          from: socket.id,
+          offer: data.offer
+        }
+      );
+    }
+  );
+
+  socket.on(
+    "answer",
+    data => {
+      if (!data?.to) return;
+
+      io.to(data.to).emit(
+        "answer",
+        {
+          from: socket.id,
+          answer: data.answer
+        }
+      );
+    }
+  );
+
+  socket.on(
+    "ice-candidate",
+    data => {
+      if (!data?.to) return;
+
+      io.to(data.to).emit(
+        "ice-candidate",
+        {
+          from: socket.id,
+          candidate: data.candidate
+        }
+      );
+    }
+  );
+
+  /* MIC */
+
+  socket.on(
+    "micStatus",
+    data => {
+      if (!data?.roomId) return;
+
+      socket.to(
+        `room:${data.roomId}`
+      ).emit(
+        "micStatus",
+        {
+          userId: data.userId,
+          micOn: Boolean(data.micOn)
+        }
+      );
+    }
+  );
+
+  /* CAMERA */
+
+  socket.on(
+    "cameraStatus",
+    data => {
+      if (!data?.roomId) return;
+
+      socket.to(
+        `room:${data.roomId}`
+      ).emit(
+        "cameraStatus",
+        {
+          userId: data.userId,
+          cameraOn:
+            Boolean(data.cameraOn)
+        }
+      );
+    }
+  );
+
+  /* DISCONNECT */
+
+  socket.on(
+    "disconnect",
+    async () => {
+      console.log(
+        "🔌 Socket disconnected:",
+        socket.id
+      );
+
+      for (
+        const [userId, socketId]
+        of onlineUsers.entries()
+      ) {
+        if (
+          socketId === socket.id
+        ) {
+          onlineUsers.delete(
+            userId
+          );
+
+          try {
+            await query(
+              `
+              UPDATE users
+              SET status='offline',
+                  last_seen=NOW()
+              WHERE id=$1
+              `,
+              [userId]
+            );
+
+            io.emit(
+              "userStatus",
+              {
+                userId,
+                status: "offline"
+              }
+            );
+          } catch (error) {
+            console.error(
+              "Disconnect DB error:",
+              error.message
+            );
+          }
+
+          break;
+        }
+      }
+
+      if (socket.roomId) {
+        socket.to(
+          `room:${socket.roomId}`
+        ).emit(
+          "roomUserLeft",
+          {
+            socketId: socket.id
+          }
+        );
+      }
+
+      if (socket.classId) {
+        socket.to(
+          `class:${socket.classId}`
+        ).emit(
+          "classUserLeft",
+          {
+            socketId: socket.id
+          }
+        );
+      }
+    }
+  );
 });
 
 /* =========================
    FRONTEND
 ========================= */
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  express.static(
+    path.join(__dirname, "public")
+  )
+);
 
 app.get("*", (req, res) => {
   res.sendFile(
-    path.join(__dirname, "public", "index.html")
+    path.join(
+      __dirname,
+      "public",
+      "index.html"
+    )
   );
 });
 
 /* =========================
-   START
+   START SERVER
 ========================= */
 
 async function start() {
   try {
+    const connected =
+      await testDatabase();
+
+    if (!connected) {
+      console.error(
+        "❌ Supabase database waliin wal qunnamtiin hin milkoofne."
+      );
+
+      process.exit(1);
+    }
+
     await initDatabase();
 
-    server.listen(PORT, "0.0.0.0", () => {
-      console.log(
-        `Mullisa-JM server running on port ${PORT}`
-      );
-    });
+    server.listen(
+      PORT,
+      "0.0.0.0",
+      () => {
+        console.log(
+          `✅ Mullisa-JM server running on port ${PORT}`
+        );
+      }
+    );
   } catch (error) {
     console.error(
-      "Server/database error:",
+      "❌ Server/database error:",
       error
     );
 
