@@ -2,951 +2,456 @@
 <html lang="om">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0">
 
 <title>Mullisa-JM</title>
 
 <meta name="theme-color" content="#087443">
-<meta name="description" content="Mullisa-JM - Chat, Call, Room fi Club">
-
-<script src="/socket.io/socket.io.js"></script>
 
 <style>
 *{
   box-sizing:border-box;
-  margin:0;
-  padding:0;
-  -webkit-tap-highlight-color:transparent;
-}
-
-:root{
-  --green:#087443;
-  --green2:#0b8b52;
-  --dark:#071c13;
-  --bg:#f4f8f6;
-  --card:#ffffff;
-  --text:#14231c;
-  --muted:#708078;
-  --border:#dce8e2;
-  --danger:#d93025;
-  --warning:#e09b00;
-  --shadow:0 5px 20px rgba(0,0,0,.07);
 }
 
 body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:var(--bg);
-  color:var(--text);
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f2f6f4;
+  color:#17221d;
 }
 
-button,input,textarea{
-  font:inherit;
+header{
+  background:#087443;
+  color:white;
+  padding:14px;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+header h2{
+  margin:0;
 }
 
 button{
   border:0;
+  border-radius:10px;
+  padding:11px 14px;
   cursor:pointer;
+  font-weight:bold;
 }
 
-.app{
+.primary{
+  background:#087443;
+  color:white;
+}
+
+.danger{
+  background:#c62828;
+  color:white;
+}
+
+.light{
+  background:#e5eee9;
+}
+
+input{
   width:100%;
-  max-width:520px;
-  min-height:100vh;
-  margin:auto;
-  background:var(--bg);
-  position:relative;
-  padding-bottom:75px;
+  padding:13px;
+  margin:6px 0;
+  border:1px solid #ccd8d2;
+  border-radius:10px;
+}
+
+textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccd8d2;
+  border-radius:10px;
+}
+
+.card{
+  background:white;
+  margin:12px;
+  padding:15px;
+  border-radius:15px;
+  box-shadow:0 2px 10px #0001;
 }
 
 .hidden{
   display:none!important;
 }
 
-/* AUTH */
-
-.auth{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:linear-gradient(145deg,#087443,#0b8b52);
-}
-
-.auth-card{
-  width:100%;
+nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
   background:white;
-  border-radius:25px;
-  padding:28px 22px;
-  box-shadow:0 20px 50px rgba(0,0,0,.2);
-}
-
-.logo{
-  width:75px;
-  height:75px;
-  border-radius:22px;
-  background:var(--green);
-  color:white;
   display:flex;
-  align-items:center;
-  justify-content:center;
-  margin:0 auto 15px;
-  font-size:38px;
-  font-weight:bold;
+  justify-content:space-around;
+  padding:8px 2px;
+  box-shadow:0 -2px 10px #0002;
+  z-index:20;
 }
 
-.auth h1{
-  text-align:center;
-  color:var(--green);
-  margin-bottom:5px;
+nav button{
+  background:none;
+  font-size:12px;
+  padding:7px;
 }
-
-.auth p{
-  text-align:center;
-  color:var(--muted);
-  margin-bottom:25px;
-}
-
-.input{
-  width:100%;
-  padding:14px;
-  border:1px solid var(--border);
-  border-radius:13px;
-  outline:none;
-  margin-bottom:12px;
-  background:#fff;
-}
-
-.input:focus{
-  border-color:var(--green);
-}
-
-.primary{
-  width:100%;
-  padding:14px;
-  border-radius:13px;
-  background:var(--green);
-  color:white;
-  font-weight:bold;
-}
-
-.secondary{
-  padding:11px 15px;
-  border-radius:11px;
-  background:#eaf4ef;
-  color:var(--green);
-  font-weight:bold;
-}
-
-.danger{
-  background:#ffe9e7!important;
-  color:var(--danger)!important;
-}
-
-/* HEADER */
-
-.header{
-  position:sticky;
-  top:0;
-  z-index:30;
-  background:white;
-  padding:13px 15px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:1px solid var(--border);
-}
-
-.brand{
-  color:var(--green);
-  font-size:21px;
-  font-weight:800;
-}
-
-.header-actions{
-  display:flex;
-  gap:8px;
-}
-
-.icon-btn{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  background:#edf6f1;
-  color:var(--green);
-  font-size:19px;
-}
-
-/* PAGES */
 
 .page{
-  padding:15px;
+  padding-bottom:80px;
 }
 
-.page-title{
-  font-size:22px;
-  font-weight:800;
-  margin-bottom:15px;
-}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:17px;
-  padding:15px;
-  margin-bottom:13px;
-  box-shadow:var(--shadow);
-}
-
-.row{
+.user{
   display:flex;
   align-items:center;
   gap:10px;
-}
-
-.between{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
+  padding:10px;
+  border-bottom:1px solid #eee;
 }
 
 .avatar{
-  width:45px;
-  height:45px;
+  width:42px;
+  height:42px;
   border-radius:50%;
-  background:var(--green);
+  background:#087443;
   color:white;
   display:flex;
   align-items:center;
   justify-content:center;
   font-weight:bold;
-  flex-shrink:0;
 }
 
-.avatar.small{
-  width:36px;
-  height:36px;
-  font-size:13px;
+.online{
+  width:10px;
+  height:10px;
+  background:#18a558;
+  border-radius:50%;
 }
 
-.muted{
-  color:var(--muted);
-  font-size:13px;
-}
-
-.empty{
-  text-align:center;
-  padding:30px 15px;
-  color:var(--muted);
-}
-
-/* POSTS */
-
-.post-content{
-  margin:12px 0;
-  line-height:1.5;
-  white-space:pre-wrap;
-}
-
-.post-actions{
-  display:flex;
-  gap:8px;
-  border-top:1px solid var(--border);
-  padding-top:10px;
-}
-
-.post-actions button{
-  flex:1;
-  padding:9px;
-  background:#f1f6f3;
-  color:#355247;
-  border-radius:10px;
-}
-
-/* ROOM */
-
-.room-card{
-  position:relative;
-  overflow:hidden;
-}
-
-.room-badge{
-  display:inline-block;
-  padding:5px 9px;
-  background:#e7f5ed;
-  color:var(--green);
-  border-radius:20px;
-  font-size:12px;
-  font-weight:bold;
-}
-
-.lock-badge{
-  background:#fff1d5;
-  color:#a66b00;
-}
-
-.seat-mini{
-  margin-top:12px;
-  display:flex;
-  gap:5px;
-  flex-wrap:wrap;
-}
-
-.mini-seat{
-  width:25px;
-  height:25px;
-  border-radius:7px;
-  background:#e7eee9;
-  font-size:11px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.mini-seat.used{
-  background:var(--green);
-  color:white;
-}
-
-/* ROOM SCREEN */
-
-.room-screen{
-  position:fixed;
-  inset:0;
-  z-index:100;
-  background:#06130d;
-  color:white;
-  display:flex;
-  flex-direction:column;
-}
-
-.room-header{
-  padding:13px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:#0a2117;
-}
-
-.room-title{
-  font-weight:bold;
-}
-
-.room-main{
-  flex:1;
-  overflow-y:auto;
+.chatbox{
+  height:55vh;
+  overflow:auto;
   padding:10px;
-}
-
-.room-info{
-  background:#0d281c;
-  border-radius:14px;
-  padding:12px;
-  margin-bottom:10px;
-}
-
-.room-code{
-  color:#9ce0bc;
-  font-weight:bold;
-  font-size:18px;
-  letter-spacing:2px;
-}
-
-.seats-title{
-  margin:10px 0;
-  font-weight:bold;
-}
-
-.seats-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:8px;
-}
-
-.seat{
-  min-height:95px;
-  background:#10271d;
-  border:1px solid #1c4934;
-  border-radius:14px;
-  padding:9px;
-  position:relative;
-}
-
-.seat.host{
-  border:2px solid #c7a632;
-}
-
-.seat.empty-seat{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#668075;
-}
-
-.seat-avatar{
-  width:35px;
-  height:35px;
-  border-radius:50%;
-  background:#1c6e49;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-bottom:5px;
-  font-weight:bold;
-}
-
-.seat-name{
-  font-size:13px;
-  font-weight:bold;
-  overflow:hidden;
-  white-space:nowrap;
-  text-overflow:ellipsis;
-}
-
-.seat-icons{
-  margin-top:5px;
-  font-size:12px;
-  color:#a7c7b8;
-}
-
-.seat-menu{
-  position:absolute;
-  top:7px;
-  right:7px;
-  background:#173c2b;
-  color:white;
-  border-radius:7px;
-  width:28px;
-  height:28px;
-}
-
-.audience{
-  margin-top:12px;
-  background:#0d281c;
-  border-radius:14px;
-  padding:12px;
-}
-
-.audience-user{
-  padding:8px 0;
-  border-bottom:1px solid #19402e;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.room-controls{
-  background:#0a2117;
-  padding:12px;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-}
-
-.room-control{
-  padding:11px 4px;
+  background:#edf4f0;
   border-radius:12px;
-  background:#183d2c;
-  color:white;
-  font-size:12px;
 }
 
-.room-control.active{
-  background:#0b8b52;
-}
-
-.room-control.off{
-  background:#5b211f;
-}
-
-.room-control.host-control{
-  background:#554615;
-}
-
-/* CHAT */
-
-.chat-box{
-  height:calc(100vh - 180px);
-  overflow-y:auto;
-  padding-bottom:10px;
-}
-
-.message{
+.msg{
   max-width:78%;
-  padding:10px 12px;
-  border-radius:15px;
-  margin-bottom:8px;
+  padding:9px 12px;
+  margin:7px 0;
+  border-radius:13px;
   background:white;
-  box-shadow:var(--shadow);
 }
 
-.message.mine{
+.mine{
   margin-left:auto;
-  background:var(--green);
+  background:#087443;
   color:white;
 }
 
 .chat-input{
-  position:fixed;
-  bottom:65px;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(520px,100%);
-  padding:10px;
-  background:white;
-  border-top:1px solid var(--border);
   display:flex;
-  gap:7px;
+  gap:5px;
+  margin-top:8px;
 }
 
 .chat-input input{
-  flex:1;
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:11px;
+  margin:0;
 }
 
-/* BOTTOM NAV */
-
-.bottom-nav{
-  position:fixed;
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(520px,100%);
-  height:65px;
-  background:white;
-  border-top:1px solid var(--border);
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  z-index:50;
-}
-
-.nav-btn{
-  background:white;
-  color:#718078;
-  font-size:11px;
+.video-area{
+  background:#111;
+  border-radius:15px;
+  min-height:260px;
   display:flex;
-  flex-direction:column;
-  align-items:center;
   justify-content:center;
-  gap:3px;
-}
-
-.nav-btn span:first-child{
-  font-size:20px;
-}
-
-.nav-btn.active{
-  color:var(--green);
-  font-weight:bold;
-}
-
-/* MODAL */
-
-.modal{
-  position:fixed;
-  inset:0;
-  z-index:200;
-  background:rgba(0,0,0,.55);
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-}
-
-.modal-card{
-  width:min(520px,100%);
-  max-height:90vh;
-  overflow-y:auto;
-  background:white;
-  border-radius:22px 22px 0 0;
-  padding:20px;
-}
-
-.modal-head{
-  display:flex;
-  justify-content:space-between;
   align-items:center;
-  margin-bottom:18px;
+  position:relative;
+  overflow:hidden;
 }
 
-.close{
-  width:35px;
-  height:35px;
-  border-radius:50%;
-  background:#edf2ef;
-}
-
-/* PROFILE */
-
-.profile-top{
-  text-align:center;
-  padding:20px 10px;
-}
-
-.profile-avatar{
-  width:85px;
-  height:85px;
-  border-radius:50%;
-  background:var(--green);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:30px;
-  font-weight:bold;
-  margin:auto auto 12px;
-}
-
-.setting{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 4px;
-  border-bottom:1px solid var(--border);
-}
-
-/* VIDEO */
-
-.video-preview{
+video{
   width:100%;
-  background:#000;
-  border-radius:16px;
-  min-height:220px;
-  object-fit:cover;
+  max-height:400px;
+  background:#111;
 }
 
-/* TOAST */
+#localVideo{
+  position:absolute;
+  width:120px;
+  height:160px;
+  right:10px;
+  bottom:10px;
+  object-fit:cover;
+  border:2px solid white;
+  border-radius:10px;
+}
 
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:80px;
-  transform:translateX(-50%);
-  background:#17241e;
-  color:white;
-  padding:12px 18px;
-  border-radius:12px;
-  z-index:500;
-  max-width:90%;
+.controls{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.badge{
+  background:#e5eee9;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+.center{
   text-align:center;
 }
 
-/* DARK */
-
-body.dark{
-  --bg:#07130e;
-  --card:#0e2118;
-  --text:#e9f5ef;
-  --muted:#8da99c;
-  --border:#1d3a2c;
-}
-
-body.dark .header,
-body.dark .bottom-nav,
-body.dark .nav-btn,
-body.dark .chat-input,
-body.dark .modal-card,
-body.dark .input{
-  background:#0e2118;
-  color:#e9f5ef;
-}
-
-body.dark .input{
-  color:white;
-}
-
-body.dark .card{
-  background:#0e2118;
-}
-
-body.dark .nav-btn{
-  color:#8da99c;
-}
-
-body.dark .nav-btn.active{
-  color:#61c694;
+#auth{
+  max-width:420px;
+  margin:40px auto;
 }
 </style>
+
+<script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
 
-<!-- LOGIN / REGISTER -->
+<header>
+  <h2>🎙️ Mullisa-JM</h2>
+  <small>Chat • Call • Video • Club</small>
+</header>
 
-<section id="auth" class="auth">
+<div id="auth" class="card">
 
-  <div class="auth-card">
+  <div id="loginBox">
+    <h3>Seeni</h3>
 
-    <div class="logo">M</div>
+    <input id="loginUsername"
+           placeholder="Username">
 
-    <h1>Mullisa-JM</h1>
-    <p>Chat, Call, Room fi Club</p>
+    <input id="loginPassword"
+           type="password"
+           placeholder="Password">
 
-    <div id="loginForm">
+    <button class="primary"
+            onclick="login()">
+      Seeni
+    </button>
 
-      <input
-        id="loginUsername"
-        class="input"
-        placeholder="Username"
-        autocomplete="username"
-      >
-
-      <input
-        id="loginPassword"
-        class="input"
-        type="password"
-        placeholder="Password"
-        autocomplete="current-password"
-      >
-
-      <button class="primary" onclick="login()">
-        Seeni
-      </button>
-
-      <button
-        class="secondary"
-        style="width:100%;margin-top:10px"
-        onclick="showRegister()"
-      >
-        Herregaa galmaa'i
-      </button>
-
-    </div>
-
-    <div id="registerForm" class="hidden">
-
-      <input
-        id="registerUsername"
-        class="input"
-        placeholder="Username"
-      >
-
-      <input
-        id="registerPassword"
-        class="input"
-        type="password"
-        placeholder="Password"
-      >
-
-      <input
-        id="registerBio"
-        class="input"
-        placeholder="Bio (filannoo)"
-      >
-
-      <button class="primary" onclick="register()">
-        Galmaa'i
-      </button>
-
-      <button
-        class="secondary"
-        style="width:100%;margin-top:10px"
-        onclick="showLogin()"
-      >
-        Seensa
-      </button>
-
-    </div>
-
+    <button class="light"
+            onclick="showRegister()">
+      Account Haaraa Uumi
+    </button>
   </div>
 
-</section>
+  <div id="registerBox" class="hidden">
+    <h3>Account Uumi</h3>
+
+    <input id="regName"
+           placeholder="Maqaa kee">
+
+    <input id="regUsername"
+           placeholder="Username">
+
+    <input id="regPassword"
+           type="password"
+           placeholder="Password">
+
+    <button class="primary"
+            onclick="register()">
+      Galmaa'i
+    </button>
+
+    <button class="light"
+            onclick="showLogin()">
+      Deebi'i
+    </button>
+  </div>
+
+  <p id="authMsg"></p>
+</div>
 
 
-<!-- MAIN APP -->
-
-<div id="app" class="app hidden">
-
-  <header class="header">
-
-    <div class="brand">
-      Mullisa-JM
-    </div>
-
-    <div class="header-actions">
-
-      <button class="icon-btn" onclick="showPage('search')">
-        🔍
-      </button>
-
-      <button class="icon-btn" onclick="showPage('settings')">
-        ⚙️
-      </button>
-
-    </div>
-
-  </header>
-
+<div id="app" class="hidden page">
 
   <!-- HOME -->
-
-  <section id="page-home" class="page">
-
-    <div class="between">
-      <div>
-        <div class="muted">Baga nagaan dhuftan</div>
-        <div id="homeUsername" class="page-title"></div>
-      </div>
-
-      <div id="homeAvatar" class="avatar"></div>
-    </div>
+  <section id="homePage">
 
     <div class="card">
-
-      <div class="between">
-        <div>
-          <b>🎙️ Voice Club</b>
-          <div class="muted">
-            Marii fi barnootaaf room uumii
-          </div>
-        </div>
-
-        <button class="secondary" onclick="showPage('rooms')">
-          Ilaali
-        </button>
-      </div>
-
-    </div>
-
-    <div class="card">
-
-      <div class="between">
-        <div>
-          <b>📚 Barnoota</b>
-          <div class="muted">
-            Class fi barnoota kee
-          </div>
-        </div>
-
-        <button class="secondary" onclick="showPage('classes')">
-          Seeni
-        </button>
-      </div>
-
-    </div>
-
-    <div id="homePosts"></div>
-
-  </section>
-
-
-  <!-- POSTS -->
-
-  <section id="page-posts" class="page hidden">
-
-    <div class="between">
-
-      <div class="page-title">
-        📝 Post
-      </div>
-
-      <button class="secondary" onclick="openPostModal()">
-        + Post
-      </button>
-
-    </div>
-
-    <div id="postsList"></div>
-
-  </section>
-
-
-  <!-- ROOMS -->
-
-  <section id="page-rooms" class="page hidden">
-
-    <div class="between">
-
-      <div class="page-title">
-        🎙️ Club
-      </div>
-
-      <button class="secondary" onclick="openRoomModal()">
-        + Uumi
-      </button>
-
-    </div>
-
-    <div class="card">
-
-      <b>🎙️ Voice Club</b>
-
-      <p class="muted" style="margin-top:6px">
-        Namoonni 10 hanga speaker ta'uu danda'u.
-        Warri hafan audience ta'u.
+      <h3>🏠 Baga Nagaan Dhuftan</h3>
+      <p>
+        Mullisa-JM keessatti Chat, Call,
+        Video Call fi Voice Club fayyadami.
       </p>
-
     </div>
 
-    <div id="roomsList"></div>
+    <div class="card">
+      <h3>🎙️ Voice Club</h3>
 
-  </section>
+      <input id="clubName"
+             placeholder="Maqaa Club">
 
-
-  <!-- CLASSES -->
-
-  <section id="page-classes" class="page hidden">
-
-    <div class="between">
-
-      <div class="page-title">
-        📚 Classes
-      </div>
-
-      <button class="secondary" onclick="openClassModal()">
-        + Uumi
+      <button class="primary"
+              onclick="createClub()">
+        ➕ Club Uumi
       </button>
 
+      <hr>
+
+      <input id="clubCode"
+             placeholder="Club Code">
+
+      <button class="primary"
+              onclick="joinClub()">
+        🔗 Club Seeni
+      </button>
     </div>
 
-    <div id="classesList"></div>
+    <div class="card">
+      <h3>🔎 Nama Barbaadi</h3>
 
-  </section>
+      <input id="searchInput"
+             placeholder="Maqaa ykn username"
+             oninput="searchUsers()">
 
-
-  <!-- SEARCH -->
-
-  <section id="page-search" class="page hidden">
-
-    <div class="page-title">
-      🔍 Search
+      <div id="usersList"></div>
     </div>
-
-    <input
-      id="searchInput"
-      class="input"
-      placeholder="Nama ykn username barbaadi..."
-      oninput="searchUsers()"
-    >
-
-    <div id="searchResults"></div>
 
   </section>
 
 
   <!-- CHAT -->
+  <section id="chatPage" class="hidden">
 
-  <section id="page-chat" class="page hidden">
+    <div class="card">
+      <h3 id="chatTitle">💬 Chat</h3>
 
-    <div class="page-title">
-      💬 Chat
+      <div id="chatBox"
+           class="chatbox"></div>
+
+      <div class="chat-input">
+        <input id="chatInput"
+               placeholder="Ergaa barreessi...">
+
+        <button class="primary"
+                onclick="sendMessage()">
+          ➤
+        </button>
+      </div>
     </div>
 
-    <div id="chatBox" class="chat-box"></div>
+  </section>
 
-    <div class="chat-input">
 
-      <input
-        id="chatMessage"
-        placeholder="Ergaa barreessi..."
-        onkeydown="if(event.key==='Enter')sendChat()"
-      >
+  <!-- CLUB -->
+  <section id="clubPage" class="hidden">
 
-      <button class="primary" style="width:auto" onclick="sendChat()">
-        ➤
-      </button>
+    <div class="card">
+
+      <h3>🎙️ <span id="clubTitle">
+        Voice Club
+      </span></h3>
+
+      <span class="badge">
+        Hanga 10 speakers
+      </span>
+
+      <div class="controls">
+
+        <button class="primary"
+                onclick="toggleMic()">
+          🎤 Mic
+        </button>
+
+        <button class="light"
+                onclick="raiseHand()">
+          🙋 Raise Hand
+        </button>
+
+        <button class="light"
+                onclick="shareClub()">
+          🔗 Share
+        </button>
+
+        <button class="danger"
+                onclick="leaveClub()">
+          🚪 Ba'i
+        </button>
+
+      </div>
+
+      <h4>👥 Members</h4>
+
+      <div id="clubMembers"></div>
+
+    </div>
+
+    <div class="card">
+      <h3>💬 Club Chat</h3>
+
+      <div id="clubChatBox"
+           class="chatbox"></div>
+
+      <div class="chat-input">
+        <input id="clubChatInput"
+               placeholder="Club keessatti barreessi...">
+
+        <button class="primary"
+                onclick="sendClubMessage()">
+          ➤
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- CALL -->
+  <section id="callPage" class="hidden">
+
+    <div class="card">
+
+      <h3 id="callTitle">
+        📞 Call
+      </h3>
+
+      <div class="video-area">
+
+        <video id="remoteVideo"
+               autoplay
+               playsinline></video>
+
+        <video id="localVideo"
+               autoplay
+               muted
+               playsinline></video>
+
+      </div>
+
+      <div class="controls">
+
+        <button class="light"
+                onclick="toggleCallMic()">
+          🎤 Mic
+        </button>
+
+        <button class="light"
+                onclick="toggleCamera()">
+          📷 Camera
+        </button>
+
+        <button class="danger"
+                onclick="endCall()">
+          ❌ Cufi
+        </button>
+
+      </div>
 
     </div>
 
@@ -954,808 +459,344 @@ body.dark .nav-btn.active{
 
 
   <!-- PROFILE -->
+  <section id="profilePage" class="hidden">
 
-  <section id="page-profile" class="page hidden">
+    <div class="card center">
 
-    <div class="card profile-top">
-
-      <div id="profileAvatar" class="profile-avatar"></div>
-
-      <h2 id="profileName"></h2>
-
-      <p id="profileBio" class="muted"></p>
-
-    </div>
-
-    <div class="card">
-
-      <div class="setting">
-        <span>👤 Username</span>
-        <b id="profileUsername"></b>
+      <div id="profileAvatar"
+           class="avatar"
+           style="margin:auto">
+        U
       </div>
 
-      <div class="setting">
-        <span>🟢 Status</span>
-        <span>Online</span>
-      </div>
+      <h3 id="profileName"></h3>
+      <p id="profileUsername"></p>
+
+      <button class="danger"
+              onclick="logout()">
+        Ba'i
+      </button>
 
     </div>
 
   </section>
 
-
-  <!-- SETTINGS -->
-
-  <section id="page-settings" class="page hidden">
-
-    <div class="page-title">
-      ⚙️ Settings
-    </div>
-
-    <div class="card">
-
-      <div class="setting">
-
-        <span>🌙 Dark Mode</span>
-
-        <button
-          id="darkButton"
-          class="secondary"
-          onclick="toggleDark()"
-        >
-          Cufi
-        </button>
-
-      </div>
-
-      <div class="setting">
-
-        <span>🔔 Notifications</span>
-
-        <button class="secondary">
-          Bani
-        </button>
-
-      </div>
-
-      <div class="setting">
-
-        <span>ℹ️ About</span>
-
-        <span class="muted">
-          Mullisa-JM
-        </span>
-
-      </div>
-
-    </div>
-
-    <button
-      class="primary danger"
-      style="margin-top:10px"
-      onclick="logout()"
-    >
-      Ba'i
-    </button>
-
-  </section>
-
-
-  <!-- BOTTOM NAV -->
-
-  <nav class="bottom-nav">
-
-    <button class="nav-btn active" onclick="showPage('home',this)">
-      <span>🏠</span>
-      <span>Home</span>
-    </button>
-
-    <button class="nav-btn" onclick="showPage('posts',this)">
-      <span>📝</span>
-      <span>Post</span>
-    </button>
-
-    <button class="nav-btn" onclick="showPage('rooms',this)">
-      <span>🎙️</span>
-      <span>Room</span>
-    </button>
-
-    <button class="nav-btn" onclick="showPage('chat',this)">
-      <span>💬</span>
-      <span>Chat</span>
-    </button>
-
-    <button class="nav-btn" onclick="showPage('profile',this)">
-      <span>👤</span>
-      <span>Profile</span>
-    </button>
-
-  </nav>
-
 </div>
 
 
-<!-- ROOM SCREEN -->
+<nav id="nav" class="hidden">
 
-<section id="roomScreen" class="room-screen hidden">
+  <button onclick="showPage('homePage')">
+    🏠<br>Home
+  </button>
 
-  <div class="room-header">
+  <button onclick="showPage('chatPage')">
+    💬<br>Chat
+  </button>
 
-    <div>
+  <button onclick="showPage('clubPage')">
+    🎙️<br>Club
+  </button>
 
-      <div id="roomScreenName" class="room-title">
-        Club
-      </div>
+  <button onclick="showPage('profilePage')">
+    👤<br>Profile
+  </button>
 
-      <div id="roomScreenCode" class="muted">
-        CLUB
-      </div>
-
-    </div>
-
-    <button
-      class="icon-btn"
-      onclick="leaveCurrentRoom()"
-    >
-      ✕
-    </button>
-
-  </div>
-
-
-  <div class="room-main">
-
-    <div class="room-info">
-
-      <div id="roomDescription" class="muted">
-        Voice Club
-      </div>
-
-      <div style="margin-top:8px">
-        Club ID:
-        <span id="roomCode" class="room-code"></span>
-      </div>
-
-      <button
-        class="secondary"
-        style="margin-top:10px"
-        onclick="shareClub()"
-      >
-        🔗 Share
-      </button>
-
-    </div>
-
-
-    <div class="seats-title">
-      🎙️ Speaker Seats — 10
-    </div>
-
-    <div id="speakerSeats" class="seats-grid"></div>
-
-
-    <div class="audience">
-
-      <div class="between">
-        <b>👥 Audience</b>
-        <span id="audienceCount" class="muted">0</span>
-      </div>
-
-      <div id="audienceList"></div>
-
-    </div>
-
-  </div>
-
-
-  <div class="room-controls">
-
-    <button
-      id="micButton"
-      class="room-control"
-      onclick="toggleRoomMic()"
-    >
-      🎙️ Mic
-    </button>
-
-    <button
-      id="cameraButton"
-      class="room-control"
-      onclick="toggleRoomCamera()"
-    >
-      📹 Camera
-    </button>
-
-    <button
-      id="handButton"
-      class="room-control"
-      onclick="raiseHand()"
-    >
-      ✋ Hand
-    </button>
-
-    <button
-      class="room-control"
-      onclick="copyClubCode()"
-    >
-      📋 ID
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- POST MODAL -->
-
-<div id="postModal" class="modal hidden">
-
-  <div class="modal-card">
-
-    <div class="modal-head">
-
-      <h3>📝 Post Haaraa</h3>
-
-      <button class="close" onclick="closeModal('postModal')">
-        ✕
-      </button>
-
-    </div>
-
-    <textarea
-      id="postContent"
-      class="input"
-      rows="5"
-      placeholder="Waan yaada kee barreessi..."
-    ></textarea>
-
-    <button class="primary" onclick="createPost()">
-      Maxxansi
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- ROOM MODAL -->
-
-<div id="roomModal" class="modal hidden">
-
-  <div class="modal-card">
-
-    <div class="modal-head">
-
-      <h3>🎙️ Club Uumi</h3>
-
-      <button class="close" onclick="closeModal('roomModal')">
-        ✕
-      </button>
-
-    </div>
-
-    <input
-      id="roomName"
-      class="input"
-      placeholder="Maqaa Club"
-    >
-
-    <textarea
-      id="roomDescriptionInput"
-      class="input"
-      rows="3"
-      placeholder="Ibsa Club"
-    ></textarea>
-
-    <button class="primary" onclick="createRoom()">
-      Club Uumi
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- CLASS MODAL -->
-
-<div id="classModal" class="modal hidden">
-
-  <div class="modal-card">
-
-    <div class="modal-head">
-
-      <h3>📚 Class Uumi</h3>
-
-      <button class="close" onclick="closeModal('classModal')">
-        ✕
-      </button>
-
-    </div>
-
-    <input
-      id="className"
-      class="input"
-      placeholder="Maqaa Class"
-    >
-
-    <button class="primary" onclick="createClass()">
-      Class Uumi
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- TOAST -->
-
-<div id="toast" class="toast hidden"></div>
+</nav>
 
 
 <script>
-/* =========================================================
-   STATE
-========================================================= */
-
 let token = localStorage.getItem("mullisa_token");
 let me = null;
-
 let socket = null;
 
-let currentRoom = null;
-let currentRoomData = null;
+let currentChatUser = null;
+let currentClub = null;
 
 let localStream = null;
+let peer = null;
+let currentCallUser = null;
+let currentCallType = "video";
 
-let roomMic = true;
-let roomCamera = false;
-let handRaised = false;
+const rtcConfig = {
+  iceServers: [
+    {
+      urls: "stun:stun.l.google.com:19302"
+    },
+    {
+      urls: "stun:stun1.l.google.com:19302"
+    }
+  ]
+};
 
-const peerConnections = {};
 
-let currentChatUser = null;
+/* AUTH UI */
 
+function showRegister(){
+  document.getElementById("loginBox")
+    .classList.add("hidden");
 
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function $(id){
-  return document.getElementById(id);
+  document.getElementById("registerBox")
+    .classList.remove("hidden");
 }
 
-function showToast(message){
-  const t = $("toast");
+function showLogin(){
+  document.getElementById("registerBox")
+    .classList.add("hidden");
 
-  t.textContent = message;
-  t.classList.remove("hidden");
-
-  clearTimeout(window.toastTimer);
-
-  window.toastTimer = setTimeout(()=>{
-    t.classList.add("hidden");
-  },3000);
+  document.getElementById("loginBox")
+    .classList.remove("hidden");
 }
 
-function initials(name){
-  if(!name) return "?";
 
-  return name
-    .split(" ")
-    .map(x=>x[0])
-    .join("")
-    .substring(0,2)
-    .toUpperCase();
-}
+/* API */
 
-async function api(url,options={}){
-  options.headers = options.headers || {};
+async function api(url, options = {}){
 
-  options.headers["Content-Type"] = "application/json";
+  options.headers = {
+    ...(options.headers || {}),
+    "Content-Type":"application/json"
+  };
 
   if(token){
-    options.headers["Authorization"] = "Bearer " + token;
+    options.headers.Authorization =
+      "Bearer " + token;
   }
 
-  const res = await fetch(url,options);
+  const res = await fetch(url, options);
 
-  let data = {};
-
-  try{
-    data = await res.json();
-  }catch(e){}
+  const data = await res.json()
+    .catch(() => ({}));
 
   if(!res.ok){
-    throw new Error(data.error || "Dogoggora uumame");
+    throw new Error(
+      data.error || "Error"
+    );
   }
 
   return data;
 }
 
 
-/* =========================================================
-   AUTH
-========================================================= */
-
-function showRegister(){
-  $("loginForm").classList.add("hidden");
-  $("registerForm").classList.remove("hidden");
-}
-
-function showLogin(){
-  $("registerForm").classList.add("hidden");
-  $("loginForm").classList.remove("hidden");
-}
+/* REGISTER */
 
 async function register(){
 
-  const username = $("registerUsername").value.trim();
-  const password = $("registerPassword").value;
-  const bio = $("registerBio").value.trim();
-
-  if(!username || !password){
-    showToast("Username fi password guuti.");
-    return;
-  }
-
   try{
 
-    const data = await api("/api/register",{
-      method:"POST",
-      body:JSON.stringify({
-        username,
-        password,
-        bio
-      })
-    });
+    const data = await api(
+      "/api/register",
+      {
+        method:"POST",
+        body:JSON.stringify({
+          name:document.getElementById("regName").value,
+          username:document.getElementById("regUsername").value,
+          password:document.getElementById("regPassword").value
+        })
+      }
+    );
 
     token = data.token;
 
-    localStorage.setItem("mullisa_token",token);
+    localStorage.setItem(
+      "mullisa_token",
+      token
+    );
 
     await startApp();
 
-  }catch(err){
-    showToast(err.message);
+  }catch(e){
+
+    document.getElementById("authMsg")
+      .textContent = "❌ " + e.message;
   }
 }
+
+
+/* LOGIN */
 
 async function login(){
 
-  const username = $("loginUsername").value.trim();
-  const password = $("loginPassword").value;
-
-  if(!username || !password){
-    showToast("Username fi password guuti.");
-    return;
-  }
-
   try{
 
-    const data = await api("/api/login",{
-      method:"POST",
-      body:JSON.stringify({
-        username,
-        password
-      })
-    });
+    const data = await api(
+      "/api/login",
+      {
+        method:"POST",
+        body:JSON.stringify({
+          username:
+            document.getElementById(
+              "loginUsername"
+            ).value,
+
+          password:
+            document.getElementById(
+              "loginPassword"
+            ).value
+        })
+      }
+    );
 
     token = data.token;
 
-    localStorage.setItem("mullisa_token",token);
+    localStorage.setItem(
+      "mullisa_token",
+      token
+    );
 
     await startApp();
 
-  }catch(err){
-    showToast(err.message);
+  }catch(e){
+
+    document.getElementById("authMsg")
+      .textContent = "❌ " + e.message;
   }
 }
 
-function logout(){
 
-  localStorage.removeItem("mullisa_token");
-
-  token = null;
-
-  if(socket){
-    socket.disconnect();
-  }
-
-  location.reload();
-}
-
-
-/* =========================================================
-   START APP
-========================================================= */
+/* START */
 
 async function startApp(){
 
   try{
 
-    const data = await api("/api/me");
+    me = await api("/api/me");
 
-    me = data.user || data;
+    document.getElementById("auth")
+      .classList.add("hidden");
 
-    $("auth").classList.add("hidden");
-    $("app").classList.remove("hidden");
+    document.getElementById("app")
+      .classList.remove("hidden");
 
-    updateProfile();
+    document.getElementById("nav")
+      .classList.remove("hidden");
+
+    document.getElementById("profileName")
+      .textContent = me.name;
+
+    document.getElementById("profileUsername")
+      .textContent = "@" + me.username;
+
+    document.getElementById("profileAvatar")
+      .textContent =
+      me.name.charAt(0).toUpperCase();
 
     connectSocket();
 
-    await loadPosts();
-    await loadRooms();
-    await loadClasses();
+  }catch(e){
 
-  }catch(err){
-
-    localStorage.removeItem("mullisa_token");
-
-    token = null;
-
-    $("auth").classList.remove("hidden");
-    $("app").classList.add("hidden");
-
+    logout();
   }
 }
 
 
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-function showPage(page,button=null){
-
-  document.querySelectorAll(".page").forEach(p=>{
-    p.classList.add("hidden");
-  });
-
-  const target = $("page-"+page);
-
-  if(target){
-    target.classList.remove("hidden");
-  }
-
-  document.querySelectorAll(".nav-btn").forEach(b=>{
-    b.classList.remove("active");
-  });
-
-  if(button){
-    button.classList.add("active");
-  }
-
-  if(page==="home"){
-    loadPosts();
-  }
-
-  if(page==="posts"){
-    loadPosts();
-  }
-
-  if(page==="rooms"){
-    loadRooms();
-  }
-
-  if(page==="classes"){
-    loadClasses();
-  }
-
-  if(page==="profile"){
-    updateProfile();
-  }
-}
-
-
-/* =========================================================
-   SOCKET
-========================================================= */
+/* SOCKET */
 
 function connectSocket(){
 
-  if(socket){
-    socket.disconnect();
-  }
+  socket = io();
 
-  socket = io({
-    auth:{
-      token
-    }
-  });
+  socket.on("connect", () => {
 
-  socket.on("connect",()=>{
-
-    socket.emit("userOnline",{
-      userId:me.id
-    });
+    socket.emit(
+      "user-online",
+      me.id
+    );
 
   });
 
 
-  socket.on("newPost",()=>{
-    loadPosts();
-  });
+  socket.on("private-message", msg => {
 
-
-  socket.on("postLikeChanged",()=>{
-    loadPosts();
-  });
-
-
-  socket.on("newComment",()=>{
-    loadPosts();
-  });
-
-
-  socket.on("roomUserJoined",data=>{
-
-    if(currentRoom && data.roomId===currentRoom){
-
-      loadCurrentRoom();
-
+    if(
+      currentChatUser &&
+      (
+        msg.sender_id === currentChatUser.id ||
+        msg.receiver_id === currentChatUser.id
+      )
+    ){
+      addChatMessage(msg);
     }
 
   });
 
 
-  socket.on("roomUserLeft",data=>{
+  socket.on("incoming-call", async data => {
 
-    if(currentRoom && data.roomId===currentRoom){
+    const answer = confirm(
+      "📞 " +
+      data.fromName +
+      " siif waamaa jira.\n\n" +
+      (
+        data.callType === "video"
+        ? "🎥 Video Call"
+        : "📞 Voice Call"
+      )
+    );
 
-      loadCurrentRoom();
+    if(!answer) return;
 
-    }
-
-  });
-
-
-  socket.on("roomState",data=>{
-
-    if(currentRoom && data.roomId===currentRoom){
-
-      loadCurrentRoom();
-
-    }
+    await receiveCall(data);
 
   });
 
 
-  socket.on("micStatus",data=>{
+  socket.on("call-answered", async data => {
 
-    if(currentRoom && data.roomId===currentRoom){
+    if(peer){
 
-      loadCurrentRoom();
-
-    }
-
-  });
-
-
-  socket.on("cameraStatus",data=>{
-
-    if(currentRoom && data.roomId===currentRoom){
-
-      loadCurrentRoom();
-
-    }
-
-  });
-
-
-  socket.on("raiseHand",data=>{
-
-    if(currentRoom && data.roomId===currentRoom){
-
-      loadCurrentRoom();
-
-    }
-
-  });
-
-
-  socket.on("memberPromoted",data=>{
-
-    if(currentRoom && data.roomId===currentRoom){
-
-      showToast("Nama tokko speaker ta'e.");
-      loadCurrentRoom();
-
-    }
-
-  });
-
-
-  socket.on("memberDemoted",data=>{
-
-    if(currentRoom && data.roomId===currentRoom){
-
-      loadCurrentRoom();
-
-    }
-
-  });
-
-
-  socket.on("memberRemoved",data=>{
-
-    if(currentRoom && data.roomId===currentRoom){
-
-      if(data.userId===me.id){
-
-        closeRoomScreen();
-
-        showToast("Room keessaa si baasan.");
-
-      }else{
-
-        loadCurrentRoom();
-
-      }
-
-    }
-
-  });
-
-
-  socket.on("roomLocked",data=>{
-
-    if(currentRoom && data.roomId===currentRoom){
-
-      loadCurrentRoom();
-
-    }
-
-  });
-
-
-  /* WEBRTC */
-
-  socket.on("offer",async data=>{
-
-    if(!data || !data.from){
-      return;
-    }
-
-    await handleOffer(data);
-
-  });
-
-
-  socket.on("answer",async data=>{
-
-    if(!data || !data.from){
-      return;
-    }
-
-    const pc = peerConnections[data.from];
-
-    if(pc){
-
-      await pc.setRemoteDescription(
-        new RTCSessionDescription(data.answer)
+      await peer.setRemoteDescription(
+        new RTCSessionDescription(
+          data.answer
+        )
       );
-
     }
 
   });
 
 
-  socket.on("ice-candidate",async data=>{
+  socket.on("ice-candidate", async data => {
 
-    if(!data || !data.from){
-      return;
-    }
-
-    const pc = peerConnections[data.from];
-
-    if(pc && data.candidate){
+    if(peer && data.candidate){
 
       try{
-        await pc.addIceCandidate(
-          new RTCIceCandidate(data.candidate)
-        );
-      }catch(e){}
 
+        await peer.addIceCandidate(
+          new RTCIceCandidate(
+            data.candidate
+          )
+        );
+
+      }catch(e){
+        console.log(e);
+      }
+
+    }
+
+  });
+
+
+  socket.on("call-ended", () => {
+    endCallLocal();
+  });
+
+
+  socket.on("club-message", msg => {
+
+    if(
+      currentClub &&
+      msg.userId
+    ){
+      addClubMessage(msg);
+    }
+
+  });
+
+
+  socket.on("club-action", data => {
+
+    if(data.action === "mute"){
+      alert("Host si mute godhe.");
     }
 
   });
@@ -1763,1759 +804,780 @@ function connectSocket(){
 }
 
 
-/* =========================================================
-   PROFILE
-========================================================= */
+/* PAGES */
 
-function updateProfile(){
+function showPage(id){
 
-  if(!me){
-    return;
-  }
+  [
+    "homePage",
+    "chatPage",
+    "clubPage",
+    "callPage",
+    "profilePage"
+  ].forEach(page => {
 
-  const name = me.username || "User";
+    document.getElementById(page)
+      .classList.add("hidden");
 
-  $("homeUsername").textContent = name;
+  });
 
-  $("homeAvatar").textContent = initials(name);
-
-  $("profileName").textContent = name;
-
-  $("profileUsername").textContent = "@"+name;
-
-  $("profileBio").textContent =
-    me.bio || "Mullisa-JM fayyadamaa";
-
-  $("profileAvatar").textContent = initials(name);
+  document.getElementById(id)
+    .classList.remove("hidden");
 }
 
 
-/* =========================================================
-   POSTS
-========================================================= */
+/* SEARCH */
 
-async function loadPosts(){
+let searchTimer;
 
-  try{
+async function searchUsers(){
 
-    const data = await api("/api/posts");
+  clearTimeout(searchTimer);
 
-    const posts = data.posts || data || [];
+  searchTimer = setTimeout(async () => {
 
-    renderPosts(posts);
+    const q =
+      document.getElementById(
+        "searchInput"
+      ).value.trim();
 
-  }catch(err){
+    if(!q){
+      document.getElementById(
+        "usersList"
+      ).innerHTML = "";
+      return;
+    }
 
-    console.log(err);
+    try{
 
-  }
+      const users =
+        await api(
+          "/api/users?q=" +
+          encodeURIComponent(q)
+        );
 
-}
+      const box =
+        document.getElementById(
+          "usersList"
+        );
 
-function renderPosts(posts){
+      box.innerHTML = "";
 
-  const html = posts.map(post=>{
+      users.forEach(user => {
 
-    const name =
-      post.username ||
-      post.user_name ||
-      "User";
+        const div =
+          document.createElement("div");
 
-    return `
-      <div class="card">
+        div.className = "user";
 
-        <div class="row">
-
-          <div class="avatar small">
-            ${initials(name)}
+        div.innerHTML = `
+          <div class="avatar">
+            ${user.name.charAt(0).toUpperCase()}
           </div>
 
-          <div>
-            <b>${escapeHtml(name)}</b>
-            <div class="muted">
-              ${formatDate(post.created_at)}
-            </div>
+          <div style="flex:1">
+            <b>${escapeHtml(user.name)}</b>
+            <br>
+            <small>@${escapeHtml(user.username)}</small>
           </div>
 
-        </div>
-
-        <div class="post-content">
-          ${escapeHtml(post.content || "")}
-        </div>
-
-        <div class="post-actions">
-
-          <button onclick="likePost('${post.id}')">
-            ❤️ ${post.likes || 0}
+          <button class="primary"
+            onclick='openChat(${JSON.stringify(user)})'>
+            💬
           </button>
 
-          <button onclick="commentPost('${post.id}')">
-            💬 ${post.comments || 0}
+          <button class="light"
+            onclick='startCall(${JSON.stringify(user)},"voice")'>
+            📞
           </button>
 
-          <button onclick="sharePost('${post.id}')">
-            🔗
+          <button class="light"
+            onclick='startCall(${JSON.stringify(user)},"video")'>
+            🎥
           </button>
+        `;
 
-        </div>
+        box.appendChild(div);
 
-      </div>
-    `;
-
-  }).join("");
-
-  $("postsList").innerHTML =
-    html ||
-    `<div class="empty">Post hin jiru.</div>`;
-
-  $("homePosts").innerHTML =
-    posts.slice(0,3).map(post=>{
-
-      const name=post.username || "User";
-
-      return `
-        <div class="card">
-
-          <div class="row">
-
-            <div class="avatar small">
-              ${initials(name)}
-            </div>
-
-            <b>${escapeHtml(name)}</b>
-
-          </div>
-
-          <div class="post-content">
-            ${escapeHtml(post.content || "")}
-          </div>
-
-        </div>
-      `;
-
-    }).join("");
-}
-
-function openPostModal(){
-
-  $("postContent").value="";
-
-  $("postModal").classList.remove("hidden");
-
-}
-
-async function createPost(){
-
-  const content = $("postContent").value.trim();
-
-  if(!content){
-    showToast("Post barreessi.");
-    return;
-  }
-
-  try{
-
-    await api("/api/posts",{
-      method:"POST",
-      body:JSON.stringify({
-        content
-      })
-    });
-
-    closeModal("postModal");
-
-    showToast("Post maxxanfame.");
-
-    loadPosts();
-
-  }catch(err){
-    showToast(err.message);
-  }
-}
-
-async function likePost(id){
-
-  try{
-
-    await api("/api/posts/"+id+"/like",{
-      method:"POST"
-    });
-
-    loadPosts();
-
-  }catch(err){
-    showToast(err.message);
-  }
-}
-
-async function commentPost(id){
-
-  const text = prompt("Yaada kee barreessi:");
-
-  if(!text){
-    return;
-  }
-
-  try{
-
-    await api("/api/posts/"+id+"/comments",{
-      method:"POST",
-      body:JSON.stringify({
-        content:text
-      })
-    });
-
-    loadPosts();
-
-  }catch(err){
-    showToast(err.message);
-  }
-}
-
-async function sharePost(id){
-
-  try{
-
-    await api("/api/posts/"+id+"/share",{
-      method:"POST"
-    });
-
-    showToast("Post qoodame.");
-
-  }catch(err){
-    showToast(err.message);
-  }
-}
-
-
-/* =========================================================
-   ROOMS
-========================================================= */
-
-function openRoomModal(){
-
-  $("roomName").value="";
-  $("roomDescriptionInput").value="";
-
-  $("roomModal").classList.remove("hidden");
-
-}
-
-async function createRoom(){
-
-  const name = $("roomName").value.trim();
-
-  const description =
-    $("roomDescriptionInput").value.trim();
-
-  if(!name){
-
-    showToast("Maqaa Club galchi.");
-
-    return;
-  }
-
-  try{
-
-    const data = await api("/api/rooms",{
-      method:"POST",
-      body:JSON.stringify({
-        name,
-        description
-      })
-    });
-
-    closeModal("roomModal");
-
-    showToast(
-      "Club uumame. ID: "+
-      (data.room?.club_code || "")
-    );
-
-    await loadRooms();
-
-  }catch(err){
-
-    showToast(err.message);
-
-  }
-}
-
-async function loadRooms(){
-
-  try{
-
-    const data = await api("/api/rooms");
-
-    const rooms =
-      data.rooms ||
-      data ||
-      [];
-
-    renderRooms(rooms);
-
-  }catch(err){
-
-    $("roomsList").innerHTML =
-      `<div class="empty">${escapeHtml(err.message)}</div>`;
-
-  }
-
-}
-
-function renderRooms(rooms){
-
-  if(!rooms.length){
-
-    $("roomsList").innerHTML =
-      `<div class="empty">
-        🎙️ Club hin jiru.<br><br>
-        Club jalqaba uumi.
-      </div>`;
-
-    return;
-  }
-
-  $("roomsList").innerHTML = rooms.map(room=>{
-
-    const count =
-      room.member_count ||
-      room.members_count ||
-      0;
-
-    const speakers =
-      room.speaker_count ||
-      0;
-
-    return `
-      <div class="card room-card">
-
-        <div class="between">
-
-          <div>
-
-            <span class="room-badge">
-              🎙️ CLUB
-            </span>
-
-            ${
-              room.is_locked
-              ? `<span class="room-badge lock-badge">🔒 Cufame</span>`
-              : ""
-            }
-
-          </div>
-
-          <span class="muted">
-            ${speakers}/10
-          </span>
-
-        </div>
-
-        <h3 style="margin-top:10px">
-          ${escapeHtml(room.name || "Club")}
-        </h3>
-
-        <p class="muted" style="margin-top:5px">
-          ${escapeHtml(room.description || "Voice Club")}
-        </p>
-
-        <div style="margin-top:10px">
-          <b>Club ID:</b>
-          ${escapeHtml(room.club_code || "--------")}
-        </div>
-
-        <div class="seat-mini">
-
-          ${Array.from({length:10},(_,i)=>{
-
-            const used =
-              i < speakers;
-
-            return `
-              <div class="mini-seat ${used?"used":""}">
-                ${i+1}
-              </div>
-            `;
-
-          }).join("")}
-
-        </div>
-
-        <div class="between" style="margin-top:12px">
-
-          <span class="muted">
-            👥 ${count} nama
-          </span>
-
-          <button
-            class="primary"
-            style="width:auto;padding:10px 16px"
-            onclick="joinRoom('${room.id}')"
-          >
-            Seeni
-          </button>
-
-        </div>
-
-      </div>
-    `;
-
-  }).join("");
-
-}
-
-async function joinRoom(roomId){
-
-  try{
-
-    const data = await api(
-      "/api/rooms/"+roomId+"/join",
-      {
-        method:"POST"
-      }
-    );
-
-    currentRoom = roomId;
-
-    if(socket){
-
-      socket.emit("joinRoom",{
-        roomId
       });
 
+    }catch(e){
+      console.log(e);
     }
 
-    $("roomScreen").classList.remove("hidden");
-
-    await loadCurrentRoom();
-
-    await startRoomMedia();
-
-  }catch(err){
-
-    showToast(err.message);
-
-  }
-
+  },300);
 }
 
-async function loadCurrentRoom(){
 
-  if(!currentRoom){
-    return;
-  }
+/* PRIVATE CHAT */
+
+async function openChat(user){
+
+  currentChatUser = user;
+
+  document.getElementById("chatTitle")
+    .textContent =
+    "💬 " + user.name;
+
+  showPage("chatPage");
 
   try{
 
-    const data = await api(
-      "/api/rooms/"+currentRoom
-    );
-
-    currentRoomData = data;
-
-    renderCurrentRoom(data);
-
-  }catch(err){
-
-    showToast(err.message);
-
-  }
-
-}
-
-function renderCurrentRoom(data){
-
-  const room = data.room || {};
-  const members = data.members || [];
-
-  $("roomScreenName").textContent =
-    room.name || "Club";
-
-  $("roomScreenCode").textContent =
-    room.club_code || "";
-
-  $("roomDescription").textContent =
-    room.description || "Voice Club";
-
-  $("roomCode").textContent =
-    room.club_code || "--------";
-
-  const speakers =
-    members
-      .filter(m=>m.is_speaker || m.seat)
-      .sort((a,b)=>
-        (a.seat||99)-(b.seat||99)
-      );
-
-  const audience =
-    members.filter(m=>
-      !(m.is_speaker || m.seat)
-    );
-
-  renderSpeakerSeats(speakers);
-
-  renderAudience(audience);
-
-  $("audienceCount").textContent =
-    audience.length;
-
-  const mine =
-    members.find(m=>
-      String(m.user_id)===String(me.id)
-    );
-
-  if(mine){
-
-    roomMic =
-      mine.mic_on !== false;
-
-    roomCamera =
-      mine.camera_on === true;
-
-    handRaised =
-      mine.hand_raised === true;
-
-    updateRoomButtons();
-
-  }
-
-  const isOwner =
-    String(room.owner_id)===String(me.id);
-
-  if(isOwner){
-
-    addHostControls();
-
-  }
-
-}
-
-function renderSpeakerSeats(speakers){
-
-  const map = {};
-
-  speakers.forEach(m=>{
-    if(m.seat){
-      map[m.seat]=m;
-    }
-  });
-
-  let html="";
-
-  for(let i=1;i<=10;i++){
-
-    const member=map[i];
-
-    if(!member){
-
-      html+=`
-        <div class="seat empty-seat">
-          🎙️ Seat ${i}
-        </div>
-      `;
-
-      continue;
-    }
-
-    const isHost =
-      String(member.user_id)===
-      String(currentRoomData.room.owner_id);
-
-    html+=`
-      <div class="seat ${isHost?"host":""}">
-
-        <div class="seat-avatar">
-          ${initials(member.username)}
-        </div>
-
-        <div class="seat-name">
-          ${escapeHtml(member.username || "User")}
-        </div>
-
-        <div class="seat-icons">
-
-          ${isHost ? "👑 " : ""}
-
-          ${member.mic_on ? "🎙️" : "🔇"}
-
-          ${member.camera_on ? "📹" : "📷"}
-
-          ${member.hand_raised ? " ✋" : ""}
-
-        </div>
-
-        ${
-          String(me.id)!==
-          String(member.user_id)
-          &&
-          String(currentRoomData.room.owner_id)===
-          String(me.id)
-          ?
-          `<button
-             class="seat-menu"
-             onclick="openMemberMenu('${member.user_id}','${escapeHtml(member.username)}')"
-           >
-             ⋮
-           </button>`
-          :
-          ""
-        }
-
-      </div>
-    `;
-
-  }
-
-  $("speakerSeats").innerHTML=html;
-
-}
-
-function renderAudience(audience){
-
-  if(!audience.length){
-
-    $("audienceList").innerHTML=
-      `<div class="muted" style="margin-top:8px">
-        Audience hin jiru.
-      </div>`;
-
-    return;
-  }
-
-  $("audienceList").innerHTML =
-    audience.map(member=>{
-
-      const owner =
-        currentRoomData &&
-        String(currentRoomData.room.owner_id)===
-        String(me.id);
-
-      return `
-        <div class="audience-user">
-
-          <div class="row">
-
-            <div class="avatar small">
-              ${initials(member.username)}
-            </div>
-
-            <div>
-
-              <b>
-                ${escapeHtml(member.username || "User")}
-              </b>
-
-              ${
-                member.hand_raised
-                ? `<div class="muted">✋ Harka kaase</div>`
-                : `<div class="muted">Audience</div>`
-              }
-
-            </div>
-
-          </div>
-
-          ${
-            owner
-            ?
-            `<button
-              class="secondary"
-              onclick="promoteMember('${member.user_id}')"
-            >
-              🎙️ Promote
-            </button>`
-            :
-            ""
-          }
-
-        </div>
-      `;
-
-    }).join("");
-
-}
-
-function addHostControls(){
-
-  const controls =
-    document.querySelector(".room-controls");
-
-  if(document.getElementById("lockRoomButton")){
-    return;
-  }
-
-  const button =
-    document.createElement("button");
-
-  button.id="lockRoomButton";
-
-  button.className="room-control host-control";
-
-  button.textContent =
-    currentRoomData.room.is_locked
-    ? "🔓 Ban"
-    : "🔒 Cufi";
-
-  button.onclick=toggleRoomLock;
-
-  controls.appendChild(button);
-
-}
-
-async function toggleRoomLock(){
-
-  try{
-
-    const locked =
-      !currentRoomData.room.is_locked;
-
-    await api(
-      "/api/rooms/"+currentRoom+"/lock",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          locked
-        })
-      }
-    );
-
-    showToast(
-      locked
-      ? "Club cufame."
-      : "Club baname."
-    );
-
-    loadCurrentRoom();
-
-  }catch(err){
-
-    showToast(err.message);
-
-  }
-
-}
-
-async function leaveCurrentRoom(){
-
-  try{
-
-    if(currentRoom){
-
+    const messages =
       await api(
-        "/api/rooms/"+currentRoom+"/leave",
-        {
-          method:"POST"
-        }
+        "/api/messages/" + user.id
       );
 
-      if(socket){
+    const box =
+      document.getElementById(
+        "chatBox"
+      );
 
-        socket.emit("leaveRoom",{
-          roomId:currentRoom
-        });
+    box.innerHTML = "";
 
-      }
+    messages.forEach(addChatMessage);
 
+    box.scrollTop = box.scrollHeight;
+
+  }catch(e){
+    alert(e.message);
+  }
+}
+
+function addChatMessage(msg){
+
+  const box =
+    document.getElementById(
+      "chatBox"
+    );
+
+  const div =
+    document.createElement("div");
+
+  div.className =
+    "msg " +
+    (
+      Number(msg.sender_id) === Number(me.id)
+      ? "mine"
+      : ""
+    );
+
+  div.textContent = msg.message;
+
+  box.appendChild(div);
+
+  box.scrollTop = box.scrollHeight;
+}
+
+function sendMessage(){
+
+  if(!currentChatUser) return;
+
+  const input =
+    document.getElementById(
+      "chatInput"
+    );
+
+  const message =
+    input.value.trim();
+
+  if(!message) return;
+
+  socket.emit(
+    "private-message",
+    {
+      receiverId: currentChatUser.id,
+      message,
+      senderName: me.name
     }
+  );
 
-  }catch(err){}
-
-  await stopRoomMedia();
-
-  closeRoomScreen();
-
-  loadRooms();
-
-}
-
-function closeRoomScreen(){
-
-  $("roomScreen").classList.add("hidden");
-
-  currentRoom=null;
-
-  currentRoomData=null;
-
-  Object.keys(peerConnections).forEach(id=>{
-    try{
-      peerConnections[id].close();
-    }catch(e){}
-    delete peerConnections[id];
-  });
-
-}
-
-function openMemberMenu(userId,username){
-
-  const action =
-    prompt(
-      username+
-      "\n\n1 = Mute\n2 = Promote\n3 = Demote\n4 = Remove\n\nLakko filadhu:"
-    );
-
-  if(action==="1"){
-    muteMember(userId);
-  }
-
-  if(action==="2"){
-    promoteMember(userId);
-  }
-
-  if(action==="3"){
-    demoteMember(userId);
-  }
-
-  if(action==="4"){
-    removeMember(userId);
-  }
-
-}
-
-async function muteMember(userId){
-
-  try{
-
-    await api(
-      "/api/rooms/"+currentRoom+"/mute",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          userId
-        })
-      }
-    );
-
-    loadCurrentRoom();
-
-  }catch(err){
-    showToast(err.message);
-  }
-
-}
-
-async function promoteMember(userId){
-
-  try{
-
-    await api(
-      "/api/rooms/"+currentRoom+"/promote",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          userId
-        })
-      }
-    );
-
-    showToast("Speaker ta'e.");
-
-    loadCurrentRoom();
-
-  }catch(err){
-    showToast(err.message);
-  }
-
-}
-
-async function demoteMember(userId){
-
-  try{
-
-    await api(
-      "/api/rooms/"+currentRoom+"/demote",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          userId
-        })
-      }
-    );
-
-    loadCurrentRoom();
-
-  }catch(err){
-    showToast(err.message);
-  }
-
-}
-
-async function removeMember(userId){
-
-  if(!confirm("Nama kana Club keessaa baasuu?")){
-    return;
-  }
-
-  try{
-
-    await api(
-      "/api/rooms/"+currentRoom+"/remove",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          userId
-        })
-      }
-    );
-
-    loadCurrentRoom();
-
-  }catch(err){
-    showToast(err.message);
-  }
-
+  input.value = "";
 }
 
 
-/* =========================================================
-   ROOM MEDIA
-========================================================= */
+/* CALL */
 
-async function startRoomMedia(){
+async function startCall(user,type){
+
+  currentCallUser = user;
+  currentCallType = type;
+
+  showPage("callPage");
+
+  document.getElementById("callTitle")
+    .textContent =
+    type === "video"
+      ? "🎥 Video Call - " + user.name
+      : "📞 Voice Call - " + user.name;
+
+  await prepareMedia(type);
+
+  createPeer();
+
+  const offer =
+    await peer.createOffer();
+
+  await peer.setLocalDescription(
+    offer
+  );
+
+  socket.emit(
+    "call-user",
+    {
+      userId:user.id,
+      fromName:me.name,
+      callType:type,
+      offer
+    }
+  );
+}
+
+
+async function prepareMedia(type){
 
   try{
 
     localStream =
-      await navigator.mediaDevices.getUserMedia({
-        audio:true,
-        video:true
-      });
-
-    roomMic=true;
-    roomCamera=false;
-
-    localStream.getAudioTracks().forEach(track=>{
-      track.enabled=true;
-    });
-
-    localStream.getVideoTracks().forEach(track=>{
-      track.enabled=false;
-    });
-
-    updateRoomButtons();
-
-  }catch(err){
-
-    console.log(err);
-
-    try{
-
-      localStream =
-        await navigator.mediaDevices.getUserMedia({
+      await navigator.mediaDevices
+        .getUserMedia({
           audio:true,
-          video:false
+          video:type === "video"
         });
 
-    }catch(e){}
+    document.getElementById(
+      "localVideo"
+    ).srcObject = localStream;
 
-  }
+  }catch(e){
 
-}
-
-async function stopRoomMedia(){
-
-  if(localStream){
-
-    localStream.getTracks().forEach(track=>{
-      track.stop();
-    });
-
-    localStream=null;
-
-  }
-
-}
-
-async function toggleRoomMic(){
-
-  roomMic=!roomMic;
-
-  if(localStream){
-
-    localStream
-      .getAudioTracks()
-      .forEach(track=>{
-        track.enabled=roomMic;
-      });
-
-  }
-
-  try{
-
-    await api(
-      "/api/rooms/"+currentRoom+"/mic",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          micOn:roomMic
-        })
-      }
+    alert(
+      "Microphone/Camera hayyama:\n" +
+      e.message
     );
 
-    if(socket){
-
-      socket.emit("micStatus",{
-        roomId:currentRoom,
-        micOn:roomMic
-      });
-
-    }
-
-  }catch(err){}
-
-  updateRoomButtons();
-
+  }
 }
 
-async function toggleRoomCamera(){
 
-  roomCamera=!roomCamera;
+function createPeer(){
 
-  if(localStream){
-
-    const videoTracks =
-      localStream.getVideoTracks();
-
-    if(videoTracks.length){
-
-      videoTracks.forEach(track=>{
-        track.enabled=roomCamera;
-      });
-
-    }
-
-  }
-
-  try{
-
-    await api(
-      "/api/rooms/"+currentRoom+"/camera",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          cameraOn:roomCamera
-        })
-      }
+  peer =
+    new RTCPeerConnection(
+      rtcConfig
     );
-
-  }catch(err){}
-
-  updateRoomButtons();
-
-}
-
-async function raiseHand(){
-
-  handRaised=!handRaised;
-
-  try{
-
-    await api(
-      "/api/rooms/"+currentRoom+"/raise-hand",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          raised:handRaised
-        })
-      }
-    );
-
-  }catch(err){}
-
-  updateRoomButtons();
-
-}
-
-function updateRoomButtons(){
-
-  const mic=$("micButton");
-  const camera=$("cameraButton");
-  const hand=$("handButton");
-
-  if(mic){
-
-    mic.textContent =
-      roomMic
-      ? "🎙️ Mic ON"
-      : "🔇 Mic OFF";
-
-    mic.classList.toggle("active",roomMic);
-
-  }
-
-  if(camera){
-
-    camera.textContent =
-      roomCamera
-      ? "📹 Camera ON"
-      : "📷 Camera OFF";
-
-    camera.classList.toggle("active",roomCamera);
-
-  }
-
-  if(hand){
-
-    hand.textContent =
-      handRaised
-      ? "✋ Kaafame"
-      : "✋ Hand";
-
-    hand.classList.toggle("active",handRaised);
-
-  }
-
-  const lockButton =
-    $("lockRoomButton");
-
-  if(lockButton && currentRoomData){
-
-    lockButton.textContent =
-      currentRoomData.room.is_locked
-      ? "🔓 Ban"
-      : "🔒 Cufi";
-
-  }
-
-}
-
-
-/* =========================================================
-   WEBRTC
-========================================================= */
-
-async function createPeerConnection(socketId){
-
-  if(peerConnections[socketId]){
-    return peerConnections[socketId];
-  }
-
-  const pc =
-    new RTCPeerConnection({
-      iceServers:[
-        {
-          urls:"stun:stun.l.google.com:19302"
-        },
-        {
-          urls:"stun:stun1.l.google.com:19302"
-        }
-      ]
-    });
-
-  peerConnections[socketId]=pc;
 
   if(localStream){
 
     localStream
       .getTracks()
-      .forEach(track=>{
-        pc.addTrack(track,localStream);
+      .forEach(track => {
+
+        peer.addTrack(
+          track,
+          localStream
+        );
+
       });
 
   }
 
-  pc.onicecandidate=event=>{
+  peer.ontrack = event => {
 
-    if(event.candidate && socket){
-
-      socket.emit("ice-candidate",{
-        to:socketId,
-        candidate:event.candidate
-      });
-
-    }
+    document.getElementById(
+      "remoteVideo"
+    ).srcObject =
+      event.streams[0];
 
   };
 
-  pc.ontrack=event=>{
+  peer.onicecandidate = event => {
 
-    let video =
-      document.getElementById(
-        "remote-"+socketId
+    if(event.candidate &&
+       currentCallUser){
+
+      socket.emit(
+        "ice-candidate",
+        {
+          toUserId:
+            currentCallUser.id,
+
+          candidate:
+            event.candidate
+        }
       );
 
-    if(!video){
-
-      video=document.createElement("video");
-
-      video.id="remote-"+socketId;
-
-      video.autoplay=true;
-      video.playsInline=true;
-
-      video.style.width="100%";
-      video.style.borderRadius="12px";
-
-      $("room-main").appendChild(video);
-
     }
-
-    video.srcObject=event.streams[0];
 
   };
 
-  return pc;
+  peer.onconnectionstatechange = () => {
 
+    if(
+      peer.connectionState ===
+      "failed"
+    ){
+      endCallLocal();
+    }
+
+  };
 }
 
-async function handleOffer(data){
 
-  const pc =
-    await createPeerConnection(data.from);
+async function receiveCall(data){
 
-  await pc.setRemoteDescription(
-    new RTCSessionDescription(data.offer)
+  currentCallUser = {
+    id:data.fromUserId,
+    name:data.fromName
+  };
+
+  currentCallType =
+    data.callType;
+
+  showPage("callPage");
+
+  document.getElementById("callTitle")
+    .textContent =
+      data.callType === "video"
+      ? "🎥 Video Call - " + data.fromName
+      : "📞 Voice Call - " + data.fromName;
+
+  await prepareMedia(
+    data.callType
+  );
+
+  createPeer();
+
+  await peer.setRemoteDescription(
+    new RTCSessionDescription(
+      data.offer
+    )
   );
 
   const answer =
-    await pc.createAnswer();
+    await peer.createAnswer();
 
-  await pc.setLocalDescription(answer);
-
-  socket.emit("answer",{
-    to:data.from,
+  await peer.setLocalDescription(
     answer
-  });
+  );
 
-}
-
-
-/* =========================================================
-   CLASSES
-========================================================= */
-
-function openClassModal(){
-
-  $("className").value="";
-
-  $("classModal").classList.remove("hidden");
-
-}
-
-async function createClass(){
-
-  const name =
-    $("className").value.trim();
-
-  if(!name){
-
-    showToast("Maqaa Class galchi.");
-
-    return;
-  }
-
-  try{
-
-    await api("/api/classes",{
-      method:"POST",
-      body:JSON.stringify({
-        name
-      })
-    });
-
-    closeModal("classModal");
-
-    showToast("Class uumame.");
-
-    loadClasses();
-
-  }catch(err){
-
-    showToast(err.message);
-
-  }
-
-}
-
-async function loadClasses(){
-
-  try{
-
-    const data =
-      await api("/api/classes");
-
-    const classes =
-      data.classes ||
-      data ||
-      [];
-
-    if(!classes.length){
-
-      $("classesList").innerHTML =
-        `<div class="empty">
-          📚 Class hin jiru.
-        </div>`;
-
-      return;
-
+  socket.emit(
+    "answer-call",
+    {
+      toUserId:data.fromUserId,
+      answer
     }
-
-    $("classesList").innerHTML =
-      classes.map(c=>`
-
-        <div class="card">
-
-          <div class="between">
-
-            <div>
-
-              <h3>
-                📚 ${escapeHtml(c.name)}
-              </h3>
-
-              <div class="muted">
-                👤 ${escapeHtml(c.owner_name || "")}
-              </div>
-
-            </div>
-
-            <button
-              class="primary"
-              style="width:auto;padding:10px 15px"
-              onclick="joinClass('${c.id}')"
-            >
-              Seeni
-            </button>
-
-          </div>
-
-        </div>
-
-      `).join("");
-
-  }catch(err){
-
-    console.log(err);
-
-  }
-
+  );
 }
 
-async function joinClass(id){
 
-  try{
+function toggleCallMic(){
 
-    await api(
-      "/api/classes/"+id+"/join",
+  if(!localStream) return;
+
+  const track =
+    localStream.getAudioTracks()[0];
+
+  if(track){
+    track.enabled =
+      !track.enabled;
+  }
+}
+
+
+function toggleCamera(){
+
+  if(!localStream) return;
+
+  const track =
+    localStream.getVideoTracks()[0];
+
+  if(track){
+    track.enabled =
+      !track.enabled;
+  }
+}
+
+
+function endCall(){
+
+  if(
+    currentCallUser &&
+    socket
+  ){
+
+    socket.emit(
+      "end-call",
       {
-        method:"POST"
+        toUserId:
+          currentCallUser.id
       }
     );
 
-    showToast("Class keessatti galte.");
-
-  }catch(err){
-
-    showToast(err.message);
-
   }
 
+  endCallLocal();
 }
 
 
-/* =========================================================
-   SEARCH
-========================================================= */
+function endCallLocal(){
 
-let searchTimer=null;
+  if(localStream){
 
-function searchUsers(){
+    localStream
+      .getTracks()
+      .forEach(track =>
+        track.stop()
+      );
 
-  clearTimeout(searchTimer);
+    localStream = null;
+  }
 
-  searchTimer=setTimeout(
-    performSearch,
-    400
-  );
+  if(peer){
 
+    peer.close();
+    peer = null;
+  }
+
+  document.getElementById(
+    "localVideo"
+  ).srcObject = null;
+
+  document.getElementById(
+    "remoteVideo"
+  ).srcObject = null;
+
+  currentCallUser = null;
+
+  showPage("homePage");
 }
 
-async function performSearch(){
 
-  const q =
-    $("searchInput").value.trim();
+/* CLUB */
 
-  if(!q){
-
-    $("searchResults").innerHTML="";
-
-    return;
-
-  }
+async function createClub(){
 
   try{
+
+    const name =
+      document.getElementById(
+        "clubName"
+      ).value.trim() ||
+      "Mullisa Club";
 
     const data =
       await api(
-        "/api/users?search="+
-        encodeURIComponent(q)
+        "/api/clubs",
+        {
+          method:"POST",
+          body:JSON.stringify({name})
+        }
       );
 
-    const users =
-      data.users ||
-      data ||
-      [];
+    document.getElementById(
+      "clubCode"
+    ).value =
+      data.club.club_code;
 
-    if(!users.length){
+    await openClub(
+      data.club
+    );
 
-      $("searchResults").innerHTML =
-        `<div class="empty">
-          Nama hin argamne.
-        </div>`;
+  }catch(e){
 
-      return;
-    }
-
-    $("searchResults").innerHTML =
-      users.map(user=>`
-
-        <div class="card">
-
-          <div class="between">
-
-            <div class="row">
-
-              <div class="avatar">
-                ${initials(user.username)}
-              </div>
-
-              <div>
-
-                <b>
-                  ${escapeHtml(user.username)}
-                </b>
-
-                <div class="muted">
-                  ${escapeHtml(user.bio || "")}
-                </div>
-
-              </div>
-
-            </div>
-
-            <button
-              class="secondary"
-              onclick="followUser('${user.id}')"
-            >
-              + Follow
-            </button>
-
-          </div>
-
-        </div>
-
-      `).join("");
-
-  }catch(err){
-
-    showToast(err.message);
-
+    alert("❌ " + e.message);
   }
-
 }
 
-async function followUser(userId){
+
+async function joinClub(){
 
   try{
 
-    await api(
-      "/api/users/"+userId+"/follow",
-      {
-        method:"POST"
-      }
+    const code =
+      document.getElementById(
+        "clubCode"
+      ).value.trim();
+
+    const data =
+      await api(
+        "/api/clubs/join",
+        {
+          method:"POST",
+          body:JSON.stringify({code})
+        }
+      );
+
+    await openClub(
+      data.club
     );
 
-    showToast("Follow goote.");
+  }catch(e){
 
-  }catch(err){
-
-    showToast(err.message);
-
+    alert("❌ " + e.message);
   }
-
 }
 
 
-/* =========================================================
-   CHAT
-========================================================= */
+async function openClub(club){
 
-function sendChat(){
+  currentClub = club;
 
-  const input=$("chatMessage");
+  document.getElementById(
+    "clubTitle"
+  ).textContent =
+    club.name +
+    " (" +
+    club.club_code +
+    ")";
 
-  const text=input.value.trim();
+  socket.emit(
+    "join-club-room",
+    club.club_code
+  );
 
-  if(!text){
-    return;
-  }
+  showPage("clubPage");
 
-  const box=$("chatBox");
+  await loadClubMembers();
+  await loadClubMessages();
+}
 
-  const div=document.createElement("div");
 
-  div.className="message mine";
+async function loadClubMembers(){
 
-  div.textContent=text;
+  const members =
+    await api(
+      "/api/clubs/" +
+      currentClub.club_code +
+      "/members"
+    );
+
+  const box =
+    document.getElementById(
+      "clubMembers"
+    );
+
+  box.innerHTML = "";
+
+  members.forEach(member => {
+
+    const div =
+      document.createElement("div");
+
+    div.className = "user";
+
+    div.innerHTML = `
+      <div class="avatar">
+        ${member.name.charAt(0).toUpperCase()}
+      </div>
+
+      <div style="flex:1">
+        <b>${escapeHtml(member.name)}</b>
+        <br>
+        <small>
+          ${
+            member.role === "host"
+            ? "👑 Host"
+            : member.mic_on
+              ? "🎤 Speaker"
+              : "👂 Listener"
+          }
+        </small>
+      </div>
+    `;
+
+    box.appendChild(div);
+
+  });
+}
+
+
+async function loadClubMessages(){
+
+  const messages =
+    await api(
+      "/api/clubs/" +
+      currentClub.club_code +
+      "/messages"
+    );
+
+  const box =
+    document.getElementById(
+      "clubChatBox"
+    );
+
+  box.innerHTML = "";
+
+  messages.forEach(addClubMessage);
+
+  box.scrollTop =
+    box.scrollHeight;
+}
+
+
+function addClubMessage(msg){
+
+  const box =
+    document.getElementById(
+      "clubChatBox"
+    );
+
+  const div =
+    document.createElement("div");
+
+  div.className =
+    "msg " +
+    (
+      Number(msg.userId) === Number(me.id)
+      ? "mine"
+      : ""
+    );
+
+  div.innerHTML =
+    `<b>${escapeHtml(msg.name)}</b><br>` +
+    escapeHtml(msg.message);
 
   box.appendChild(div);
 
-  input.value="";
-
-  box.scrollTop=box.scrollHeight;
-
-  if(socket){
-
-    socket.emit("globalMessage",{
-      content:text
-    });
-
-  }
-
-}
-
-if(typeof io!=="undefined"){
-
-  document.addEventListener("DOMContentLoaded",()=>{
-
-    /* event added after socket connection */
-
-  });
-
+  box.scrollTop =
+    box.scrollHeight;
 }
 
 
-/* =========================================================
-   MODALS
-========================================================= */
+function sendClubMessage(){
 
-function closeModal(id){
+  if(!currentClub) return;
 
-  $(id).classList.add("hidden");
+  const input =
+    document.getElementById(
+      "clubChatInput"
+    );
 
-}
+  const message =
+    input.value.trim();
 
+  if(!message) return;
 
-/* =========================================================
-   DARK MODE
-========================================================= */
-
-function toggleDark(){
-
-  document.body.classList.toggle("dark");
-
-  const dark =
-    document.body.classList.contains("dark");
-
-  localStorage.setItem(
-    "mullisa_dark",
-    dark ? "1" : "0"
+  socket.emit(
+    "club-message",
+    {
+      code:
+        currentClub.club_code,
+      message
+    }
   );
 
-  $("darkButton").textContent =
-    dark ? "Bani" : "Cufi";
-
-}
-
-function loadDarkMode(){
-
-  const dark =
-    localStorage.getItem("mullisa_dark")==="1";
-
-  if(dark){
-
-    document.body.classList.add("dark");
-
-  }
-
-  if($("darkButton")){
-
-    $("darkButton").textContent =
-      dark ? "Bani" : "Cufi";
-
-  }
-
+  input.value = "";
 }
 
 
-/* =========================================================
-   CLUB SHARE
-========================================================= */
+function toggleMic(){
 
-function copyClubCode(){
+  if(!localStream){
 
-  if(!currentRoomData){
+    alert(
+      "Jalqaba Call ykn Voice media banu."
+    );
+
     return;
   }
 
-  const code =
-    currentRoomData.room.club_code;
+  const track =
+    localStream.getAudioTracks()[0];
 
-  navigator.clipboard
-    .writeText(code)
-    .then(()=>{
-      showToast("Club ID copy ta'e.");
-    })
-    .catch(()=>{
-      showToast("Club ID: "+code);
-    });
-
+  if(track){
+    track.enabled =
+      !track.enabled;
+  }
 }
+
+
+function raiseHand(){
+
+  if(!currentClub) return;
+
+  socket.emit(
+    "club-action",
+    {
+      code:
+        currentClub.club_code,
+      action:"raise-hand"
+    }
+  );
+
+  alert("🙋 Raise hand ergame.");
+}
+
 
 function shareClub(){
 
-  if(!currentRoomData){
-    return;
-  }
+  if(!currentClub) return;
 
-  const room =
-    currentRoomData.room;
-
-  const text =
-    "🎙️ Mullisa-JM Club\n\n"+
-    room.name+
-    "\nClub ID: "+
-    room.club_code;
+  const url =
+    location.origin +
+    "/?club=" +
+    currentClub.club_code;
 
   if(navigator.share){
 
     navigator.share({
       title:"Mullisa-JM Club",
-      text
-    }).catch(()=>{});
+      text:
+        "Mullisa-JM Club seeni",
+      url
+    });
 
   }else{
 
-    navigator.clipboard
-      .writeText(text)
-      .then(()=>{
-        showToast("Link/ID qophaa'e.");
-      });
+    navigator.clipboard.writeText(url);
 
+    alert(
+      "🔗 Link Club copy ta'eera."
+    );
   }
-
 }
 
 
-/* =========================================================
-   UTILITIES
-========================================================= */
+function leaveClub(){
 
-function escapeHtml(value){
+  currentClub = null;
 
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-function formatDate(date){
-
-  if(!date){
-    return "";
-  }
-
-  try{
-
-    return new Date(date)
-      .toLocaleString("om-ET",{
-        day:"2-digit",
-        month:"2-digit",
-        hour:"2-digit",
-        minute:"2-digit"
-      });
-
-  }catch(e){
-
-    return "";
-
-  }
-
+  showPage("homePage");
 }
 
 
-/* =========================================================
-   SOCKET GLOBAL CHAT
-========================================================= */
+/* LOGOUT */
 
-function setupSocketChat(){
+function logout(){
 
-  if(!socket){
-    return;
-  }
+  localStorage.removeItem(
+    "mullisa_token"
+  );
 
-  socket.off("globalMessage");
+  token = null;
 
-  socket.on("globalMessage",data=>{
-
-    if(!data || !data.content){
-      return;
-    }
-
-    const box=$("chatBox");
-
-    const div=document.createElement("div");
-
-    const mine =
-      data.userId &&
-      String(data.userId)===
-      String(me.id);
-
-    div.className =
-      "message"+(mine?" mine":"");
-
-    div.innerHTML =
-      mine
-      ? escapeHtml(data.content)
-      :
-      `<b>${escapeHtml(data.username || "User")}</b><br>
-       ${escapeHtml(data.content)}`;
-
-    box.appendChild(div);
-
-    box.scrollTop=box.scrollHeight;
-
-  });
-
+  location.reload();
 }
 
 
-/* =========================================================
-   INIT
-========================================================= */
+/* SAFE HTML */
 
-loadDarkMode();
+function escapeHtml(text){
+
+  return String(text || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+/* AUTO LOGIN */
 
 if(token){
-
   startApp();
-
-}else{
-
-  $("auth").classList.remove("hidden");
-  $("app").classList.add("hidden");
-
 }
-
-
-/* socket chat hook */
-
-const originalConnectSocket =
-  connectSocket;
-
-connectSocket=function(){
-
-  originalConnectSocket();
-
-  setTimeout(()=>{
-    setupSocketChat();
-  },300);
-
-};
-
 </script>
 
 </body>
