@@ -124,7 +124,40 @@ async function migrate() {
       bio TEXT DEFAULT '',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       last_seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
+   await db(`
+  ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS name VARCHAR(120)
+`);
+
+await db(`
+  ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS username VARCHAR(80)
+`);
+
+await db(`
+  ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS password_hash TEXT
+`);
+
+await db(`
+  ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS avatar TEXT
+`);
+
+await db(`
+  ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS bio TEXT DEFAULT ''
+`);
+
+await db(`
+  ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+`);
+
+await db(`
+  ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS last_seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+` )
   `);
 
   const userIdType = await getUsersIdType();
