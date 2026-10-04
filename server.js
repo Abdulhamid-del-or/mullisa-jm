@@ -32,6 +32,8 @@ if (!databaseUrl) {
   Kun Render -> Supabase keessatti
   ENETUNREACH IPv6 rakkoo hir'isa.
 */
+const { Pool } = require("pg");
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -42,14 +44,31 @@ const pool = new Pool({
   max: 10
 });
 
-pool.on("error", (error) => {
-  console.error("❌ PostgreSQL pool error:", error.message);
+pool.on("error", (err) => {
+  console.error("❌ Unexpected database error:", err.message);
 });
 
-async function query(text, params = []) {
-  return pool.query(text, params);
-}
+async function testDatabase() {
+  for (let i = 1; i <= 5; i++) {
+    try {
+      const result = await pool.query("SELECT NOW()");
+      console.log("✅ Database connected:", result.rows[0]);
+      return true;
+    } catch (err) {
+      console.error(
+        `❌ Database connection attempt ${i}/5 failed:`,
+        err.message
+      );
 
+      if (i < 5) {
+        await new Promise(resolve => setTimeout(resolve, 3000));
+      }
+    }
+  }
+
+  console.error("❌ Database connection failed after 5 attempts.");
+  process.exit(1);
+                      }
 /* =========================
    DATABASE CONNECTION TEST
 ========================= */
