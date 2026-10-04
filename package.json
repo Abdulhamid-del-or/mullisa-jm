@@ -1,7 +1,7 @@
 {
   "name": "mullisa-jm",
   "version": "3.0.0",
-  "description": "Mullisa-JM - Chat, Call, Video, Room, Post and Learning",
+  "description": "Mullisa-JM Chat, Call, Room fi Club",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
