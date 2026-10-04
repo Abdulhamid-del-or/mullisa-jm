@@ -32,25 +32,14 @@ if (!databaseUrl) {
   Kun Render -> Supabase keessatti
   ENETUNREACH IPv6 rakkoo hir'isa.
 */
-
 const pool = new Pool({
-  connectionString: databaseUrl,
-
+  connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   },
-
   family: 4,
-
-  connectionTimeoutMillis: 15000,
-
-  idleTimeoutMillis: 30000,
-
-  max: 10,
-
-  keepAlive: true,
-
-  keepAliveInitialDelayMillis: 10000
+  connectionTimeoutMillis: 10000,
+  max: 10
 });
 
 pool.on("error", (error) => {
