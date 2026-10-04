@@ -652,7 +652,84 @@ app.get(
     }
   }
 );
+/* =====================================================
+   PRIVATE CHAT HISTORY
+===================================================== */
 
+app.get(
+  "/api/messages/:userId",
+  auth,
+  async (req, res) => {
+
+    try {
+
+      const other =
+        String(req.params.userId);
+
+      const me =
+        String(req.user.id);
+
+      const result =
+        await db(
+          `
+          SELECT
+            m.id,
+            m.sender_id,
+            m.receiver_id,
+            m.message,
+            m.created_at,
+
+            COALESCE(
+              u.name,
+              u.username,
+              'User'
+            ) AS sender_name
+
+          FROM messages m
+
+          LEFT JOIN users u
+            ON u.id = m.sender_id::uuid
+
+          WHERE
+            (
+              m.sender_id::text = $1
+              AND
+              m.receiver_id::text = $2
+            )
+            OR
+            (
+              m.sender_id::text = $2
+              AND
+              m.receiver_id::text = $1
+            )
+
+          ORDER BY
+            m.created_at ASC
+
+          LIMIT 200
+          `,
+          [
+            me,
+            other
+          ]
+        );
+
+      res.json(result.rows);
+
+    } catch (err) {
+
+      console.error(
+        "CHAT HISTORY ERROR:",
+        err
+      );
+
+      res.status(500).json({
+        error:
+          "Chat history argachuu hin dandeenye."
+      });
+    }
+  }
+);
 /* =====================================================
    SEARCH USERS
 ===================================================== */
@@ -710,89 +787,6 @@ app.get(
 
       console.error(
         "USERS SEARCH ERROR:",
-        err
-      );
-
-      res.status(500).json([]);
-    }
-  }
-);
-
-/* =====================================================
-   PRIVATE CHAT HISTORY
-===================================================== */
-
-app.get(
-  "/api/messages/:userId",
-  auth,
-  async (req, res) => {
-
-    try {
-
-      const other =
-        String(
-          req.params.userId
-        );
-
-      const me =
-        String(
-          req.user.id
-        );
-
-      const result =
-        await db(
-          `
-          SELECT
-            m.id,
-            m.sender_id,
-            m.receiver_id,
-            m.message,
-            m.created_at,
-
-            COALESCE(
-              u.name,
-              u.username,
-              'User'
-            ) AS sender_name
-
-          FROM messages m
-
-          LEFT JOIN users u
-          ON CAST(u.id AS TEXT) =
-             m.sender_id
-
-          WHERE
-            (
-              m.sender_id = $1
-              AND
-              m.receiver_id = $2
-            )
-            OR
-            (
-              m.sender_id = $2
-              AND
-              m.receiver_id = $1
-            )
-
-          ORDER BY
-            m.created_at ASC
-
-          LIMIT 200
-          `,
-          [
-            me,
-            other
-          ]
-        );
-
-      res.json(
-        result.rows
-      );
-
-    } catch (err) {
-
-      console.error(
-        "CHAT HISTORY ERROR:",
         err
       );
 
