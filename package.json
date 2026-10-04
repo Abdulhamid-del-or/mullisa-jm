@@ -1,7 +1,7 @@
 {
   "name": "mullisa-jm",
-  "version": "4.0.0",
-  "description": "Mullisa-JM Chat, Call, Video Call and Voice Club",
+  "version": "5.0.0",
+  "description": "Mullisa-JM Chat, Call, Video, Voice Club fi Social App",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
