@@ -479,7 +479,20 @@ app.get("/api/clubs/:code/members", auth, async (req, res) => {
        ORDER BY cm.joined_at`,
       [req.params.code.toUpperCase()]
     );
-
+SELECT
+  table_name,
+  column_name,
+  data_type,
+  udt_name
+FROM information_schema.columns
+WHERE table_name IN (
+  'users',
+  'clubs',
+  'club_members',
+  'club_messages',
+  'messages'
+)
+ORDER BY table_name, ordinal_position;
     res.json(result.rows);
   } catch {
     res.status(500).json([]);
